@@ -1,5 +1,7 @@
 library(shiny)
 library(shinydashboard)
+library(lme4)
+library(xtable)
 
 shinyUI(
 
@@ -41,9 +43,7 @@ shinyUI(
         
         # in this box the results will be shown
         box(title = "Output Table", status = "primary", width = 12,
-            
-            helpText("Table showing results"),
-            helpText("-> table output?, download button?")
+        uiOutput("table_region")
         )
         
       )
@@ -51,3 +51,4 @@ shinyUI(
     )
   )
 )
+

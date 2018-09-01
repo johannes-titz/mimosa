@@ -3,12 +3,12 @@ shinyServer(function(input, output, session) {
   # initialize dataframes which will contain the variables
   # maybe they don't really need to be reactive
   level1 <- level2 <- data.frame()
-  vars <- reactiveValues(level1 = level1, level2 = level2)
+  vars <- reactiveValues(level1 = level1, level2 = level2, data = data)
   
   observeEvent(input$datafile, {
-   
     req(input$datafile)
-    data <- read.table(file = input$datafile$datapath)
+    vars$data <- read.csv(file = input$datafile$datapath, stringsAsFactors = F)
+    data <- vars$data
     # test file: "C:/HLM7 Student Examples/AppendxA/HSBALL.dat"
     
     ## identify levels (heuristically)
@@ -33,11 +33,20 @@ shinyServer(function(input, output, session) {
   output$variables <- renderUI({
     fluidRow(
       column(width = 3,
+             radioButtons("group_id", label = "Group ID", selected = character(0),
+                          choices = colnames(vars$level2))
+      ),
+      column(width = 3,
              radioButtons("outcome", label = "Outcome", selected = character(0),
                           choices = colnames(vars$level1))
       ),
       column(width = 3,
              checkboxGroupInput("l1", label = "Level 1", 
+                                choiceNames = colnames(vars$level1),
+                                choiceValues = colnames(vars$level1))
+      ),
+      column(width = 2,
+             checkboxGroupInput("l1_varies", label = "Level 1 varies", 
                                 choiceNames = colnames(vars$level1),
                                 choiceValues = colnames(vars$level1))
       ),
@@ -113,9 +122,37 @@ shinyServer(function(input, output, session) {
     }
       
   })
-
   
-
-
-
+  output$table_region <- renderUI({
+    # renderTable does not work if the object is empty, as is the case when
+    # no iv and grouping var is selected, workaround:
+    if (is.null(input$group_id) | is.null(input$outcome))
+      return("Select IV and grouping variable")
+    
+    tableOutput("table")
+  })
+  
+  output$table <- renderTable(rownames = T,{
+    fixed <- paste(input$l1, collapse = "+")
+    
+    # random intercept model without any ivs
+    if (fixed == ""){
+      random_intercept <- paste("(1|", input$group_id, ")", sep = "")
+    } else {
+    
+    # level does not vary
+    random_intercept <- paste(input$l1_varies, collapse = "+")
+    random_intercept <- paste("+(", random_intercept, "|", input$group_id, ")", sep = "")
+    random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
+                               paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
+    }
+    
+    mdl_formula <- paste(input$outcome, "~", fixed, random_intercept, sep = "")
+    # calc the actual model
+    mdl <- lmer(as.formula(mdl_formula), data = vars$data)
+    mdl_smr <- summary(mdl)
+    table <- mdl_smr$coefficients
+    table
+  })
 })
+
