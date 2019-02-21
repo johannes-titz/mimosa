@@ -2,12 +2,15 @@ library(shiny)
 library(shinydashboard)
 library(lme4)
 library(xtable)
+library(sjPlot)
+
+options(shiny.autoreload = F)
 
 shinyUI(
 
   dashboardPage(skin = "blue",
               
-    dashboardHeader(title = "Mixed Models"),
+    dashboardHeader(title = "mimosa"),
     
     dashboardSidebar(
     
