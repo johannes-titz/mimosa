@@ -1,10 +1,28 @@
+d <- read.csv("hsball.csv", stringsAsFactors = F)
+
 shinyServer(function(input, output, session) {
   
-  # initialize dataframes which will contain the variables
+  # initialize dataframes which will contain the variables----------------------
   # maybe they don't really need to be reactive
   level1 <- level2 <- data.frame()
   vars <- reactiveValues(level1 = level1, level2 = level2, data = data)
   
+  # this is just for testing purposes, has to be removed in the official version
+  vars$data <- d
+  data <- d
+  row_counter <- c(2:dim(data)[1])
+  row_counter <- row_counter[data[row_counter, 1] != data[row_counter-1, 1]]
+
+  # check if all values until first transition point are equal
+  equal <- apply(data[1:(row_counter[1]-1), ], 2, duplicated)
+  equal <- apply(equal[2:dim(equal)[1], ], 2, all)
+
+  # sort variables by levels
+  # assuming a maximum of 2 levels
+  vars$level1 <- data.frame(data[ , !equal])
+  vars$level2 <- data.frame(data[ , equal])
+  
+  # read in data file ----------------------------------------------------------
   observeEvent(input$datafile, {
     req(input$datafile)
     vars$data <- read.csv(file = input$datafile$datapath, stringsAsFactors = F)
@@ -29,27 +47,29 @@ shinyServer(function(input, output, session) {
     
   })
   
-  # variable inputs are generated in the server file since they depend on vars
+  # variable inputs are generated in the server file since they depend on vars--
   output$variables <- renderUI({
     fluidRow(
-      column(width = 3,
+      column(width = 2,
              radioButtons("group_id", label = "Group ID", selected = character(0),
                           choices = colnames(vars$level2))
       ),
-      column(width = 3,
+      column(width = 2,
              radioButtons("outcome", label = "Outcome", selected = character(0),
                           choices = colnames(vars$level1))
       ),
-      column(width = 3,
+      column(width = 2,
              checkboxGroupInput("l1", label = "Level 1", 
                                 choiceNames = colnames(vars$level1),
                                 choiceValues = colnames(vars$level1))
       ),
+      conditionalPanel(condition = "input.l1.length > 0", 
       column(width = 2,
-             checkboxGroupInput("l1_varies", label = "Level 1 varies", 
-                                choiceNames = colnames(vars$level1),
-                                choiceValues = colnames(vars$level1))
-      ),
+             checkboxGroupInput("l1_varies", label = "Level 1 varies")#, 
+             #                    choiceNames = colnames(vars$level1),
+             #                    choiceValues = colnames(vars$level1))
+      )),
+      
       column(width = 3,
              checkboxGroupInput("l2", label = "Level 2", 
                                 choiceNames = colnames(vars$level2),
@@ -58,15 +78,20 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # prevent selecting outcome as predictor by removing it from choices
+  # prevent selecting outcome as predictor by removing it from choices----------
   observeEvent(input$outcome, {
     updateCheckboxGroupInput(session, "l1", 
-                             choiceNames = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
-                             choiceValues = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
-                             selected = input$l1)
+      choiceNames = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
+      choiceValues = colnames(vars$level1)[colnames(vars$level1) != input$outcome])
   })
+  # prevent selecting variation 
+  observeEvent(input$l1, {
+      updateCheckboxGroupInput(session, "l1_varies",
+                               choiceNames = input$l1,
+                               choiceValues = input$l1)
+  }, ignoreNULL = F)
   
-  # create HTML output for level 1 equation
+  # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
     if (!is.null(input$outcome)){
       equation <- c(input$outcome, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
@@ -85,7 +110,7 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  # create HTML output for level 2 equations
+  # create HTML output for level 2 equations------------------------------------
   # does not yet allow to modify equations independently 
   output$mod_l2 <- renderUI({
     if (!is.null(input$outcome)){
@@ -123,36 +148,41 @@ shinyServer(function(input, output, session) {
       
   })
   
+  # create table ---------------------------------------------------------------
   output$table_region <- renderUI({
     # renderTable does not work if the object is empty, as is the case when
     # no iv and grouping var is selected, workaround:
     if (is.null(input$group_id) | is.null(input$outcome))
       return("Select IV and grouping variable")
-    
-    tableOutput("table")
-  })
-  
-  output$table <- renderTable(rownames = T,{
-    fixed <- paste(input$l1, collapse = "+")
-    
-    # random intercept model without any ivs
-    if (fixed == ""){
-      random_intercept <- paste("(1|", input$group_id, ")", sep = "")
-    } else {
-    
-    # level does not vary
-    random_intercept <- paste(input$l1_varies, collapse = "+")
-    random_intercept <- paste("+(", random_intercept, "|", input$group_id, ")", sep = "")
-    random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
-                               paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
+    else {
+      # renderTable(rownames = T,{
+      fixed <- paste(c(input$l1, input$l2), collapse = "+")
+
+      # random intercept model without any ivs
+      if (fixed == ""){
+        random_intercept <- paste("(1|", input$group_id, ")", sep = "")
+      } else {
+
+        # level does not vary
+        random_intercept <- paste(input$l1_varies, collapse = "+")
+        random_intercept <- paste("+(", random_intercept, "|", input$group_id, ")", sep = "")
+        random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
+                                   paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
+      }
+
+      mdl_formula <- paste(input$outcome, "~", fixed, random_intercept, sep = "")
+      # calc the actual model
+      mdl <- lmer(as.formula(mdl_formula), data = vars$data)
+      mdl_smr <- summary(mdl)
+      table <- mdl_smr$coefficients
+      # add variances?
+      table
+      #tab_model(mdl, file = "output.html")
+      writeLines(tab_model(mdl)[[3]], con = "output.html")
+      HTML(tab_model(mdl)[[3]])
     }
-    
-    mdl_formula <- paste(input$outcome, "~", fixed, random_intercept, sep = "")
-    # calc the actual model
-    mdl <- lmer(as.formula(mdl_formula), data = vars$data)
-    mdl_smr <- summary(mdl)
-    table <- mdl_smr$coefficients
-    table
+
+    #htmlOutput("table")
   })
 })
 
