@@ -5,7 +5,9 @@ shinyServer(function(input, output, session) {
   # initialize dataframes which will contain the variables----------------------
   # maybe they don't really need to be reactive
   level1 <- level2 <- data.frame()
-  vars <- reactiveValues(level1 = level1, level2 = level2, data = data)
+  r_mdl_formula <- ""
+  vars <- reactiveValues(level1 = level1, level2 = level2, data = data,
+                         r_mdl_formula = "", group_id = NA)
   
   # this is just for testing purposes, has to be removed in the official version
   vars$data <- d
@@ -25,34 +27,64 @@ shinyServer(function(input, output, session) {
   # read in data file ----------------------------------------------------------
   observeEvent(input$datafile, {
     req(input$datafile)
-    vars$data <- read.csv(file = input$datafile$datapath, stringsAsFactors = F)
+    fileending <- stringr::str_match(input$datafile$datapath, "(\\..+$)")[1,1]
+    
+    # input_tbl <- read_csv2("input_tbl.csv")
+    # print(input_tbl)
+    # #ifelse(fileending %in% input_tbl$ending)
+    # print(fileending)
+    # read_function <- input_tbl$func[input_tbl$ending == fileending]
+    # cmd <- paste("data <- ", read_function, "(input$datafile$datapath)", sep = "")
+    # print(cmd)
+    # eval(parse(text = cmd))
+    # 
+    if (fileending == ".sav") {
+      data <- foreign::read.spss(input$datafile$datapath, to.data.frame = T)
+    }
+    
+    if (fileending == ".csv") {
+      data <- readr::read_csv(input$datafile$datapath)
+    }
+    
+    vars$data <- data
     data <- vars$data
+    
     # test file: "C:/HLM7 Student Examples/AppendxA/HSBALL.dat"
     
     ## identify levels (heuristically)
     
     # find transition points between groups
     # assuming that id is the first variable in the df
+    id <- find_id(data)
+    vars$group_id <- id
+    print(length(id))
+    if (length(id)==0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
+    #showNotification("wrong", type = "error", action = a(href = "javascript:location.reload();", "Reload page"))
+    
     row_counter <- c(2:dim(data)[1])
-    row_counter <- row_counter[data[row_counter, 1] != data[row_counter-1, 1]]
+    print(row_counter)
+    row_counter <- row_counter[data[row_counter, id] != data[row_counter-1, id]]
+    print(row_counter)
     
     # check if all values until first transition point are equal
     equal <- apply(data[1:(row_counter[1]-1), ], 2, duplicated)
+    print(equal)
+    print("last")
+    if (nrow(equal)<=2) return() # improve this
     equal <- apply(equal[2:dim(equal)[1], ], 2, all)
-    
+    print(equal)
     # sort variables by levels
     # assuming a maximum of 2 levels
     vars$level1 <- data.frame(data[ , !equal])
     vars$level2 <- data.frame(data[ , equal])
-    
   })
   
   # variable inputs are generated in the server file since they depend on vars--
   output$variables <- renderUI({
     fluidRow(
       column(width = 2,
-             radioButtons("group_id", label = "Group ID", selected = character(0),
-                          choices = colnames(vars$level2))
+             radioButtons("group_id", label = "Group ID", selected = vars$group_id[1],
+                          choices = vars$group_id)
       ),
       column(width = 2,
              radioButtons("outcome", label = "Outcome", selected = character(0),
@@ -70,11 +102,17 @@ shinyServer(function(input, output, session) {
              #                    choiceValues = colnames(vars$level1))
       )),
       
-      column(width = 3,
+      column(width = 2,
              checkboxGroupInput("l2", label = "Level 2", 
                                 choiceNames = colnames(vars$level2),
                                 choiceValues = colnames(vars$level2))
-      )
+      ),
+      conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
+      column(width = 2,
+             checkboxGroupInput("interaction", label = "Cross-level interaction")#
+                                #choiceNames = paste(colnames(vars$level1), colnames(vars$level2)),
+                                #choiceValues = paste(colnames(vars$level1), colnames(vars$level2)))
+      ))
     )
   })
   
@@ -88,8 +126,23 @@ shinyServer(function(input, output, session) {
   observeEvent(input$l1, {
       updateCheckboxGroupInput(session, "l1_varies",
                                choiceNames = input$l1,
-                               choiceValues = input$l1)
+                               choiceValues = input$l1,
+                               selected = input$l1)
   }, ignoreNULL = F)
+  
+  observeEvent(input$l2, {
+    if (is.null(input$l1) | is.null(input$l2)) {
+      return()
+    } else {
+    interactions <- expand.grid(input$l1, input$l2)
+    interactions <- paste(interactions[,1], interactions[,2], sep = "*")
+    updateCheckboxGroupInput(session, "interaction",
+                             choiceNames = interactions,
+                             choiceValues = interactions,
+                             selected = input$interaction)
+    }
+  }, ignoreNULL = F)
+  
   
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
@@ -145,7 +198,8 @@ shinyServer(function(input, output, session) {
     else if (!is.null(input$l2)){
       HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
     }
-      
+    HTML("R formula")
+    HTML(vars$r_mdl_formula)
   })
   
   # create table ---------------------------------------------------------------
@@ -169,8 +223,17 @@ shinyServer(function(input, output, session) {
         random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
                                    paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
       }
-
-      mdl_formula <- paste(input$outcome, "~", fixed, random_intercept, sep = "")
+      
+      interaction <- paste(input$interaction, collapse = "+")
+      print(interaction)
+      print(interaction)
+      mdl_formula <- paste(input$outcome, "~",
+                           fixed,
+                           "+",
+                           interaction, 
+                           random_intercept, sep = "")
+      mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
+      vars$r_mdl_formula <- mdl_formula
       # calc the actual model
       mdl <- lmer(as.formula(mdl_formula), data = vars$data)
       mdl_smr <- summary(mdl)
