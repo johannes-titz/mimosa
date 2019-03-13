@@ -22,7 +22,8 @@ shinyServer(function(input, output, session) {
   output$variables <- renderUI({
     fluidRow(
       column(width = 2,
-             radioButtons("group_id", label = "Group ID", selected = reactive$group_id[1],
+             radioButtons("group_id", label = "Group ID",
+                          selected = reactive$group_id[1],
                           choices = reactive$group_id)
       ),
       column(width = 2,
@@ -38,7 +39,6 @@ shinyServer(function(input, output, session) {
       column(width = 2,
              checkboxGroupInput("l1_varies", label = "Level 1 varies")
       )),
-      
       column(width = 2,
              checkboxGroupInput("l2", label = "Level 2", 
                                 choiceNames = colnames(reactive$level2),
@@ -46,7 +46,8 @@ shinyServer(function(input, output, session) {
       ),
       conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
       column(width = 2,
-             checkboxGroupInput("interaction", label = "Cross-level interaction")
+             checkboxGroupInput("interaction",
+                                label = "Cross-level interaction")
       ))
     )
   })
