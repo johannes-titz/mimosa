@@ -7,7 +7,7 @@ extract_levels <- function(d, var){
 }
 
 find_id <- function(d){
-  
+  d <- dplyr::select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
   vars <- names(d)
   res <- lapply(vars, function(x) extract_levels(d, x))
   
@@ -17,4 +17,15 @@ find_id <- function(d){
   position_of_id <- which.max(apply(df, 1, max))
   result <- vars[position_of_id]
   result
+}
+
+load_data <- function(datafile){
+  fileending <- stringr::str_match(datafile$datapath, "(\\..+$)")[1,1]
+  if (fileending == ".sav") {
+    data <- Hmisc::spss.get(datafile$datapath)
+  }
+  
+  if (fileending == ".csv") {
+    data <- readr::read_csv(datafile$datapath, col_types = NULL)
+  }
 }
