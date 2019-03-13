@@ -2,17 +2,17 @@ d <- read.csv("hsball.csv", stringsAsFactors = F)
 
 shinyServer(function(input, output, session) {
   # create reactive variables
-  vars <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
+  reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                          data = d, r_mdl_formula = "", group_id = character(0))
   
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
     req(input$datafile)
     data <- load_data(input$datafile)
-    vars$data <- data
+    reactive$data <- data
     
     id <- find_id(data)
-    vars$group_id <- id
+    reactive$group_id <- id
     
     ## identify levels (heuristically)
     
@@ -38,26 +38,26 @@ shinyServer(function(input, output, session) {
     
     # sort variables by levels
     # assuming a maximum of 2 levels
-    vars$level1 <- data.frame(data[ , !equal])
+    reactive$level1 <- data.frame(data[ , !equal])
     equal[id] <- F
-    vars$level2 <- data.frame(data[ , equal])
+    reactive$level2 <- data.frame(data[ , equal])
   })
   
-  # variable inputs are generated in the server file since they depend on vars--
+  # variable inputs are generated in the server file since they depend on reactive--
   output$variables <- renderUI({
     fluidRow(
       column(width = 2,
-             radioButtons("group_id", label = "Group ID", selected = vars$group_id[1],
-                          choices = vars$group_id)
+             radioButtons("group_id", label = "Group ID", selected = reactive$group_id[1],
+                          choices = reactive$group_id)
       ),
       column(width = 2,
              radioButtons("outcome", label = "Outcome", selected = character(0),
-                          choices = colnames(vars$level1))
+                          choices = colnames(reactive$level1))
       ),
       column(width = 2,
              checkboxGroupInput("l1", label = "Level 1", 
-                                choiceNames = colnames(vars$level1),
-                                choiceValues = colnames(vars$level1))
+                                choiceNames = colnames(reactive$level1),
+                                choiceValues = colnames(reactive$level1))
       ),
       conditionalPanel(condition = "input.l1.length > 0", 
       column(width = 2,
@@ -66,8 +66,8 @@ shinyServer(function(input, output, session) {
       
       column(width = 2,
              checkboxGroupInput("l2", label = "Level 2", 
-                                choiceNames = colnames(vars$level2),
-                                choiceValues = colnames(vars$level2))
+                                choiceNames = colnames(reactive$level2),
+                                choiceValues = colnames(reactive$level2))
       ),
       conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
       column(width = 2,
@@ -81,8 +81,8 @@ shinyServer(function(input, output, session) {
     sel <- input$l1[input$l1!=input$outcome]
     print(sel)
     updateCheckboxGroupInput(session, "l1", 
-      choiceNames = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
-      choiceValues = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
+      choiceNames = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
+      choiceValues = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
       selected = sel)
   })
   # prevent selecting variation 
@@ -180,7 +180,7 @@ shinyServer(function(input, output, session) {
       HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
     }
     HTML("R formula")
-    HTML(vars$r_mdl_formula)
+    HTML(reactive$r_mdl_formula)
   })
   
   # create table ---------------------------------------------------------------
@@ -215,9 +215,9 @@ shinyServer(function(input, output, session) {
                            interaction, 
                            random_intercept, sep = "")
       mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
-      vars$r_mdl_formula <- mdl_formula
+      reactive$r_mdl_formula <- mdl_formula
       # calc the actual model
-      mdl <- lmer(as.formula(mdl_formula), data = vars$data)
+      mdl <- lmer(as.formula(mdl_formula), data = reactive$data)
       mdl_smr <- summary(mdl)
       table <- mdl_smr$coefficients
       # add variances?
