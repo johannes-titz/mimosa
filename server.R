@@ -1,7 +1,8 @@
 shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
-                         data = data.frame(), r_mdl_formula = "", group_id = character(0))
+                             data = data.frame(), r_mdl_formula = "",
+                             group_id = character(0))
   
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
@@ -12,33 +13,9 @@ shinyServer(function(input, output, session) {
     id <- find_id(data)
     reactive$group_id <- id
     
-    ## identify levels (heuristically)
-    
-    # find transition points between groups
-    # assuming that id is the first variable in the df
-    
-    if (length(id) == 0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
-    
-    row_counter <- c(2:dim(data)[1])
-    print(row_counter)
-    row_counter <- row_counter[data[row_counter, id] != data[row_counter-1, id]]
-    print(row_counter)
-    
-    # check if all values until first transition point are equal
-    # works only with values that are repeated; if only one value is here it does
-    # not work
-    equal <- apply(data[1:(row_counter[1]-1), ], 2, duplicated)
-    print(equal)
-    
-    if (is.null(dim(equal))) shinyalert("Error", "I was not able to find at least two rows of data for the first group. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()") # improve this
-    equal <- apply(equal[2:dim(equal)[1], ], 2, all)
-    print(equal)
-    
-    # sort variables by levels
-    # assuming a maximum of 2 levels
-    reactive$level1 <- data.frame(data[ , !equal])
-    equal[id] <- F
-    reactive$level2 <- data.frame(data[ , equal])
+    result <- identify_levels(id, data)
+    reactive$level1 <- result[[1]]
+    reactive$level2 <- result[[2]]
   })
   
   # variable inputs are generated in the server file since they depend on reactive--

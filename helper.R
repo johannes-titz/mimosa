@@ -7,7 +7,8 @@ extract_levels <- function(d, var){
 }
 
 find_id <- function(d){
-  d <- dplyr::select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
+  print(head(d))
+  d <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
   vars <- names(d)
   res <- lapply(vars, function(x) extract_levels(d, x))
   
@@ -28,4 +29,30 @@ load_data <- function(datafile){
   if (fileending == ".csv") {
     data <- readr::read_csv(datafile$datapath, col_types = NULL)
   }
+  data
+}
+
+identify_levels <- function(id_name, data){
+  id <- unlist(data[, id_name])
+  result <- NULL
+  if (length(id) == 0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
+  
+  # find transition points between groups
+  transition_points <- which(id != dplyr::lag(id))
+  
+  # check if all values until first transition point are equal
+  # works only with values that are repeated; if only one value is here it does
+  # not work
+  equal <- apply(data[1:(transition_points[1]-1), ], 2, duplicated)
+  
+  if (is.null(dim(equal))) shinyalert("Error", "I was not able to find at least two rows of data for the first group. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()") # improve this
+  equal <- apply(equal[2:dim(equal)[1], ], 2, all)
+  print(equal)
+  
+  # sort variables by levels
+  # assuming a maximum of 2 levels
+  result[[1]] <- data.frame(data[ , !equal])
+  equal[id_name] <- F
+  result[[2]] <- data.frame(data[ , equal])
+  result
 }
