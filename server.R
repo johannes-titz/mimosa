@@ -1,9 +1,7 @@
-d <- read.csv("hsball.csv", stringsAsFactors = F)
-
 shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
-                         data = d, r_mdl_formula = "", group_id = character(0))
+                         data = data.frame(), r_mdl_formula = "", group_id = character(0))
   
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
