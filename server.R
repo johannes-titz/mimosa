@@ -1,65 +1,25 @@
 d <- read.csv("hsball.csv", stringsAsFactors = F)
 
 shinyServer(function(input, output, session) {
+  # create reactive variables
+  vars <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
+                         data = d, r_mdl_formula = "", group_id = character(0))
   
-  # initialize dataframes which will contain the variables----------------------
-  # maybe they don't really need to be reactive
-  level1 <- level2 <- data.frame()
-  r_mdl_formula <- ""
-  vars <- reactiveValues(level1 = level1, level2 = level2, data = data,
-                         r_mdl_formula = "", group_id = NA)
-  
-  # this is just for testing purposes, has to be removed in the official version
-  vars$data <- d
-  data <- d
-  row_counter <- c(2:dim(data)[1])
-  row_counter <- row_counter[data[row_counter, 1] != data[row_counter-1, 1]]
-
-  # check if all values until first transition point are equal
-  equal <- apply(data[1:(row_counter[1]-1), ], 2, duplicated)
-  equal <- apply(equal[2:dim(equal)[1], ], 2, all)
-
-  # sort variables by levels
-  # assuming a maximum of 2 levels
-  vars$level1 <- data.frame(data[ , !equal])
-  vars$level2 <- data.frame(data[ , equal])
-  
-  # read in data file ----------------------------------------------------------
+  # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
     req(input$datafile)
-    fileending <- stringr::str_match(input$datafile$datapath, "(\\..+$)")[1,1]
-    
-    # input_tbl <- read_csv2("input_tbl.csv")
-    # print(input_tbl)
-    # #ifelse(fileending %in% input_tbl$ending)
-    # print(fileending)
-    # read_function <- input_tbl$func[input_tbl$ending == fileending]
-    # cmd <- paste("data <- ", read_function, "(input$datafile$datapath)", sep = "")
-    # print(cmd)
-    # eval(parse(text = cmd))
-    # 
-    if (fileending == ".sav") {
-      data <- foreign::read.spss(input$datafile$datapath, to.data.frame = T)
-    }
-    
-    if (fileending == ".csv") {
-      data <- readr::read_csv(input$datafile$datapath)
-    }
-    
+    data <- load_data(input$datafile)
     vars$data <- data
-    data <- vars$data
     
-    # test file: "C:/HLM7 Student Examples/AppendxA/HSBALL.dat"
+    id <- find_id(data)
+    vars$group_id <- id
     
     ## identify levels (heuristically)
     
     # find transition points between groups
     # assuming that id is the first variable in the df
-    id <- find_id(data)
-    vars$group_id <- id
-    print(length(id))
-    if (length(id)==0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
-    #showNotification("wrong", type = "error", action = a(href = "javascript:location.reload();", "Reload page"))
+    
+    if (length(id) == 0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
     
     row_counter <- c(2:dim(data)[1])
     print(row_counter)
@@ -67,15 +27,19 @@ shinyServer(function(input, output, session) {
     print(row_counter)
     
     # check if all values until first transition point are equal
+    # works only with values that are repeated; if only one value is here it does
+    # not work
     equal <- apply(data[1:(row_counter[1]-1), ], 2, duplicated)
     print(equal)
-    print("last")
-    if (nrow(equal)<=2) return() # improve this
+    
+    if (is.null(dim(equal))) shinyalert("Error", "I was not able to find at least two rows of data for the first group. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()") # improve this
     equal <- apply(equal[2:dim(equal)[1], ], 2, all)
     print(equal)
+    
     # sort variables by levels
     # assuming a maximum of 2 levels
     vars$level1 <- data.frame(data[ , !equal])
+    equal[id] <- F
     vars$level2 <- data.frame(data[ , equal])
   })
   
@@ -97,9 +61,7 @@ shinyServer(function(input, output, session) {
       ),
       conditionalPanel(condition = "input.l1.length > 0", 
       column(width = 2,
-             checkboxGroupInput("l1_varies", label = "Level 1 varies")#, 
-             #                    choiceNames = colnames(vars$level1),
-             #                    choiceValues = colnames(vars$level1))
+             checkboxGroupInput("l1_varies", label = "Level 1 varies")
       )),
       
       column(width = 2,
@@ -109,33 +71,52 @@ shinyServer(function(input, output, session) {
       ),
       conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
       column(width = 2,
-             checkboxGroupInput("interaction", label = "Cross-level interaction")#
-                                #choiceNames = paste(colnames(vars$level1), colnames(vars$level2)),
-                                #choiceValues = paste(colnames(vars$level1), colnames(vars$level2)))
+             checkboxGroupInput("interaction", label = "Cross-level interaction")
       ))
     )
   })
   
   # prevent selecting outcome as predictor by removing it from choices----------
   observeEvent(input$outcome, {
+    sel <- input$l1[input$l1!=input$outcome]
+    print(sel)
     updateCheckboxGroupInput(session, "l1", 
       choiceNames = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
-      choiceValues = colnames(vars$level1)[colnames(vars$level1) != input$outcome])
+      choiceValues = colnames(vars$level1)[colnames(vars$level1) != input$outcome],
+      selected = sel)
   })
   # prevent selecting variation 
   observeEvent(input$l1, {
+    if (is.null(input$l1)) {
+      updateCheckboxGroupInput(session, "interaction", choiceNames = "",
+                               choiceValues = "",
+                               selected = NULL)
+    } else {
       updateCheckboxGroupInput(session, "l1_varies",
                                choiceNames = input$l1,
                                choiceValues = input$l1,
                                selected = input$l1)
+      
+     interactions <- expand.grid(input$l1, input$l2)
+     if (ncol(interactions) ==2) {
+       interactions <- paste(interactions[,1], interactions[,2], sep = ":")
+     
+    updateCheckboxGroupInput(session, "interaction",
+                             choiceNames = interactions,
+                             choiceValues = interactions,
+                             selected = input$interaction)
+                             }
+    }
   }, ignoreNULL = F)
   
   observeEvent(input$l2, {
     if (is.null(input$l1) | is.null(input$l2)) {
-      return()
+      updateCheckboxGroupInput(session, "interaction", choiceNames = "",
+                               choiceValues = "",
+                               selected = NULL)
     } else {
     interactions <- expand.grid(input$l1, input$l2)
-    interactions <- paste(interactions[,1], interactions[,2], sep = "*")
+    interactions <- paste(interactions[,1], interactions[,2], sep = ":")
     updateCheckboxGroupInput(session, "interaction",
                              choiceNames = interactions,
                              choiceValues = interactions,
@@ -209,6 +190,7 @@ shinyServer(function(input, output, session) {
     if (is.null(input$group_id) | is.null(input$outcome))
       return("Select IV and grouping variable")
     else {
+      if (input$outcome %in% input$l1) return()
       # renderTable(rownames = T,{
       fixed <- paste(c(input$l1, input$l2), collapse = "+")
 
@@ -248,4 +230,3 @@ shinyServer(function(input, output, session) {
     #htmlOutput("table")
   })
 })
-
