@@ -2,7 +2,8 @@ shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
-                             group_id = character(0))
+                             group_id = character(0),
+                             table = NULL)
   
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
@@ -52,10 +53,18 @@ shinyServer(function(input, output, session) {
     )
   })
   
+  output$download <- downloadHandler(
+    filename = paste(Sys.Date(), "mimosa.html", sep = ""),
+    content = function(file) {
+      writeLines(reactive$table, file)
+    }
+  )
+  
   # prevent selecting outcome as predictor by removing it from choices----------
   observeEvent(input$outcome, {
+    print(input$outcome)
+
     sel <- input$l1[input$l1!=input$outcome]
-    print(sel)
     updateCheckboxGroupInput(session, "l1", 
       choiceNames = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
       choiceValues = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
@@ -183,8 +192,6 @@ shinyServer(function(input, output, session) {
       }
       
       interaction <- paste(input$interaction, collapse = "+")
-      print(interaction)
-      print(interaction)
       mdl_formula <- paste(input$outcome, "~",
                            fixed,
                            "+",
@@ -197,8 +204,8 @@ shinyServer(function(input, output, session) {
       mdl_smr <- summary(mdl)
       table <- mdl_smr$coefficients
       # add variances?
-      table
       #tab_model(mdl, file = "output.html")
+      reactive$table <- tab_model(mdl)[[3]]
       writeLines(tab_model(mdl)[[3]], con = "output.html")
       HTML(tab_model(mdl)[[3]])
     }

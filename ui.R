@@ -7,6 +7,7 @@ library(readr)
 library(shinyalert)
 library(Hmisc)
 library(dplyr)
+library(clipr)
 source("helper.R")
 
 options(shiny.autoreload = F)
@@ -41,7 +42,9 @@ shinyUI(
       fluidRow(
         # in this box the results will be shown
         box(title = "Output Table", status = "primary", width = 12,
-        uiOutput("table_region")
+        uiOutput("table_region"),
+        br(),
+        downloadButton("download", "Download Table")
         )
       )
     )
