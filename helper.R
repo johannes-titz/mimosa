@@ -55,16 +55,24 @@ identify_levels <- function(id_name, data){
   result
 }
 
-create_mdl2_formula <- function(beta_nmbr, beta_varies){
+create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL){
   beta_varies <- ifelse(beta_varies, paste(" + u<sub>", beta_nmbr, "j",
                                            "</sub>", sep =""), "")
+  interaction <- ifelse(!is.null(interaction),
+                        paste("&gamma;<sub>",
+                              beta_nmbr, 1:length(interaction),
+                              "</sub>", interaction, "<sub>j</sub>", 
+                              collapse = "+", sep =""),
+                        "")
+  interaction <- ifelse(interaction == "", "", paste("+", interaction))
   eq_beta <- c("<br>&beta;<sub>", beta_nmbr, "j</sub> = &gamma;<sub>", beta_nmbr, 
-                         "0</sub> ", beta_varies)
+                         "0</sub> ", interaction, beta_varies)
   eq_beta
 }
 
 create_lvl2_constant <- function(l2){
-  part <- paste("&gamma;<sub>0", 1:length(l2), "</sub>", l2, collapse = "+", sep ="")
+  part <- paste("&gamma;<sub>0", 1:length(l2), "</sub>", l2, "<sub>j</sub>",
+                collapse = "+", sep ="")
   part <- paste("+", part)
   part2 <- paste("&beta;<sub>0j</sub> = &gamma;<sub>00</sub>", ifelse(is.null(l2), "", part))
   paste(part2, "+u<sub>0j</sub>")

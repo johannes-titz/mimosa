@@ -118,7 +118,8 @@ shinyServer(function(input, output, session) {
       if (!is.null(input$l1)){
         for (index in 1:length(input$l1)){
           equation <- append(equation, 
-                             c(" + &beta;<sub>", index, "j</sub>", input$l1[index]), 
+                             c(" + &beta;<sub>", index, "j</sub>", input$l1[index],
+                               "<sub>ij</sub>"), 
                              after = length(equation)-1)
         }
       }
@@ -138,7 +139,15 @@ shinyServer(function(input, output, session) {
         for (l1_var in 0:length(input$l1)){
           if (l1_var > 0){
             l1_varies <- input$l1[l1_var] %in% input$l1_varies
-            eq_beta <- create_mdl2_formula(l1_var, l1_varies)
+            interaction <- NULL
+            if (length(input$interaction) > 0){
+              split <- strsplit(input$interaction, ":")
+              logical <- grep(input$l1[l1_var], split)
+              if (length(logical) > 0) {
+                interaction <- sapply(split[logical], function(x) x[2])
+              }
+            }
+            eq_beta <- create_mdl2_formula(l1_var, l1_varies, interaction)
           }
           # 
           # if (!is.null(input$l2)){
