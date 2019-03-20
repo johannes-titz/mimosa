@@ -64,8 +64,6 @@ shinyServer(function(input, output, session) {
   
   # prevent selecting outcome as predictor by removing it from choices----------
   observeEvent(input$outcome, {
-    print(input$outcome)
-
     sel <- input$l1[input$l1!=input$outcome]
     updateCheckboxGroupInput(session, "l1", 
       choiceNames = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
@@ -132,29 +130,24 @@ shinyServer(function(input, output, session) {
   })
   
   # create HTML output for level 2 equations------------------------------------
-  # does not yet allow to modify equations independently 
   output$mod_l2 <- renderUI({
     if (!is.null(input$outcome)){
       equation <- c()
       if (1){
+        eq_beta <- create_lvl2_constant(input$l2)
         for (l1_var in 0:length(input$l1)){
           if (l1_var > 0){
-            print(input$l1_varies)
             l1_varies <- input$l1[l1_var] %in% input$l1_varies
             eq_beta <- create_mdl2_formula(l1_var, l1_varies)
           }
-          else {
-            eq_beta <- c("&beta;<sub>", l1_var, "j</sub> = &gamma;<sub>", l1_var, 
-                         "0</sub> ", " + u<sub>0j</sub>")
-          }
-          
-          if (!is.null(input$l2)){
-            for (l2_var in 1:length(input$l2)){
-              print(l2_var)
-              print(l1_varies[l2_var])
-              eq_beta <- append(eq_beta, create_mdl2_formula(l2_var, l1_varies[l2_var]))
-            }
-          }
+          # 
+          # if (!is.null(input$l2)){
+          #   for (l2_var in 1:length(input$l2)){
+          #     # print(l2_var)
+          #     # print(l1_varies[l2_var])
+          #     eq_beta <- append(eq_beta, create_mdl2_formula(l2_var, input$l1_varies[l2_var]))
+          #   }
+          #}
           equation <- append(equation, eq_beta)
         }
       }
