@@ -56,3 +56,12 @@ identify_levels <- function(id_name, data){
   result[[2]] <- data.frame(data[ , equal])
   result
 }
+
+create_mdl2_formula <- function(beta_nmbr, beta_varies){
+  beta_varies <- ifelse(beta_varies, paste(" + u<sub>", beta_nmbr, "j",
+                                           "</sub>", sep =""), "")
+  print(beta_varies)
+  eq_beta <- c("<br>&beta;<sub>", beta_nmbr, "j</sub> = &gamma;<sub>", beta_nmbr, 
+                         "0</sub> ", beta_varies)
+  eq_beta
+}

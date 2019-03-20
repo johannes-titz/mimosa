@@ -37,8 +37,10 @@ shinyUI(
             strong("Level 1"), br(),
             uiOutput("mod_l1"),
             br(), strong("Level 2"),
+            uiOutput("mod_l2"),
             #helpText("# lacks the possibility of choosing different predictors in each equation"),
-            uiOutput("mod_l2")
+            br(), strong("R model formula"),
+            uiOutput("mod_r")
         ))
       ),
       

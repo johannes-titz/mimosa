@@ -139,26 +139,23 @@ shinyServer(function(input, output, session) {
       if (1){
         for (l1_var in 0:length(input$l1)){
           if (l1_var > 0){
-            eq_beta <- c("<br>&beta;<sub>", l1_var, "j</sub> = &gamma;<sub>", l1_var, 
-                         "0</sub> ", " + u<sub>0j</sub>")
+            print(input$l1_varies)
+            l1_varies <- input$l1[l1_var] %in% input$l1_varies
+            eq_beta <- create_mdl2_formula(l1_var, l1_varies)
           }
           else {
             eq_beta <- c("&beta;<sub>", l1_var, "j</sub> = &gamma;<sub>", l1_var, 
                          "0</sub> ", " + u<sub>0j</sub>")
           }
-            
+          
           if (!is.null(input$l2)){
             for (l2_var in 1:length(input$l2)){
-              eq_beta <- append(eq_beta,
-                                c(" + &gamma;<sub>", l1_var, l2_var, "</sub>",
-                                  input$l2[l2_var]),
-                                after = length(eq_beta)-1)
+              print(l2_var)
+              print(l1_varies[l2_var])
+              eq_beta <- append(eq_beta, create_mdl2_formula(l2_var, l1_varies[l2_var]))
             }
-            equation <- append(equation, eq_beta)
           }
-          else {
-            equation <- append(equation, eq_beta)
-          }
+          equation <- append(equation, eq_beta)
         }
       }
       HTML(paste(equation, collapse = ""))
@@ -166,6 +163,9 @@ shinyServer(function(input, output, session) {
     else if (!is.null(input$l2)){
       HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
     }
+  })
+  
+  output$mod_r <- renderUI({
     HTML("R formula")
     HTML(reactive$r_mdl_formula)
   })
