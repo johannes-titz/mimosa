@@ -21,36 +21,38 @@ shinyServer(function(input, output, session) {
   
   # variable inputs are generated in the server file since they depend on reactive--
   output$variables <- renderUI({
-    fluidRow(
-      column(width = 2,
-             radioButtons("group_id", label = "Group ID",
-                          selected = reactive$group_id[1],
-                          choices = reactive$group_id)
-      ),
-      column(width = 2,
-             radioButtons("outcome", label = "Outcome", selected = character(0),
-                          choices = colnames(reactive$level1))
-      ),
-      column(width = 2,
-             checkboxGroupInput("l1", label = "Level 1", 
-                                choiceNames = colnames(reactive$level1),
-                                choiceValues = colnames(reactive$level1))
-      ),
-      conditionalPanel(condition = "input.l1.length > 0", 
-      column(width = 2,
-             checkboxGroupInput("l1_varies", label = "Level 1 varies")
-      )),
-      column(width = 2,
-             checkboxGroupInput("l2", label = "Level 2", 
-                                choiceNames = colnames(reactive$level2),
-                                choiceValues = colnames(reactive$level2))
-      ),
-      conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
-      column(width = 2,
-             checkboxGroupInput("interaction",
-                                label = "Cross-level interaction")
-      ))
-    )
+    if (length(reactive$group_id) > 0) {
+      fluidRow(
+        column(width = 2,
+               radioButtons("group_id", label = "Group ID",
+                            selected = reactive$group_id[1],
+                            choices = reactive$group_id)
+        ),
+        column(width = 2,
+               radioButtons("outcome", label = "Outcome", selected = character(0),
+                            choices = colnames(reactive$level1))
+        ),
+        column(width = 2,
+               checkboxGroupInput("l1", label = "Level 1", 
+                                  choiceNames = colnames(reactive$level1),
+                                  choiceValues = colnames(reactive$level1))
+        ),
+        conditionalPanel(condition = "input.l1.length > 0", 
+        column(width = 2,
+               checkboxGroupInput("l1_varies", label = "Level 1 varies")
+        )),
+        column(width = 2,
+               checkboxGroupInput("l2", label = "Level 2", 
+                                  choiceNames = colnames(reactive$level2),
+                                  choiceValues = colnames(reactive$level2))
+        ),
+        conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
+        column(width = 2,
+               checkboxGroupInput("interaction",
+                                  label = "Cross-level interaction")
+        ))
+      )
+    }
   })
   
   output$download <- downloadHandler(
