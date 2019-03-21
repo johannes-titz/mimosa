@@ -11,21 +11,25 @@ source("helper.R")
 options(shiny.autoreload = F)
 
 shinyUI(
+
   dashboardPage(skin = "blue",
+                
     dashboardHeader(title = "mimosa"),
     dashboardSidebar(
+      tags$style(type = 'text/css', 
+               "footer{position: absolute; bottom:1%; left: 5%; padding:5px;}"
+      ),
       useShinyalert(),
       tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
       h4("1. Load data"),
       fileInput("datafile", label = NULL),
       h6("Currently, you can only load .csv files and .sav (SPSS) files."),
-      br(),
-      HTML('<font size="1"><p style="color:grey">&copy; 2019 Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></p></font>')
+      HTML('<footer><font size="1"><p style="color:grey">&copy; 2019 Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>')
     ),
   
     dashboardBody(
-      #conditionalPanel(condition = "typeof(reactive.group_id) != 'undefined'",
       fluidRow(
+        #conditionalPanel(condition = "output.fileUploaded",
         # in this box variables are shown (sorted by levels) and can be chosen for the model
         box(title = "2. Create model", status = "primary", collapsible = T, width = 7,
             uiOutput("variables")
