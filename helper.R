@@ -1,7 +1,6 @@
 extract_levels <- function(d, var){
   d <- group_by_(d, var)
   get_levels <- function(x) {length(levels(as.factor(as.character(x))))}
-                
   levels <- summarize_all(d, get_levels)
   levels %>% summarize_all(get_levels)
 }
@@ -13,7 +12,7 @@ find_id <- function(d){
   
   df <- plyr::ldply(res, "data.frame")
   
-  df <- filter_all(df, any_vars(. ==1))
+  df <- filter_all(df, any_vars(. == 1))
   position_of_id <- which.max(apply(df, 1, max))
   result <- vars[position_of_id]
   result
@@ -22,7 +21,7 @@ find_id <- function(d){
 load_data <- function(datafile){
   fileending <- stringr::str_match(datafile$datapath, "(\\..+$)")[1,1]
   if (fileending == ".sav") {
-    data <- Hmisc::spss.get(datafile$datapath)
+    data <- Hmisc::spss.get(datafile$datapath, use.value.labels = F)
   }
   
   if (fileending == ".csv") {
@@ -43,15 +42,16 @@ identify_levels <- function(id_name, data){
   # works only with values that are repeated; if only one value is here it does
   # not work
   equal <- apply(data[1:(transition_points[1]-1), ], 2, duplicated)
+  if (is.null(dim(equal))) {
+    equal <- apply(data[transition_points[1]:(transition_points[2]-1), ], 2, duplicated)}
   
   if (is.null(dim(equal))) shinyalert("Error", "I was not able to find at least two rows of data for the first group. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()") # improve this
   equal <- apply(equal[2:dim(equal)[1], ], 2, all)
-  
   # sort variables by levels
   # assuming a maximum of 2 levels
-  result[[1]] <- data.frame(data[ , !equal])
+  result[[1]] <- data.frame(data[ ,!equal])
   equal[id_name] <- F
-  result[[2]] <- data.frame(data[ , equal])
+  result[[2]] <- select(data, which(equal))
   result
 }
 
