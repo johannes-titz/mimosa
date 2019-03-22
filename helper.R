@@ -25,7 +25,7 @@ load_data <- function(datafile){
   }
   
   if (fileending == ".csv") {
-    data <- readr::read_csv(datafile$datapath, col_types = NULL)
+    data <- read.csv(datafile$datapath)
   }
   data
 }
