@@ -1,19 +1,24 @@
-extract_levels <- function(d, var){
+extract_levels <- function(d, var, var_total_length){
+  incProgress(1/var_total_length,
+              message = paste("Testing Variable ", var, " as grouping variable"))
+  # changed it so that simply the average number of levels for the var is
+  # calculated
   d <- group_by_(d, var)
   get_levels <- function(x) {length(levels(as.factor(as.character(x))))}
   levels <- summarize_all(d, get_levels)
-  levels %>% summarize_all(get_levels)
+  levels[,1] <- NA
+  mean(unlist(levels), na.rm = T)
 }
 
 find_id <- function(d){
   d <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
-  vars <- names(d)
-  res <- lapply(vars, function(x) extract_levels(d, x))
-  
-  df <- plyr::ldply(res, "data.frame")
-  
-  df <- filter_all(df, any_vars(. == 1))
-  position_of_id <- which.max(apply(df, 1, max))
+  # take only variables where every group has at least two values, this avoids
+  # taking as a group id an arbitrary variable (e.g. open field) with many
+  # possible values
+  res <- apply(d, 2, function(x) prop.table(table(table(x) > 1))["TRUE"] == 1)
+  vars <- names(d)[res]
+  res <- sapply(vars, function(x) extract_levels(d, x, length(res)))
+  position_of_id <- which.min(res)
   result <- vars[position_of_id]
   result
 }

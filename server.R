@@ -7,16 +7,17 @@ shinyServer(function(input, output, session) {
   
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
+    withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
     data <- load_data(input$datafile)
     reactive$data <- data
     
     id <- find_id(data)
     reactive$group_id <- id
-    
     result <- identify_levels(id, data)
     reactive$level1 <- result[[1]]
     reactive$level2 <- result[[2]]
+    })
   })
   # variable inputs are generated in the server file since they depend on reactive--
   output$variables <- renderUI({
@@ -169,14 +170,6 @@ shinyServer(function(input, output, session) {
             }
             eq_beta <- create_mdl2_formula(l1_var, l1_varies, interaction)
           }
-          # 
-          # if (!is.null(input$l2)){
-          #   for (l2_var in 1:length(input$l2)){
-          #     # print(l2_var)
-          #     # print(l1_varies[l2_var])
-          #     eq_beta <- append(eq_beta, create_mdl2_formula(l2_var, input$l1_varies[l2_var]))
-          #   }
-          #}
           equation <- append(equation, eq_beta)
         }
       }
