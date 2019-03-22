@@ -18,12 +18,11 @@ shinyServer(function(input, output, session) {
     reactive$level1 <- result[[1]]
     reactive$level2 <- result[[2]]
   })
-  
   # variable inputs are generated in the server file since they depend on reactive--
   output$variables <- renderUI({
     if (length(reactive$group_id) > 0) {
       fluidRow(
-        column(width = 2,
+        column(width = 1,
                radioButtons("group_id", label = "Group ID",
                             selected = reactive$group_id[1],
                             choices = reactive$group_id)
@@ -49,7 +48,9 @@ shinyServer(function(input, output, session) {
         conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
         column(width = 2,
                checkboxGroupInput("interaction",
-                                  label = "Cross-level interaction")
+                                  label = "Cross-level interaction",
+                                  choiceNames = "",
+                                  choiceValues = "")
         ))
       )
     }
@@ -82,7 +83,7 @@ shinyServer(function(input, output, session) {
                                choiceValues = input$l1,
                                selected = input$l1)
       
-     interactions <- expand.grid(input$l1, input$l2)
+     interactions <- expand.grid(input$l1_varies, input$l2)
      if (ncol(interactions) ==2) {
        interactions <- paste(interactions[,1], interactions[,2], sep = ":")
      
@@ -94,13 +95,32 @@ shinyServer(function(input, output, session) {
     }
   }, ignoreNULL = F)
   
+   observeEvent(input$l1_varies, {
+    #  if (is.null(input$l1_varies)) {
+    #   updateCheckboxGroupInput(session, "interaction", choiceNames = "",
+    #                            choiceValues = "",
+    #                            selected = NULL)
+    # } else {
+     interactions <- expand.grid(input$l1_varies, input$l2)
+     if (ncol(interactions) == 2) {
+       interactions <- paste(interactions[,1], interactions[,2], sep = ":")
+     
+       updateCheckboxGroupInput(session, "interaction",
+                             choiceNames = interactions,
+                             choiceValues = interactions,
+                             selected = input$interaction)
+     }
+    # }
+  }, ignoreNULL = F)
+  
+   
   observeEvent(input$l2, {
     if (is.null(input$l1) | is.null(input$l2)) {
       updateCheckboxGroupInput(session, "interaction", choiceNames = "",
                                choiceValues = "",
                                selected = NULL)
     } else {
-    interactions <- expand.grid(input$l1, input$l2)
+    interactions <- expand.grid(input$l1_varies, input$l2)
     interactions <- paste(interactions[,1], interactions[,2], sep = ":")
     updateCheckboxGroupInput(session, "interaction",
                              choiceNames = interactions,

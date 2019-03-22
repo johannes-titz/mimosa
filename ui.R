@@ -31,13 +31,13 @@ shinyUI(
       fluidRow(
         #conditionalPanel(condition = "output.fileUploaded",
         # in this box variables are shown (sorted by levels) and can be chosen for the model
-        box(title = "2. Create model", status = "primary", collapsible = T, width = 7,
+        box(title = "2. Create model", status = "primary", collapsible = T, width = 8,
             uiOutput("variables")
         ),
         
         conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
         # in this box the model equations will be displayed
-        box(title = "Model", status = "primary", collapsible = T, width = 5,
+        box(title = "Model", status = "primary", collapsible = T, width = 4,
             strong("Level 1"), br(),
             uiOutput("mod_l1"),
             br(), strong("Level 2"),
@@ -51,7 +51,7 @@ shinyUI(
       fluidRow(
         conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
         # in this box the results will be shown
-        box(title = "3. Save output table", status = "primary", width = 12,
+        box(title = "3. Save output table", status = "primary", width = 8,
         uiOutput("table_region"),
         br(),
         downloadButton("download", "Download Table"))
