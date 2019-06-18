@@ -2,7 +2,7 @@ shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
-                             group_id = character(0),
+                             group_id_selected = character(0), group_ids = character(0),
                              table = NULL)
   
   # read in data file, determine ID and level of variables----------------------
@@ -13,29 +13,30 @@ shinyServer(function(input, output, session) {
     reactive$data <- data
     
     id <- find_id(data)
-    reactive$group_id <- id
-    result <- identify_levels(id, data)
-    reactive$level1 <- result[[1]]
-    reactive$level2 <- result[[2]]
+    reactive$group_id_selected <- id[1]
+    reactive$group_ids <- id
+    result <- determine_levels(id[1], data)
+    reactive$level1 <- result$level1
+    reactive$level2 <- result$level2
     })
   })
   # variable inputs are generated in the server file since they depend on reactive--
   output$variables <- renderUI({
-    if (length(reactive$group_id) > 0) {
+    if (length(reactive$group_id_selected) > 0) {
       fluidRow(
-        column(width = 1,
-               radioButtons("group_id", label = "Group ID",
-                            selected = reactive$group_id[1],
-                            choices = reactive$group_id)
+        column(width = 2,
+               selectInput("group_id", label = "Group ID",
+                            selected = reactive$group_id_selected,
+                            choices = reactive$group_ids)
         ),
         column(width = 2,
                radioButtons("outcome", label = "Outcome", selected = character(0),
-                            choices = colnames(reactive$level1))
+                            choices = reactive$level1)
         ),
         column(width = 2,
                checkboxGroupInput("l1", label = "Level 1", 
-                                  choiceNames = colnames(reactive$level1),
-                                  choiceValues = colnames(reactive$level1))
+                                  choiceNames = reactive$level1,
+                                  choiceValues = reactive$level1)
         ),
         conditionalPanel(condition = "input.l1.length > 0", 
         column(width = 2,
@@ -43,8 +44,8 @@ shinyServer(function(input, output, session) {
         )),
         column(width = 2,
                checkboxGroupInput("l2", label = "Level 2", 
-                                  choiceNames = colnames(reactive$level2),
-                                  choiceValues = colnames(reactive$level2))
+                                  choiceNames = reactive$level2,
+                                  choiceValues = reactive$level2)
         ),
         conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
         column(width = 2,
@@ -63,16 +64,23 @@ shinyServer(function(input, output, session) {
       writeLines(reactive$table, file)
     }
   )
-  
+
+  observeEvent(input$group_id, {
+    reactive$group_id_selected <- input$group_id
+    result <- determine_levels(input$group_id, reactive$data)
+    reactive$level1 <- result$level1
+    reactive$level2 <- result$level2
+  })
+
   # prevent selecting outcome as predictor by removing it from choices----------
   observeEvent(input$outcome, {
     sel <- input$l1[input$l1!=input$outcome]
-    updateCheckboxGroupInput(session, "l1", 
-      choiceNames = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
-      choiceValues = colnames(reactive$level1)[colnames(reactive$level1) != input$outcome],
+    updateCheckboxGroupInput(session, "l1",
+      choiceNames = reactive$level1[reactive$level1 != input$outcome],
+      choiceValues = reactive$level1[reactive$level1 != input$outcome],
       selected = sel)
   })
-  # prevent selecting variation 
+  # prevent selecting variation
   observeEvent(input$l1, {
     if (is.null(input$l1)) {
       updateCheckboxGroupInput(session, "interaction", choiceNames = "",
@@ -83,11 +91,11 @@ shinyServer(function(input, output, session) {
                                choiceNames = input$l1,
                                choiceValues = input$l1,
                                selected = input$l1)
-      
+
      interactions <- expand.grid(input$l1_varies, input$l2)
      if (ncol(interactions) ==2) {
        interactions <- paste(interactions[,1], interactions[,2], sep = ":")
-     
+
     updateCheckboxGroupInput(session, "interaction",
                              choiceNames = interactions,
                              choiceValues = interactions,
@@ -95,7 +103,7 @@ shinyServer(function(input, output, session) {
                              }
     }
   }, ignoreNULL = F)
-  
+
    observeEvent(input$l1_varies, {
     #  if (is.null(input$l1_varies)) {
     #   updateCheckboxGroupInput(session, "interaction", choiceNames = "",
@@ -105,7 +113,7 @@ shinyServer(function(input, output, session) {
      interactions <- expand.grid(input$l1_varies, input$l2)
      if (ncol(interactions) == 2) {
        interactions <- paste(interactions[,1], interactions[,2], sep = ":")
-     
+
        updateCheckboxGroupInput(session, "interaction",
                              choiceNames = interactions,
                              choiceValues = interactions,
@@ -113,8 +121,8 @@ shinyServer(function(input, output, session) {
      }
     # }
   }, ignoreNULL = F)
-  
-   
+
+
   observeEvent(input$l2, {
     if (is.null(input$l1) | is.null(input$l2)) {
       updateCheckboxGroupInput(session, "interaction", choiceNames = "",
@@ -129,8 +137,8 @@ shinyServer(function(input, output, session) {
                              selected = input$interaction)
     }
   }, ignoreNULL = F)
-  
-  
+
+
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
     if (!is.null(input$outcome)){
@@ -138,9 +146,9 @@ shinyServer(function(input, output, session) {
                   " + e<sub>ij</sub>")
       if (!is.null(input$l1)){
         for (index in 1:length(input$l1)){
-          equation <- append(equation, 
+          equation <- append(equation,
                              c(" + &beta;<sub>", index, "j</sub>", input$l1[index],
-                               "<sub>ij</sub>"), 
+                               "<sub>ij</sub>"),
                              after = length(equation)-1)
         }
       }
@@ -150,7 +158,7 @@ shinyServer(function(input, output, session) {
       HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
     }
   })
-  
+
   # create HTML output for level 2 equations------------------------------------
   output$mod_l2 <- renderUI({
     if (!is.null(input$outcome)){
@@ -179,12 +187,12 @@ shinyServer(function(input, output, session) {
       HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
     }
   })
-  
+
   output$mod_r <- renderUI({
     HTML("R formula")
     HTML(reactive$r_mdl_formula)
   })
-  
+
   # create table ---------------------------------------------------------------
   output$table_region <- renderUI({
     # renderTable does not work if the object is empty, as is the case when
@@ -207,14 +215,15 @@ shinyServer(function(input, output, session) {
         random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
                                    paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
       }
-      
+
       interaction <- paste(input$interaction, collapse = "+")
       mdl_formula <- paste(input$outcome, "~",
                            fixed,
                            "+",
-                           interaction, 
+                           interaction,
                            random_intercept, sep = "")
       mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
+      mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
       reactive$r_mdl_formula <- mdl_formula
       # calc the actual model
       mdl <- lmer(as.formula(mdl_formula), data = reactive$data)
