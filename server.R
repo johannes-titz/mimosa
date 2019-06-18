@@ -231,9 +231,9 @@ shinyServer(function(input, output, session) {
       table <- mdl_smr$coefficients
       # add variances?
       #tab_model(mdl, file = "output.html")
-      reactive$table <- tab_model(mdl)[[3]]
-      writeLines(tab_model(mdl)[[3]], con = "output.html")
-      HTML(tab_model(mdl)[[3]])
+      reactive$table <- tab_model(mdl, show.se = T, string.se = "SE")[[3]]
+      writeLines(tab_model(mdl, show.se = T, string.se = "SE")[[3]], con = "output.html")
+      HTML(tab_model(mdl, show.se = T, string.se = "SE")[[3]])
     }
 
     #htmlOutput("table")
