@@ -16,6 +16,10 @@ find_id <- function(d){
   #test1 <- apply(res, 1, function(x) sum(x != 1, na.rm = T))
   #test3 <- test1 > 0 & test2 > 1
   ids <- vars[test2 > 0]
+  if (length(ids) == 0){
+    ids <- vars
+  }
+  
   #position_of_id <- which.min(res)
   #result <- vars[position_of_id]
   ids
