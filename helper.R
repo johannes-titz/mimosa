@@ -3,12 +3,14 @@ find_id <- function(d){
   # at least another variable on level 2
   d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
   d2 <- select_if(d2, function(x) length(unique(x)) != length(x))
+  d2 <- select_if(d2, function(x) length(unique(x)) != 1)
   # take only variables where every group has at least two values, this avoids
   # taking as a group id an arbitrary variable (e.g. open field) with many
   # possible values
-  res <- apply(d2, 2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .70)
-  vars <- names(res)
+  d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .70)
+  vars <- names(d2)
   res <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
+  #res <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
   res <- plyr::ldply(res, data.frame)
   rownames(res) <- vars
   #test1 <- apply(res, 1, function(x) sum(x == 0))
