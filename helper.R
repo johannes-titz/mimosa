@@ -1,26 +1,67 @@
-extract_levels <- function(d, var, var_total_length){
-  incProgress(1/var_total_length,
+find_id <- function(d){
+  # the idea here is to check for each potential grouping variable if it has
+  # at least another variable on level 2
+  d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
+  d2 <- select_if(d2, function(x) length(unique(x)) != length(x))
+  # take only variables where every group has at least two values, this avoids
+  # taking as a group id an arbitrary variable (e.g. open field) with many
+  # possible values
+  res <- apply(d2, 2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .70)
+  vars <- names(res)
+  res <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
+  res <- plyr::ldply(res, data.frame)
+  rownames(res) <- vars
+  #test1 <- apply(res, 1, function(x) sum(x == 0))
+  test2 <- apply(res, 1, function(x) sum(x == 1, na.rm = T))
+  #test1 <- apply(res, 1, function(x) sum(x != 1, na.rm = T))
+  #test3 <- test1 > 0 & test2 > 1
+  ids <- vars[test2 > 0]
+  #position_of_id <- which.min(res)
+  #result <- vars[position_of_id]
+  ids
+}
+
+determine_levels <- function(id_name, data){
+  identified_levels <- extract_levels2_without_progress(data, id_name)
+  result <- NULL
+  level2 <- na.omit(identified_levels == 1)
+  # assuming a maximum of 2 levels
+  result[[1]] <- names(level2)[!level2]
+  #result[[1]] <- select(data, which(!level2))  
+  level2[id_name] <- F
+  result[[2]] <- names(level2)[level2] #data.frame(data[, which(level2)])
+  names(result) <- c("level1", "level2")
+  result
+}
+
+get_levels <- function(x) {
+  length(levels(as.factor(as.character(x))))
+}
+  
+extract_levels2 <- function(d, var, var_total_length){
+  incProgress(1 / var_total_length,
               message = paste("Testing Variable ", var, " as grouping variable"))
   # changed it so that simply the average number of levels for the var is
   # calculated
   d <- group_by_(d, var)
-  get_levels <- function(x) {length(levels(as.factor(as.character(x))))}
+
   levels <- summarize_all(d, get_levels)
-  levels[,1] <- NA
-  mean(unlist(levels), na.rm = T)
+  levels[var] <- NA
+  levels <- colMeans(levels)
+  levels
+  # mean(unlist(levels), na.rm = T)
 }
 
-find_id <- function(d){
-  d <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
-  # take only variables where every group has at least two values, this avoids
-  # taking as a group id an arbitrary variable (e.g. open field) with many
-  # possible values
-  res <- apply(d, 2, function(x) prop.table(table(table(x) > 1))["TRUE"] == 1)
-  vars <- names(d)[res]
-  res <- sapply(vars, function(x) extract_levels(d, x, length(res)))
-  position_of_id <- which.min(res)
-  result <- vars[position_of_id]
-  result
+extract_levels2_without_progress <- function(d, var){
+  # changed it so that simply the average number of levels for the var is
+  # calculated
+  d <- group_by_(d, var)
+
+  levels <- summarize_all(d, get_levels)
+  levels[var] <- NA
+  levels <- colMeans(levels)
+  levels
+  # mean(unlist(levels), na.rm = T)
 }
 
 load_data <- function(datafile){
@@ -33,31 +74,6 @@ load_data <- function(datafile){
     data <- read.csv(datafile$datapath)
   }
   data
-}
-
-identify_levels <- function(id_name, data){
-  id <- unlist(data[, id_name])
-  result <- NULL
-  if (length(id) == 0) shinyalert("Error", "Cannot detect the ID variable. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()")
-  
-  # find transition points between groups
-  transition_points <- which(id != dplyr::lag(id))
-  
-  # check if all values until first transition point are equal
-  # works only with values that are repeated; if only one value is here it does
-  # not work
-  equal <- apply(data[1:(transition_points[1]-1), ], 2, duplicated)
-  if (is.null(dim(equal))) {
-    equal <- apply(data[transition_points[1]:(transition_points[2]-1), ], 2, duplicated)}
-  
-  if (is.null(dim(equal))) shinyalert("Error", "I was not able to find at least two rows of data for the first group. Check if your data is really hierarchical, please.", type = "error", callbackJS = "location.reload()") # improve this
-  equal <- apply(equal[2:dim(equal)[1], ], 2, all)
-  # sort variables by levels
-  # assuming a maximum of 2 levels
-  result[[1]] <- data.frame(data[ ,!equal])
-  equal[id_name] <- F
-  result[[2]] <- select(data, which(equal))
-  result
 }
 
 create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL){
