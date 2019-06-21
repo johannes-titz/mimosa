@@ -226,7 +226,15 @@ shinyServer(function(input, output, session) {
       mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
       reactive$r_mdl_formula <- mdl_formula
       # calc the actual model
-      mdl <- lmer(as.formula(mdl_formula), data = reactive$data)
+      mdl <- tryCatch({
+        lmer(as.formula(mdl_formula), data = reactive$data)},
+        error = function(error_message){
+            msg <- ifelse(grepl("<= number of random effects", error_message),
+                "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
+            shinyalert("You deleted the Internet!", msg)
+            message(error_message)
+        }
+      )
       mdl_smr <- summary(mdl)
       table <- mdl_smr$coefficients
       # add variances?
