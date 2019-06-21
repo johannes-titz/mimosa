@@ -10,6 +10,8 @@ library(dplyr)
 source("helper.R")
 options(shiny.autoreload = F)
 
+options(shiny.sanitize.errors = FALSE)
+
 shinyUI(
 
   dashboardPage(skin = "blue",
