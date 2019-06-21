@@ -53,11 +53,18 @@ shinyUI(
       fluidRow(
         conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
         # in this box the results will be shown
-        box(title = "3. Save output table", status = "primary", width = 8,
+        box(title = "3. Save output table", status = "primary", width = 6,
         uiOutput("table_region"),
         br(),
         downloadButton("download", "Download Table"))
-      ))
+      ),
+        conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
+                         box(title = "Table Options",collapsed = T, status = "primary", collapsible = T, width = 2,
+                         checkboxGroupInput("output_options", "Output options",
+                                   choices = c("standard error", "p", "test statistic", "AIC",
+               "Deviance", "Log-Likelihood"))))#,
+                                   #choiceValues = rep(T, 2))))
+      )
     )
   )
 )

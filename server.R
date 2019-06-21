@@ -238,10 +238,25 @@ shinyServer(function(input, output, session) {
       mdl_smr <- summary(mdl)
       table <- mdl_smr$coefficients
       # add variances?
+      res <- c("standard error", "p", "test statistic", "AIC",
+               "Deviance", "Log-Likelihood") %in% input$output_options
+      print(res)
       #tab_model(mdl, file = "output.html")
-      reactive$table <- tab_model(mdl, show.se = T, string.se = "SE")[[3]]
-      writeLines(tab_model(mdl, show.se = T, string.se = "SE")[[3]], con = "output.html")
-      HTML(tab_model(mdl, show.se = T, string.se = "SE")[[3]])
+      reactive$table <- tab_model(mdl, show.se = res[1], show.p = res[2], show.stat = res[3],
+                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
+                     show.fstat = FALSE, show.aic = res[4], show.aicc = F,
+                     show.dev = res[5], show.loglik = res[6],
+                     string.se = "SE")[[3]]
+      writeLines(tab_model(mdl, show.se = res[1], show.p = res[2], show.stat = res[3],
+                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
+                     show.fstat = FALSE, show.aic = res[4], show.aicc = F,
+                     show.dev = res[5], show.loglik = res[6],
+                     string.se = "SE")[[3]], con = "output.html")
+      HTML(tab_model(mdl, show.se = res[1], show.p = res[2], show.stat = res[3],
+                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
+                     show.fstat = FALSE, show.aic = res[4], show.aicc = F,
+                     show.dev = res[5], show.loglik = res[6],
+                     string.se = "SE")[[3]])
     }
 
     #htmlOutput("table")
