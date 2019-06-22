@@ -1,4 +1,11 @@
 shinyServer(function(input, output, session) {
+  onBookmark(function(state){
+    state$values$data <- reactive$data
+  })
+  onRestore(function(state){
+    reactive$data <- state$values$data
+  })
+  
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
