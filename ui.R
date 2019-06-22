@@ -11,7 +11,7 @@ source("helper.R")
 options(shiny.autoreload = F)
 
 options(shiny.sanitize.errors = FALSE)
-enableBookmarking("server")
+enableBookmarking("url")
 
 function(request){
 shinyUI(

@@ -1,9 +1,28 @@
 shinyServer(function(input, output, session) {
+  #bookmarking
+  # observe({
+  #   # Trigger this observer every time an input changes
+  #   reactiveValuesToList(input)
+  #   session$doBookmark()
+  # })
+  # onBookmarked(function(url) {
+  #   updateQueryString(url)
+  # })
+
   onBookmark(function(state){
-    state$values$data <- reactive$data
+    tempfile <- tempfile(fileext = ".Rdata")
+    state$values$datafile <- tempfile
+    saveRDS(reactive$data, tempfile)
   })
-  onRestore(function(state){
-    reactive$data <- state$values$data
+  onRestored(function(state){
+    print(state$values$datafile)
+    reactive$data <- readRDS(state$values$datafile)#load_data(state$values$datafile)
+    id <- find_id(reactive$data)
+    reactive$group_id_selected <- id[1]
+    reactive$group_ids <- id
+    result <- determine_levels(id[1], reactive$data)
+    reactive$level1 <- result$level1
+    reactive$level2 <- result$level2
   })
   
   # create reactive variables
