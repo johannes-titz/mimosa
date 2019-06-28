@@ -116,7 +116,7 @@ shinyServer(function(input, output, session) {
       updateCheckboxGroupInput(session, "l1_varies",
                                choiceNames = input$l1,
                                choiceValues = input$l1,
-                               selected = input$l1)
+                               selected = input$l1_varies)
 
      interactions <- expand.grid(input$l1_varies, input$l2)
      if (ncol(interactions) ==2) {
@@ -257,7 +257,7 @@ shinyServer(function(input, output, session) {
         error = function(error_message){
             msg <- ifelse(grepl("<= number of random effects", error_message),
                 "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-            shinyalert("You deleted the Internet!", msg)
+            shinyalert(sample(c("You deleted the Internet!","Run as fast as you can and don't look back.", "Catastrophic failure.", "User error - replace user.", "User error - It's not our fault"), 1), msg)
             message(error_message)
         }
       )
