@@ -28,7 +28,7 @@ find_id <- function(d){
 }
 
 determine_levels <- function(id_name, data){
-  identified_levels <- extract_levels2_without_progress(data, id_name)
+  identified_levels <- extract_levels2(data, id_name)
   result <- NULL
   level2 <- na.omit(identified_levels == 1)
   # assuming a maximum of 2 levels
@@ -45,20 +45,7 @@ get_levels <- function(x) {
 }
   
 extract_levels2 <- function(d, var, var_total_length){
-  incProgress(1 / var_total_length,
-              message = paste("Testing Variable ", var, " as grouping variable"))
-  # changed it so that simply the average number of levels for the var is
-  # calculated
-  d <- group_by_(d, var)
-
-  levels <- summarize_all(d, get_levels)
-  levels[var] <- NA
-  levels <- colMeans(levels)
-  levels
-  # mean(unlist(levels), na.rm = T)
-}
-
-extract_levels2_without_progress <- function(d, var){
+  incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
   # changed it so that simply the average number of levels for the var is
   # calculated
   d <- group_by_(d, var)
