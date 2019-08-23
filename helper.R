@@ -33,8 +33,8 @@ perc_more_than_one_val_per_group <- function(x){
   prop.table(table(table(x) > 1))["TRUE"]
 }
 
-determine_levels <- function(id_name, data, with_progress = F){
-  identified_levels <- extract_levels2(data, id_name, ncol(data), with_progress)
+determine_levels <- function(id_name, data, show_prog = F){
+  identified_levels <- extract_levels2(data, id_name, ncol(data), show_prog)
   result <- NULL
   level2 <- na.omit(identified_levels == 1)
   # assuming a maximum of 2 levels
@@ -50,8 +50,8 @@ get_levels <- function(x) {
   length(levels(as.factor(as.character(x))))
 }
   
-extract_levels2 <- function(d, var, var_total_length, with_progress = F){
-  if(with_progress) {
+extract_levels2 <- function(d, var, var_total_length, show_prog = F){
+  if(show_prog) {
     incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
   }
   

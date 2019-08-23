@@ -41,7 +41,7 @@ shinyServer(function(input, output, session) {
     id <- find_id(data)
     reactive$group_id_selected <- id[1]
     reactive$group_ids <- id
-    result <- determine_levels(id[1], data, with_progress = T)
+    result <- determine_levels(id[1], data, show_prog = T)
     reactive$level1 <- result$level1
     reactive$level2 <- result$level2
     })
