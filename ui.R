@@ -41,7 +41,7 @@ shinyUI(
             uiOutput("variables")
         ),
         
-        conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
+        conditionalPanel(condition = "input.dv != undefined && input.dv.length > 1",
         # in this box the model equations will be displayed
         box(title = "Model", status = "primary", collapsible = T, width = 4,
             strong("Level 1"), br(),
@@ -55,14 +55,14 @@ shinyUI(
       ),
       
       fluidRow(
-        conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
+        conditionalPanel(condition = "input.dv != undefined && input.dv.length > 1",
         # in this box the results will be shown
         box(title = "3. Save output table", status = "primary", width = 6,
         uiOutput("table_region"),
         br(),
         downloadButton("download", "Download Table"))
       ),
-        conditionalPanel(condition = "input.outcome != undefined && input.outcome.length > 1",
+        conditionalPanel(condition = "input.dv != undefined && input.dv.length > 1",
                          box(title = "Table Options",collapsed = T, status = "primary", collapsible = T, width = 2,
                          checkboxGroupInput("output_options", "Output options",
                                    choices = c("standard error", "p", "test statistic", "AIC",

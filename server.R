@@ -41,7 +41,7 @@ shinyServer(function(input, output, session) {
     id <- find_id(data)
     reactive$group_id_selected <- id[1]
     reactive$group_ids <- id
-    result <- determine_levels(id[1], data)
+    result <- determine_levels(id[1], data, with_progress = T)
     reactive$level1 <- result$level1
     reactive$level2 <- result$level2
     })
@@ -56,7 +56,8 @@ shinyServer(function(input, output, session) {
                             choices = reactive$group_ids)
         ),
         column(width = 2,
-               radioButtons("outcome", label = "Outcome", selected = character(0),
+               radioButtons("dv", label = "Dependent Variable",
+                            selected = character(0),
                             choices = reactive$level1)
         ),
         column(width = 2,
@@ -73,7 +74,7 @@ shinyServer(function(input, output, session) {
                                   choiceNames = reactive$level2,
                                   choiceValues = reactive$level2)
         ),
-        conditionalPanel(condition = "input.l1.length > 0 & input.l2.length>0",
+        conditionalPanel(condition = "input.l1_varies.length > 0 & input.l2.length>0",
         column(width = 2,
                checkboxGroupInput("interaction",
                                   label = "Cross-level interaction",
@@ -98,12 +99,12 @@ shinyServer(function(input, output, session) {
     reactive$level2 <- result$level2
   })
 
-  # prevent selecting outcome as predictor by removing it from choices----------
-  observeEvent(input$outcome, {
-    sel <- input$l1[input$l1!=input$outcome]
+  # prevent selecting dv as predictor by removing it from choices----------
+  observeEvent(input$dv, {
+    sel <- input$l1[input$l1!=input$dv]
     updateCheckboxGroupInput(session, "l1",
-      choiceNames = reactive$level1[reactive$level1 != input$outcome],
-      choiceValues = reactive$level1[reactive$level1 != input$outcome],
+      choiceNames = reactive$level1[reactive$level1 != input$dv],
+      choiceValues = reactive$level1[reactive$level1 != input$dv],
       selected = sel)
   })
   # prevent selecting variation
@@ -119,7 +120,8 @@ shinyServer(function(input, output, session) {
                                selected = input$l1_varies)
 
      interactions <- expand.grid(input$l1_varies, input$l2)
-     if (ncol(interactions) ==2) {
+     print(interactions)
+     if (ncol(interactions) == 2) {
        interactions <- paste(interactions[,1], interactions[,2], sep = ":")
 
     updateCheckboxGroupInput(session, "interaction",
@@ -167,8 +169,8 @@ shinyServer(function(input, output, session) {
 
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
-    if (!is.null(input$outcome)){
-      equation <- c(input$outcome, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
+    if (!is.null(input$dv)){
+      equation <- c(input$dv, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
                   " + e<sub>ij</sub>")
       if (!is.null(input$l1)){
         for (index in 1:length(input$l1)){
@@ -181,13 +183,13 @@ shinyServer(function(input, output, session) {
       HTML(paste(equation, collapse = ""))
     }
     else if (!is.null(input$l1)){
-      HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
+      HTML(paste("<p style=\"color:red\">Please select an dv variable first.</p>"))
     }
   })
 
   # create HTML output for level 2 equations------------------------------------
   output$mod_l2 <- renderUI({
-    if (!is.null(input$outcome)){
+    if (!is.null(input$dv)){
       equation <- c()
       if (1){
         eq_beta <- create_lvl2_constant(input$l2)
@@ -210,7 +212,7 @@ shinyServer(function(input, output, session) {
       HTML(paste(equation, collapse = ""))
     }
     else if (!is.null(input$l2)){
-      HTML(paste("<p style=\"color:red\">Please select an outcome variable first.</p>"))
+      HTML(paste("<p style=\"color:red\">Please select an dv variable first.</p>"))
     }
   })
 
@@ -223,10 +225,10 @@ shinyServer(function(input, output, session) {
   output$table_region <- renderUI({
     # renderTable does not work if the object is empty, as is the case when
     # no iv and grouping var is selected, workaround:
-    if (is.null(input$group_id) | is.null(input$outcome))
+    if (is.null(input$group_id) | is.null(input$dv))
       return("Select IV and grouping variable")
     else {
-      if (input$outcome %in% input$l1) return()
+      if (input$dv %in% input$l1) return()
       # renderTable(rownames = T,{
       fixed <- paste(c(input$l1, input$l2), collapse = "+")
 
@@ -243,7 +245,7 @@ shinyServer(function(input, output, session) {
       }
 
       interaction <- paste(input$interaction, collapse = "+")
-      mdl_formula <- paste(input$outcome, "~",
+      mdl_formula <- paste(input$dv, "~",
                            fixed,
                            "+",
                            interaction,
