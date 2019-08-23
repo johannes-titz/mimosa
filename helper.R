@@ -14,10 +14,12 @@ find_id <- function(d){
   res <- plyr::ldply(res, data.frame)
   rownames(res) <- vars
   #test1 <- apply(res, 1, function(x) sum(x == 0))
+  # this gives the number of variables that are on level 2
   test2 <- apply(res, 1, function(x) sum(x == 1, na.rm = T))
   #test1 <- apply(res, 1, function(x) sum(x != 1, na.rm = T))
   #test3 <- test1 > 0 & test2 > 1
-  ids <- vars[test2 > 0]
+  test2 <- test2[test2 > 0]
+  ids <- names(sort(test2, decreasing = T))#vars[test2 > 0]
   if (length(ids) == 0){
     ids <- vars
   }
