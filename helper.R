@@ -27,8 +27,12 @@ find_id <- function(d){
   ids
 }
 
-determine_levels <- function(id_name, data){
-  identified_levels <- extract_levels2(data, id_name)
+perc_more_than_one_val_per_group <- function(x){
+  prop.table(table(table(x) > 1))["TRUE"]
+}
+
+determine_levels <- function(id_name, data, with_progress = F){
+  identified_levels <- extract_levels2(data, id_name, ncol(data), with_progress)
   result <- NULL
   level2 <- na.omit(identified_levels == 1)
   # assuming a maximum of 2 levels
@@ -44,8 +48,11 @@ get_levels <- function(x) {
   length(levels(as.factor(as.character(x))))
 }
   
-extract_levels2 <- function(d, var, var_total_length){
-  incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
+extract_levels2 <- function(d, var, var_total_length, with_progress = F){
+  if(with_progress) {
+    incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
+  }
+  
   # changed it so that simply the average number of levels for the var is
   # calculated
   d <- group_by_(d, var)
