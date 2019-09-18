@@ -262,7 +262,6 @@ shinyServer(function(input, output, session) {
       }
       
       reactive$table <- create_table()
-      writeLines(create_table(), con = "output.html")
       HTML(create_table())
     }
 
