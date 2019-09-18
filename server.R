@@ -1,5 +1,6 @@
 shinyServer(function(input, output, session) {
-  #bookmarking
+  # bookmarking ----------------------------------------------------------------
+  # is currently nut supported by shinyapps.io
   # observe({
   #   # Trigger this observer every time an input changes
   #   reactiveValuesToList(input)
@@ -8,27 +9,28 @@ shinyServer(function(input, output, session) {
   # onBookmarked(function(url) {
   #   updateQueryString(url)
   # })
-
-  onBookmark(function(state){
-    tempfile <- tempfile(fileext = ".Rdata")
-    state$values$datafile <- tempfile
-    saveRDS(reactive$data, tempfile)
-  })
-  onRestored(function(state){
-    print(state$values$datafile)
-    reactive$data <- readRDS(state$values$datafile)#load_data(state$values$datafile)
-    id <- find_id(reactive$data)
-    reactive$group_id_selected <- id[1]
-    reactive$group_ids <- id
-    result <- determine_levels(id[1], reactive$data)
-    reactive$level1 <- result$level1
-    reactive$level2 <- result$level2
-  })
-  
+  # 
+  #   onBookmark(function(state){
+  #     tempfile <- tempfile(fileext = ".Rdata")
+  #     state$values$datafile <- tempfile
+  #     saveRDS(reactive$data, tempfile)
+  #   })
+  #   onRestored(function(state){
+  #     print(state$values$datafile)
+  #     reactive$data <- readRDS(state$values$datafile)#load_data(state$values$datafile)
+  #     id <- find_id(reactive$data)
+  #     reactive$group_id_selected <- id[1]
+  #     reactive$group_ids <- id
+  #     result <- determine_levels(id[1], reactive$data)
+  #     reactive$level1 <- result$level1
+  #     reactive$level2 <- result$level2
+  #   })
+    
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
-                             group_id_selected = character(0), group_ids = character(0),
+                             group_id_selected = character(0),
+                             group_ids = character(0),
                              table = NULL)
   
   # read in data file, determine ID and level of variables----------------------
@@ -46,7 +48,8 @@ shinyServer(function(input, output, session) {
     reactive$level2 <- result$level2
     })
   })
-  # variable inputs are generated in the server file since they depend on reactive--
+  # variable inputs are generated in the server file since they depend on 
+  # reactive values
   output$variables <- renderUI({
     if (length(reactive$group_id_selected) > 0) {
       fluidRow(
@@ -85,13 +88,15 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # download table -------------------------------------------------------------
   output$download <- downloadHandler(
     filename = paste(Sys.Date(), "mimosa.html", sep = ""),
     content = function(file) {
       writeLines(reactive$table, file)
     }
   )
-
+  
+  # update levels, when group variable changes ---------------------------------
   observeEvent(input$group_id, {
     reactive$group_id_selected <- input$group_id
     result <- determine_levels(input$group_id, reactive$data)
@@ -99,60 +104,41 @@ shinyServer(function(input, output, session) {
     reactive$level2 <- result$level2
   })
 
-  # prevent selecting dv as predictor by removing it from choices----------
+  # prevent selecting dv as predictor by removing it from choices --------------
   observeEvent(input$dv, {
-    sel <- input$l1[input$l1!=input$dv]
-    updateCheckboxGroupInput(session, "l1",
-      choiceNames = reactive$level1[reactive$level1 != input$dv],
-      choiceValues = reactive$level1[reactive$level1 != input$dv],
-      selected = sel)
+    # note that input$l1 only gives selected inputs, not all possible inputs
+    selected <- input$l1[input$l1 != input$dv]
+    choices <- reactive$level1[reactive$level1 != input$dv]
+    updateCheckboxGroupInput(session, "l1", choices = choices,
+                             selected = selected)
   })
-  # prevent selecting variation
-  observeEvent(input$l1, {
+  # show level 1 random effects for selected level 1 variables -----------------
+  observeEvent(input$l1, ignoreNULL = F, {
+    # this could be simplified, but produces NA in checkbox during process
+    # if no l1 variable, there can be no variation
     if (is.null(input$l1)) {
-      updateCheckboxGroupInput(session, "interaction", choiceNames = "",
-                               choiceValues = "",
-                               selected = NULL)
+      updateCheckboxGroupInput(session, "l1_varies",
+                               choices = character(0),
+                               selected = input$l1_varies)
     } else {
       updateCheckboxGroupInput(session, "l1_varies",
-                               choiceNames = input$l1,
-                               choiceValues = input$l1,
+                               choices = input$l1,
                                selected = input$l1_varies)
-
-     interactions <- expand.grid(input$l1_varies, input$l2)
-     print(interactions)
-     if (ncol(interactions) == 2) {
-       interactions <- paste(interactions[,1], interactions[,2], sep = ":")
-
-    updateCheckboxGroupInput(session, "interaction",
-                             choiceNames = interactions,
-                             choiceValues = interactions,
-                             selected = input$interaction)
-                             }
     }
-  }, ignoreNULL = F)
-
-   observeEvent(input$l1_varies, {
-    #  if (is.null(input$l1_varies)) {
-    #   updateCheckboxGroupInput(session, "interaction", choiceNames = "",
-    #                            choiceValues = "",
-    #                            selected = NULL)
-    # } else {
+  })
+  # cross-level interaction when l1 random effect is selected-------------------
+   observeEvent(input$l1_varies, ignoreNULL = F, {
      interactions <- expand.grid(input$l1_varies, input$l2)
      if (ncol(interactions) == 2) {
        interactions <- paste(interactions[,1], interactions[,2], sep = ":")
-
        updateCheckboxGroupInput(session, "interaction",
-                             choiceNames = interactions,
-                             choiceValues = interactions,
-                             selected = input$interaction)
+                                choices = interactions,
+                                selected = input$interaction)
      }
-    # }
-  }, ignoreNULL = F)
-
-
-  observeEvent(input$l2, {
-    if (is.null(input$l1) | is.null(input$l2)) {
+  })
+  # cross-level interaction when l2 variable is selected------------------------
+  observeEvent(input$l2, ignoreNULL = F, {
+    if (is.null(input$l2)) {
       updateCheckboxGroupInput(session, "interaction", choiceNames = "",
                                choiceValues = "",
                                selected = NULL)
@@ -160,12 +146,10 @@ shinyServer(function(input, output, session) {
     interactions <- expand.grid(input$l1_varies, input$l2)
     interactions <- paste(interactions[,1], interactions[,2], sep = ":")
     updateCheckboxGroupInput(session, "interaction",
-                             choiceNames = interactions,
-                             choiceValues = interactions,
+                             choices = interactions,
                              selected = input$interaction)
     }
-  }, ignoreNULL = F)
-
+  })
 
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
@@ -183,7 +167,7 @@ shinyServer(function(input, output, session) {
       HTML(paste(equation, collapse = ""))
     }
     else if (!is.null(input$l1)){
-      HTML(paste("<p style=\"color:red\">Please select an dv variable first.</p>"))
+      HTML(paste("<p style=\"color:red\">Please select a dependent variable first.</p>"))
     }
   })
 
@@ -224,9 +208,9 @@ shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderUI({
     # renderTable does not work if the object is empty, as is the case when
-    # no iv and grouping var is selected, workaround:
+    # no dv and grouping var is selected, workaround:
     if (is.null(input$group_id) | is.null(input$dv))
-      return("Select IV and grouping variable")
+      return("Select dependent variable and grouping variable")
     else {
       if (input$dv %in% input$l1) return()
       # renderTable(rownames = T,{
