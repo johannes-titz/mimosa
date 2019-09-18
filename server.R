@@ -243,30 +243,27 @@ shinyServer(function(input, output, session) {
         error = function(error_message){
             msg <- ifelse(grepl("<= number of random effects", error_message),
                 "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-            shinyalert(sample(c("You deleted the Internet!","Run as fast as you can and don't look back.", "Catastrophic failure.", "User error - replace user.", "User error - It's not our fault"), 1), msg)
+            shinyalert("Error", msg)
             message(error_message)
         }
       )
       mdl_smr <- summary(mdl)
       table <- mdl_smr$coefficients
-      # add variances?
+
       show <- c("standard error", "p", "test statistic", "AIC",
-               "Deviance", "Log-Likelihood") %in% input$output_options
-      reactive$table <- tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
+               "Deviance", "Log-Likelihood", "beta") %in% input$output_options
+      
+      create_table <- function() {
+        tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
                      show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
                      show.fstat = FALSE, show.aic = show[4], show.aicc = F,
                      show.dev = show[5], show.loglik = show[6],
                      string.se = "SE")[[3]]
-      writeLines(tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
-                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
-                     show.fstat = FALSE, show.aic = show[4], show.aicc = F,
-                     show.dev = show[5], show.loglik = show[6],
-                     string.se = "SE")[[3]], con = "output.html")
-      HTML(tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
-                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
-                     show.fstat = FALSE, show.aic = show[4], show.aicc = F,
-                     show.dev = show[5], show.loglik = show[6],
-                     string.se = "SE")[[3]])
+      }
+      
+      reactive$table <- create_table()
+      writeLines(create_table(), con = "output.html")
+      HTML(create_table())
     }
 
     #htmlOutput("table")
