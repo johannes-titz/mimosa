@@ -70,7 +70,7 @@ shinyUI(
                 checkboxGroupInput("output_options", "Output options",
                                    choices = c("standard error", "p",
                                                "test statistic", "AIC",
-                                               "Deviance", "Log-Likelihood"))))
+                                               "Deviance", "Log-Likelihood", "beta"))))
         )
       )
     )

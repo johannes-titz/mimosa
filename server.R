@@ -252,13 +252,17 @@ shinyServer(function(input, output, session) {
 
       show <- c("standard error", "p", "test statistic", "AIC",
                "Deviance", "Log-Likelihood", "beta") %in% input$output_options
-      
+      if (length(input$l1) > 0 & show[7]){
+        show_beta <- T
+      } else {
+        show_beta <- NULL
+      }
       create_table <- function() {
         tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
                      show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
                      show.fstat = FALSE, show.aic = show[4], show.aicc = F,
                      show.dev = show[5], show.loglik = show[6],
-                     string.se = "SE")[[3]]
+                     string.se = "SE", show.std = show_beta, string.std = "&beta;")[[3]]
       }
       
       reactive$table <- create_table()
