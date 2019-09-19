@@ -1,31 +1,4 @@
 shinyServer(function(input, output, session) {
-  # bookmarking ----------------------------------------------------------------
-  # is currently nut supported by shinyapps.io
-  # observe({
-  #   # Trigger this observer every time an input changes
-  #   reactiveValuesToList(input)
-  #   session$doBookmark()
-  # })
-  # onBookmarked(function(url) {
-  #   updateQueryString(url)
-  # })
-  # 
-  #   onBookmark(function(state){
-  #     tempfile <- tempfile(fileext = ".Rdata")
-  #     state$values$datafile <- tempfile
-  #     saveRDS(reactive$data, tempfile)
-  #   })
-  #   onRestored(function(state){
-  #     print(state$values$datafile)
-  #     reactive$data <- readRDS(state$values$datafile)#load_data(state$values$datafile)
-  #     id <- find_id(reactive$data)
-  #     reactive$group_id_selected <- id[1]
-  #     reactive$group_ids <- id
-  #     result <- determine_levels(id[1], reactive$data)
-  #     reactive$level1 <- result$level1
-  #     reactive$level2 <- result$level2
-  #   })
-    
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
@@ -237,6 +210,7 @@ shinyServer(function(input, output, session) {
       mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
       mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
       reactive$r_mdl_formula <- mdl_formula
+      
       # calc the actual model
       mdl <- tryCatch({
         lmer(as.formula(mdl_formula), data = reactive$data)},
@@ -247,9 +221,8 @@ shinyServer(function(input, output, session) {
             message(error_message)
         }
       )
-      mdl_smr <- summary(mdl)
-      table <- mdl_smr$coefficients
 
+      # create the actual table
       show <- c("standard error", "p", "test statistic", "AIC",
                "Deviance", "Log-Likelihood", "beta") %in% input$output_options
       if (length(input$l1) > 0 & show[7]){
@@ -259,16 +232,14 @@ shinyServer(function(input, output, session) {
       }
       create_table <- function() {
         tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
-                     show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
-                     show.fstat = FALSE, show.aic = show[4], show.aicc = F,
-                     show.dev = show[5], show.loglik = show[6],
-                     string.se = "SE", show.std = show_beta, string.std = "&beta;")[[3]]
+                  show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
+                  show.fstat = FALSE, show.aic = show[4], show.aicc = F,
+                  show.dev = show[5], show.loglik = show[6], string.se = "SE",
+                  show.std = show_beta, string.std = "&beta;")[[3]]
       }
       
       reactive$table <- create_table()
       HTML(create_table())
     }
-
-    #htmlOutput("table")
   })
 })
