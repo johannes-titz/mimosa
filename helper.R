@@ -100,3 +100,18 @@ create_lvl2_constant <- function(l2){
   part2 <- paste("&beta;<sub>0j</sub> = &gamma;<sub>00</sub>", ifelse(is.null(l2), "", part))
   paste(part2, "+u<sub>0j</sub>")
 }
+
+create_one_slope <- function(var_name, position){
+  paste(" + &beta;<sub>", position, "j</sub>", var_name[position], "<sub>ij</sub>",
+        sep = "")
+}
+
+create_equation <- function(dv, l1 = NULL){
+  slopes <- paste(mapply(create_one_slope, l1, seq(l1)), collapse = "")
+  constant <- " &beta;<sub>0j</sub>"
+  error <- " + e<sub>ij</sub>"
+  left_side <- paste(dv, "<sub>ij</sub> =", sep ="")
+  right_side <- paste(constant, slopes, error, sep ="")
+  equation <- paste(left_side, right_side, sep = "")
+  equation
+}

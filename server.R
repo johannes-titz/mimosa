@@ -112,8 +112,8 @@ shinyServer(function(input, output, session) {
   # cross-level interaction when l2 variable is selected------------------------
   observeEvent(input$l2, ignoreNULL = F, {
     if (is.null(input$l2)) {
-      updateCheckboxGroupInput(session, "interaction", choiceNames = "",
-                               choiceValues = "",
+      updateCheckboxGroupInput(session, "interaction",
+                               choices = "",
                                selected = NULL)
     } else {
     interactions <- expand.grid(input$l1_varies, input$l2)
@@ -126,22 +126,27 @@ shinyServer(function(input, output, session) {
 
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
-    if (!is.null(input$dv)){
-      equation <- c(input$dv, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
-                  " + e<sub>ij</sub>")
-      if (!is.null(input$l1)){
-        for (index in 1:length(input$l1)){
-          equation <- append(equation,
-                             c(" + &beta;<sub>", index, "j</sub>", input$l1[index],
-                               "<sub>ij</sub>"),
-                             after = length(equation)-1)
-        }
-      }
-      HTML(paste(equation, collapse = ""))
-    }
-    else if (!is.null(input$l1)){
+    if (is.null(input$dv)) {
       HTML(paste("<p style=\"color:red\">Please select a dependent variable first.</p>"))
+    } else {
+      HTML(create_equation(input$dv, input$l1))
     }
+    # if (!is.null(input$dv)){
+    #   equation <- c(input$dv, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
+    #               " + e<sub>ij</sub>")
+    #   if (!is.null(input$l1)){
+    #     for (index in seq(input$l1)){
+    #       equation <- append(equation,
+    #                          c(" + &beta;<sub>", index, "j</sub>", input$l1[index],
+    #                            "<sub>ij</sub>"),
+    #                          after = length(equation)-1)
+    #     }
+    #   }
+    #   HTML(paste(equation, collapse = ""))
+    # }
+    # else if (!is.null(input$l1)){
+    #   HTML(paste("<p style=\"color:red\">Please select a dependent variable first.</p>"))
+    # }
   })
 
   # create HTML output for level 2 equations------------------------------------
