@@ -126,56 +126,20 @@ shinyServer(function(input, output, session) {
 
   # create HTML output for level 1 equation-------------------------------------
   output$mod_l1 <- renderUI({
-    if (is.null(input$dv)) {
-      HTML(paste("<p style=\"color:red\">Please select a dependent variable first.</p>"))
-    } else {
       HTML(create_equation(input$dv, input$l1))
-    }
-    # if (!is.null(input$dv)){
-    #   equation <- c(input$dv, "<sub>ij</sub> = &beta;<sub>0j</sub> ",
-    #               " + e<sub>ij</sub>")
-    #   if (!is.null(input$l1)){
-    #     for (index in seq(input$l1)){
-    #       equation <- append(equation,
-    #                          c(" + &beta;<sub>", index, "j</sub>", input$l1[index],
-    #                            "<sub>ij</sub>"),
-    #                          after = length(equation)-1)
-    #     }
-    #   }
-    #   HTML(paste(equation, collapse = ""))
-    # }
-    # else if (!is.null(input$l1)){
-    #   HTML(paste("<p style=\"color:red\">Please select a dependent variable first.</p>"))
-    # }
   })
 
   # create HTML output for level 2 equations------------------------------------
   output$mod_l2 <- renderUI({
-    if (!is.null(input$dv)){
-      equation <- c()
-      if (1){
-        eq_beta <- create_lvl2_constant(input$l2)
-        for (l1_var in 0:length(input$l1)){
-          if (l1_var > 0){
-            l1_varies <- input$l1[l1_var] %in% input$l1_varies
-            interaction <- NULL
-            if (length(input$interaction) > 0){
-              split <- strsplit(input$interaction, ":")
-              logical <- grep(input$l1[l1_var], split)
-              if (length(logical) > 0) {
-                interaction <- sapply(split[logical], function(x) x[2])
-              }
-            }
-            eq_beta <- create_mdl2_formula(l1_var, l1_varies, interaction)
-          }
-          equation <- append(equation, eq_beta)
-        }
+      equation <- create_lvl2_constant(input$l2)
+      for (l1_var_pos in seq(input$l1)){
+        l1_var <- input$l1[l1_var_pos]
+        l1_varies <- l1_var %in% input$l1_varies
+        interaction <- who_moderates_me(l1_var, input$interaction)
+        eq_beta <- create_mdl2_formula(l1_var_pos, l1_varies, interaction)
+        equation <- c(equation, eq_beta)
       }
       HTML(paste(equation, collapse = ""))
-    }
-    else if (!is.null(input$l2)){
-      HTML(paste("<p style=\"color:red\">Please select an dv variable first.</p>"))
-    }
   })
 
   output$mod_r <- renderUI({

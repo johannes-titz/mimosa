@@ -115,3 +115,16 @@ create_equation <- function(dv, l1 = NULL){
   equation <- paste(left_side, right_side, sep = "")
   equation
 }
+
+who_moderates_me <- function(var_name, all_moderators){
+  if (length(all_moderators) > 0){
+    split <- strsplit(all_moderators, ":")
+    position <- grep(var_name, split)
+    if (length(position) > 0) {
+      moderates_me <- sapply(split[position], function(x) x[2])
+    }
+    return(moderates_me)
+  } else {
+    return(NULL)
+  }
+}
