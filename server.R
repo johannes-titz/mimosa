@@ -1,15 +1,18 @@
 shinyServer(function(input, output, session) {
   # create reactive variables
-  reactive <- reactiveValues(level1 = data.frame(), level2 = data.frame(),
+  reactive <- reactiveValues(level1 = data.frame(),
+                             level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
                              group_id_selected = character(0),
                              group_ids = character(0),
                              table = NULL)
-  
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
     withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
+    shinyjs::show("create_model")
+    shinyjs::hide("display_model")
+    shinyjs::hide("output_region")
     data <- load_data(input$datafile)
     reactive$data <- data
     
@@ -80,6 +83,8 @@ shinyServer(function(input, output, session) {
   # prevent selecting dv as predictor by removing it from choices --------------
   observeEvent(input$dv, {
     # note that input$l1 only gives selected inputs, not all possible inputs
+    shinyjs::show("display_model")
+    shinyjs::show("output_region")
     selected <- input$l1[input$l1 != input$dv]
     choices <- reactive$level1[reactive$level1 != input$dv]
     updateCheckboxGroupInput(session, "l1", choices = choices,

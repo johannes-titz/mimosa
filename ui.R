@@ -4,6 +4,7 @@ library(lme4)
 library(sjPlot)
 library(shinyalert)
 library(dplyr)
+library(shinyjs)
 source("helper.R")
 options(shiny.autoreload = F) # for faster testing
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
@@ -34,12 +35,12 @@ shinyUI(
        useShinyalert(), # for manual error handling, has to be in dashboardBody
         # Model spec and model display -----------------------------------------
         fluidRow(
+          useShinyjs(),
+          hidden(div(id = "create_model", 
           box(title = "2. Create model", status = "primary", collapsible = T,
               width = 8, uiOutput("variables")
-          ),
-          conditionalPanel(
-            # show only if a dependent variable is selected
-            condition = "input.dv != undefined && input.dv.length > 1",
+          ))),
+          hidden(div(id = "display_model",
             box(title = "Model", status = "primary", collapsible = T, width = 4,
                 # level 1
                 strong("Level 1"),
@@ -52,27 +53,36 @@ shinyUI(
                 br(), strong("R model formula"),
                 uiOutput("mod_r")
             ))
-        ),
+          )),
         # Output Table, Download -----------------------------------------------
-        fluidRow(
-          conditionalPanel(
-            condition = "input.dv != undefined && input.dv.length > 1",
-            box(title = "3. Save output table", status = "primary", width = 6,
-                uiOutput("table_region"),
-                br(),
-                downloadButton("download", "Download Table"))
-          ),
-          # Table Options
-          conditionalPanel(
-            condition = "input.dv != undefined && input.dv.length > 1",
-            box(title = "Table Options",collapsed = T, status = "primary",
-                collapsible = T, width = 2,
-                checkboxGroupInput("output_options", "Output options",
-                                   choices = c("standard error", "p",
-                                               "test statistic", "AIC",
-                                               "Deviance", "Log-Likelihood", "beta"))))
-        )
-      )
-    )
+       fluidRow(
+         hidden(div(id = "output_region",
+                    box(title = "3. Save output table",
+                        status = "primary",
+                        width = 6,
+                        uiOutput("table_region"),
+                        br(),
+                        downloadButton("download", "Download Table")),
+                    
+                    # Table Options
+                    box(title = "Table Options",collapsed = T,
+                        status = "primary",
+                        collapsible = T, width = 2,
+                        checkboxGroupInput("output_options",
+                                           "Output options",
+                                           choices = c("standard error",
+                                                       "p",
+                                                       "test statistic",
+                                                       "AIC",
+                                                       "Deviance",
+                                                       "Log-Likelihood",
+                                                       "beta")
+                                           )
+                        )
+                    )
+                )
+         )
+     )
   )
+)
 }
