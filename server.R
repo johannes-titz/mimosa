@@ -146,7 +146,7 @@ shinyServer(function(input, output, session) {
       }
       HTML(paste(equation, collapse = ""))
   })
-
+  # create R model formula -----------------------------------------------------
   output$mod_r <- renderUI({
     HTML("R formula")
     HTML(reactive$r_mdl_formula)
