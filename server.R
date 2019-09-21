@@ -156,69 +156,49 @@ shinyServer(function(input, output, session) {
   output$table_region <- renderUI({
     # renderTable does not work if the object is empty, as is the case when
     # no dv and grouping var is selected, workaround:
-    if (is.null(input$group_id) | 
+    if (is.null(input$group_id) |
         is.null(input$dv) |
-        !input$dv %in% names(reactive$data)) # if you change data file, input$dv is not emptied
-      return("Select dependent variable and grouping variable")
-    else {
-      if (input$dv %in% input$l1) return()
-      # renderTable(rownames = T,{
-      fixed <- paste(c(input$l1, input$l2), collapse = "+")
-
-      # random intercept model without any ivs
-      if (fixed == ""){
-        random_intercept <- paste("(1|", input$group_id, ")", sep = "")
-      } else {
-
-        # level does not vary
-        random_intercept <- paste(input$l1_varies, collapse = "+")
-        random_intercept <- paste("+(", random_intercept, "|", input$group_id, ")", sep = "")
-        random_intercept <- ifelse(random_intercept == paste("+(|", input$group_id, ")", sep = ""),
-                                   paste("+(1|", input$group_id, ")", sep = ""), random_intercept)
-      }
-
-      interaction <- paste(input$interaction, collapse = "+")
-      mdl_formula <- paste(input$dv, "~",
-                           fixed,
-                           "+",
-                           interaction,
-                           random_intercept, sep = "")
-      mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
-      mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
-      reactive$r_mdl_formula <- mdl_formula
-      
-      # calc the actual model
-      mdl <- tryCatch({
-        lmer(as.formula(mdl_formula), data = reactive$data)},
-        error = function(error_message){
-            msg <- ifelse(grepl("<= number of random effects", error_message),
-                "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-            shinyalert("Error", msg)
-            message(error_message)
-        }
+        !input$dv %in% names(reactive$data))
+      # if you change data file, input$dv is not emptied
+      return("Select dependent variable and grouping variable"
       )
-
-      # create the actual table
-      show <- c("standard error", "AIC", "Deviance", "Log-Likelihood",
-                "standardized coefficients", "test statistic", "p-value") %in% input$output_options
-      if (length(input$l1) > 0 & show[7]){
-        show_beta <- T
-      } else {
-        show_beta <- NULL
+    mdl_formula <- create_r_formula(input$dv, input$group_id, input$l1,
+                                    input$l2, input$l1_varies,
+                                    input$interaction)
+    reactive$r_mdl_formula <- mdl_formula
+    
+    # calc the actual model
+    mdl <- tryCatch({
+      lmer(as.formula(mdl_formula), data = reactive$data)},
+      error = function(error_message){
+        msg <- ifelse(grepl("<= number of random effects", error_message),
+                      "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
+        shinyalert("Error", msg)
+        message(error_message)
       }
-      create_table <- function() {
-        tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
-                  show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
-                  show.fstat = FALSE, show.aic = show[4], show.aicc = F,
-                  show.dev = show[5], show.loglik = show[6], string.se = "SE",
-                  show.std = show_beta, string.std = "&beta;",
-                  string.ci = "95% CI",
-                  string.stat = "<i>t</i>",
-                  collapse.ci = F)[[3]]
-      }
-      
-      reactive$table <- create_table()
-      HTML(create_table())
+    )
+    
+    # create the actual table
+    show <- c("standard error", "AIC", "Deviance", "Log-Likelihood",
+              "standardized coefficients", "test statistic", "p-value") %in% input$output_options
+    if (length(input$l1) > 0 & show[7]){
+      show_beta <- T
+    } else {
+      show_beta <- NULL
     }
+    create_table <- function() {
+      tab_model(mdl, show.se = show[1], show.p = show[2], show.stat = show[3],
+                show.icc = TRUE, show.re.var = TRUE, show.ngroups = TRUE,
+                show.fstat = FALSE, show.aic = show[4], show.aicc = F,
+                show.dev = show[5], show.loglik = show[6], string.se = "SE",
+                show.std = show_beta, string.std = "&beta;",
+                string.ci = "95% CI",
+                string.stat = "<i>t</i>",
+                collapse.ci = F)[[3]]
+    }
+    
+    reactive$table <- create_table()
+    HTML(create_table())
+    
   })
 })

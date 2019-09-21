@@ -114,3 +114,33 @@ who_moderates_me <- function(var_name, all_moderators){
     return(NULL)
   }
 }
+
+create_r_formula <- function(dv, group_id, l1 = NULL, l2 = NULL,
+                             l1_varies = NULL, interaction = NULL){
+  fixed <- paste(c(l1, l2), collapse = "+")
+  
+  # random intercept model without any ivs
+  if (fixed == ""){
+    random_intercept <- paste("(1|", group_id, ")", sep = "")
+  } else {
+    
+    # level does not vary
+    random_intercept <- paste(l1_varies, collapse = "+")
+    random_intercept <- paste("+(", random_intercept, "|", group_id, ")",
+                              sep = "")
+    random_intercept <- ifelse(random_intercept == paste("+(|", group_id, ")",
+                                                         sep = ""),
+                               paste("+(1|", group_id, ")", sep = ""),
+                               random_intercept)
+  }
+  
+  interaction <- paste(interaction, collapse = "+")
+  mdl_formula <- paste(dv, "~",
+                       fixed,
+                       "+",
+                       interaction,
+                       random_intercept, sep = "")
+  mdl_formula <- gsub("\\+\\+", "\\+", mdl_formula)
+  mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
+  mdl_formula
+}
