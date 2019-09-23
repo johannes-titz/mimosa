@@ -144,3 +144,31 @@ create_r_formula <- function(dv, group_id, l1 = NULL, l2 = NULL,
   mdl_formula <- gsub("\\~\\+", "\\~", mdl_formula)
   mdl_formula
 }
+
+create_table <- function(mdl, l1, output_options){
+  check <- c("standard error", "AIC", "Deviance", "Log-Likelihood",
+             "standardized coefficients", "test statistic", "p-value") 
+  
+  show <- check %in% output_options
+  names(show) <- check
+  
+  if (length(l1) > 0 & show["standardized coefficients"]){
+    show_beta <- T
+  } else {
+    show_beta <- NULL
+  }
+  tab_model(mdl,
+            show.se = show["standard error"], 
+            show.p = show["p-value"],
+            show.stat = show["test statistic"],
+            show.aic = show["AIC"],
+            show.dev = show["Deviance"],
+            show.loglik = show["Log-Likelihood"],
+            show.std = show_beta,
+            string.se = "SE",
+            string.std = "&beta;",
+            string.ci = "95% CI",
+            string.stat = "<i>t</i>",
+            collapse.ci = F, show.icc = TRUE, show.re.var = TRUE,
+            show.ngroups = TRUE, show.fstat = FALSE, show.aicc = F)[[3]]
+}
