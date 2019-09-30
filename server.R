@@ -6,6 +6,26 @@ shinyServer(function(input, output, session) {
                              group_id_selected = character(0),
                              group_ids = character(0),
                              table = NULL)
+  # example data set for tutorial in paper -------------------------------------
+  observe({
+        query <- parseQueryString(session$clientData$url_search)
+        if (!is.null(query[['example']])) {
+          if (query[['example']] == "school") {
+            data <- read.csv("Exam.csv")
+            reactive$data <- data
+            shinyjs::show("create_model")
+            shinyjs::hide("display_model")
+            shinyjs::hide("output_region")
+            
+            id <- find_id(data)
+            reactive$group_id_selected <- id[1]
+            reactive$group_ids <- id
+            result <- determine_levels(id[1], data, show_prog = T)
+            reactive$level1 <- result$level1
+            reactive$level2 <- result$level2
+          }
+        }
+    })
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
     withProgress(message = "Loading data", value = 0, {
