@@ -61,11 +61,16 @@ load_data <- function(datafile){
   data <- tryCatch({
     if (fileending == ".sav") {
       data <- Hmisc::spss.get(datafile$datapath, use.value.labels = F)
-    }
-    
-    if (fileending == ".csv") {
+    } else if (fileending == ".csv") {
       encoding <- unlist(readr::guess_encoding(datafile$datapath)[1, 1])
-      data <- read.csv(datafile$datapath, fileEncoding = encoding)
+      L <- readLines(datafile$datapath, n = 1)
+      numfields_semicolon <- count.fields(textConnection(L), sep = ";")
+      numfields_colon <- count.fields(textConnection(L), sep = ",")
+      if (numfields_semicolon == 1) {
+        data <- read.csv(datafile$datapath, fileEncoding = encoding)
+      } else if (numfields_colon == 1) {
+        data <- read.csv2(datafile$datapath, fileEncoding = encoding)
+      }
     }
     data},
     error = function(error_message){
