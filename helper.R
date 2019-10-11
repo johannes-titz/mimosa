@@ -23,8 +23,8 @@ find_id <- function(d){
   ids
 }
 
-determine_levels <- function(id_name, data, show_prog = F){
-  identified_levels <- extract_levels2(data, id_name, ncol(data), show_prog)
+determine_levels <- function(id_name, data, ignore_na = T, show_prog = F){
+  identified_levels <- extract_levels2(data, id_name, ncol(data), ignore_na, show_prog)
   result <- NULL
   level2 <- na.omit(identified_levels == 1)
   result[[1]] <- names(level2)[!level2]
@@ -34,18 +34,23 @@ determine_levels <- function(id_name, data, show_prog = F){
   result
 }
 
-get_levels <- function(x) {
-  length(levels(as.factor(as.character(x))))
+get_levels <- function(x, ignore_na = TRUE) {
+  length_levels <- length(levels(as.factor(as.character(x))))
+  # if there are only NA in a variable, length_levels will be 0
+  # see also example data by karin
+  if (ignore_na) {
+    length_levels <- ifelse(length_levels == 0, 1, length_levels)
+  }
+  length_levels
 }
-  
-extract_levels2 <- function(d, var, var_total_length, show_prog = F){
+
+extract_levels2 <- function(d, var, var_total_length, 
+                            ignore_na = TRUE, show_prog = F){
   if(show_prog) {
-    incProgress(1 / var_total_length,
-                message = paste("Testing Variable ", var,
-                                " as grouping variable"))
+    incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
   }
   d <- group_by_(d, var)
-  levels <- summarize_all(d, get_levels)
+  levels <- summarize_all(d, get_levels, ignore_na = ignore_na)
   levels[var] <- NA
   levels <- colMeans(levels)
   levels
@@ -53,14 +58,23 @@ extract_levels2 <- function(d, var, var_total_length, show_prog = F){
 
 load_data <- function(datafile){
   fileending <- stringr::str_match(datafile$datapath, "(\\..+$)")[1,1]
-  if (fileending == ".sav") {
-    data <- Hmisc::spss.get(datafile$datapath, use.value.labels = F)
-  }
+  data <- tryCatch({
+    if (fileending == ".sav") {
+      data <- Hmisc::spss.get(datafile$datapath, use.value.labels = F)
+    }
+    
+    if (fileending == ".csv") {
+      encoding <- unlist(readr::guess_encoding(datafile$datapath)[1, 1])
+      data <- read.csv(datafile$datapath, fileEncoding = encoding)
+    }
+    data},
+    error = function(error_message){
+      msg <- "Sorry, I could not read your data. Please check that it is in the SPSS format .sav or a regular .csv file with a comma as a separator (not a semicolon or any other delimiter)."
+      shinyalert("Error", msg)
+      message(error_message)
+    }
+    )
   
-  if (fileending == ".csv") {
-    data <- read.csv(datafile$datapath)
-  }
-  data
 }
 
 create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL){
