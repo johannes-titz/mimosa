@@ -1,0 +1,14 @@
+Package: mimosa
+Title: A shiny app for 2-level mixed models
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Johannes",
+           family = "Titz",
+           role = c("aut", "cre"),
+           email = "johannes.titz@gmail.com",
+           comment = c(ORCID = "0000-0002-1102-5719"))
+Description: Modern, user- and scientist-friendly graphical user interface for 2-level mixed models.
+License: AGPL-3.0
+Encoding: UTF-8
+LazyData: true
+Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,sjPlot,testthat
