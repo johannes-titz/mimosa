@@ -1,0 +1,51 @@
+{
+  "input": {
+    "datafile": {
+      "name": [
+        "Daten Time & Age - Tutorium.sav"
+      ],
+      "size": [
+        74183
+      ],
+      "type": [
+        "application/x-spss-sav"
+      ],
+      "datapath": [
+        "0.sav"
+      ]
+    },
+    "group_id": "ID",
+    "group_id-selectized": "",
+    "interaction": null,
+    "l1": null,
+    "l1_varies": null,
+    "l2": null,
+    "output_options": null,
+    "sidebarCollapsed": false,
+    "sidebarItemExpanded": null
+  },
+  "output": {
+    "variables": {
+      "html": "<div class=\"row\">\n  <div class=\"col-sm-2\">\n    <div class=\"form-group shiny-input-container\">\n      <label class=\"control-label\" for=\"group_id\">Group ID<\/label>\n      <div>\n        <select id=\"group_id\"><option value=\"ID\" selected>ID<\/option><\/select>\n        <script type=\"application/json\" data-for=\"group_id\" data-nonempty=\"\">{}<\/script>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"dv\" class=\"form-group shiny-input-radiogroup shiny-input-container\">\n      <label class=\"control-label\" for=\"dv\">Dependent Variable<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"LP\"/>\n            <span>LP<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZEmpf\"/>\n            <span>ZEmpf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZDruck\"/>\n            <span>ZDruck<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"NeuErf\"/>\n            <span>NeuErf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZLP\"/>\n            <span>ZLP<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZZEmpf\"/>\n            <span>ZZEmpf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZZDruck\"/>\n            <span>ZZDruck<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"ZNeuErf\"/>\n            <span>ZNeuErf<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"l1\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n      <label class=\"control-label\" for=\"l1\">Level 1<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"LP\"/>\n            <span>LP<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZEmpf\"/>\n            <span>ZEmpf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZDruck\"/>\n            <span>ZDruck<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"NeuErf\"/>\n            <span>NeuErf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZLP\"/>\n            <span>ZLP<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZZEmpf\"/>\n            <span>ZZEmpf<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZZDruck\"/>\n            <span>ZZDruck<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"ZNeuErf\"/>\n            <span>ZNeuErf<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div data-display-if=\"input.l1.length &gt; 0\" data-ns-prefix=\"\">\n    <div class=\"col-sm-2\">\n      <div id=\"l1_varies\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n        <label class=\"control-label\" for=\"l1_varies\">Level 1 varies<\/label>\n        <div class=\"shiny-options-group\"><\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"l2\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n      <label class=\"control-label\" for=\"l2\">Level 2<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"Sex\"/>\n            <span>Sex<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"ZSex\"/>\n            <span>ZSex<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div data-display-if=\"input.l1_varies.length &gt; 0 &amp; input.l2.length&gt;0\" data-ns-prefix=\"\">\n    <div class=\"col-sm-2\">\n      <div id=\"interaction\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n        <label class=\"control-label\" for=\"interaction\">Cross-level interaction<\/label>\n        <div class=\"shiny-options-group\">\n          <div class=\"checkbox\">\n            <label>\n              <input type=\"checkbox\" name=\"interaction\" value=\"\"/>\n              <span><\/span>\n            <\/label>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+        {
+          "name": "selectize",
+          "version": "0.11.2",
+          "src": {
+            "href": "shared/selectize"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "css/selectize.bootstrap3.css",
+          "head": "<!--[if lt IE 9]>\n<script src=\"shared/selectize/js/es5-shim.min.js\"><\/script>\n<![endif]-->\n<script src=\"shared/selectize/js/selectize.min.js\"><\/script>",
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        }
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
