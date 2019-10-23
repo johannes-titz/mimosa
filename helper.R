@@ -1,3 +1,20 @@
+# Mimosa, the mixed models special agent, is a shiny app for 2-level mixed
+# models.
+#
+# Copyright (C) 2019 Johannes Titz
+#
+# This program is free software: you can redistribute it and/or modify it under
+# the terms of the GNU Affero General Public License as published by the Free
+# Software Foundation, either version 3 of the License, or any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+# details.
+#
+# You should have received a copy of the GNU Affero General Public License along
+# with this program. If not, see <https://www.gnu.org/licenses/>.
+
 find_id <- function(d){
   # first check data types and variation of variables
   d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
