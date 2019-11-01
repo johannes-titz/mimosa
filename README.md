@@ -1,6 +1,6 @@
 
 [![Build
-Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/passt)
+Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 
 Mimosa, the mixed models special agent is a shiny app for 2-level mixed
 models.
