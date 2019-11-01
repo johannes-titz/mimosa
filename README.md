@@ -46,4 +46,4 @@ directory *tests* and check that there are no problems. Please also
 follow the code style described here:
 <http://r-pkgs.had.co.nz/r.html#style>
 
-# References
+<!-- # References -->

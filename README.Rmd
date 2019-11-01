@@ -46,4 +46,4 @@ You can also drop me an e-mail and discuss suggestions at: johannes at titz.scie
 
 If you want to make a pull request, please run all tests in the directory *tests* and check that there are no problems. Please also follow the code style described here: http://r-pkgs.had.co.nz/r.html#style
 
-# References
+<!-- # References -->
