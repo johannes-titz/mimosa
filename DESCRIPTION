@@ -11,4 +11,4 @@ Description: Modern, user- and scientist-friendly graphical user interface for 2
 License: AGPL-3.0
 Encoding: UTF-8
 LazyData: true
-Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,sjPlot,testthat
+Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,shinytest,sjPlot,testthat
