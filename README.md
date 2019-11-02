@@ -26,6 +26,10 @@ shiny::runGitHub("mimosa", "johannes-titz")
 
 Yes, it is that easy\!
 
+If you have any problems installing mimosa, check that your R version is
+up to date (currently 3.6.1). If it still does not work drop me an
+e-mail at johannes at titz.science or at johannes.titz at gmail.com.
+
 <!-- For an introduction to mimosa please check out [@Titz2020]. -->
 
 # Contributing
