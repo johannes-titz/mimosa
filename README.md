@@ -8,6 +8,7 @@ models.
 # Installation
 
 No need to install the app, just got to www.mimosa.icu and use it there.
+An example data file is loaded when you got to www.mimosa.icu/example.
 
 If you really want to use it locally, open R and install the
 dependencies:
@@ -24,11 +25,15 @@ And now run the app:
 shiny::runGitHub("mimosa", "johannes-titz")
 ```
 
-Yes, it is that easy\!
+Yes, it is that easy–at least under GNU/Linux\!
 
 If you have any problems installing mimosa, check that your R version is
-up to date (currently 3.6.1). If it still does not work drop me an
-e-mail at johannes at titz.science or at johannes.titz at gmail.com.
+up to date (currently 3.6.1). If you are using Windows, enable TLS 1.2
+in the Internet Options Advanced tab (see
+<https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
+
+If it still does not work drop me an e-mail at johannes at titz.science
+or at johannes.titz at gmail.com.
 
 <!-- For an introduction to mimosa please check out [@Titz2020]. -->
 
