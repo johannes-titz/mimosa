@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <https://www.gnu.org/licenses/>.
 
+#' @import sjPlot
+#' @import dplyr
+#' @importFrom plyr ldply
+#' @noRd
 find_id <- function(d){
   # first check data types and variation of variables
   d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
@@ -40,10 +44,12 @@ find_id <- function(d){
   ids
 }
 
+#' @importFrom stats na.omit
+#' @noRd
 determine_levels <- function(id_name, data, ignore_na = T, show_prog = F){
   identified_levels <- extract_levels2(data, id_name, ncol(data), ignore_na, show_prog)
   result <- NULL
-  level2 <- na.omit(identified_levels == 1)
+  level2 <- stats::na.omit(identified_levels == 1)
   result[[1]] <- names(level2)[!level2]
   level2[id_name] <- F
   result[[2]] <- names(level2)[level2]
@@ -73,6 +79,11 @@ extract_levels2 <- function(d, var, var_total_length,
   levels
 }
 
+#' @importFrom Hmisc spss.get
+#' @importFrom utils read.csv read.csv2 count.fields
+#' @importFrom readr guess_encoding
+#' @importFrom stringr str_match
+#' @noRd
 load_data <- function(datafile){
   fileending <- stringr::str_match(datafile$datapath, "(\\..+$)")[1,1]
   data <- tryCatch({
@@ -84,15 +95,15 @@ load_data <- function(datafile){
       numfields_semicolon <- count.fields(textConnection(L), sep = ";")
       numfields_colon <- count.fields(textConnection(L), sep = ",")
       if (numfields_semicolon == 1) {
-        data <- read.csv(datafile$datapath, fileEncoding = encoding)
+        data <- utils::read.csv(datafile$datapath, fileEncoding = encoding)
       } else if (numfields_colon == 1) {
-        data <- read.csv2(datafile$datapath, fileEncoding = encoding)
+        data <- utils::read.csv2(datafile$datapath, fileEncoding = encoding)
       }
     }
     data},
     error = function(error_message){
       msg <- "Sorry, I could not read your data. Please check that it is in the SPSS format .sav or a regular .csv file with a comma as a separator (not a semicolon or any other delimiter)."
-      shinyalert("Error", msg)
+      shinyalert::shinyalert("Error", msg)
       message(error_message)
     }
     )
@@ -181,6 +192,8 @@ create_r_formula <- function(dv, group_id, l1 = NULL, l2 = NULL,
   mdl_formula
 }
 
+#' @importFrom sjPlot tab_model
+#' @noRd
 create_table <- function(mdl, l1, output_options){
   check <- c("standard error", "AIC", "Deviance", "Log-Likelihood",
              "standardized coefficients", "test statistic", "p-value") 
@@ -193,18 +206,18 @@ create_table <- function(mdl, l1, output_options){
   } else {
     show_beta <- NULL
   }
-  tab_model(mdl,
-            show.se = show["standard error"], 
-            show.p = show["p-value"],
-            show.stat = show["test statistic"],
-            show.aic = show["AIC"],
-            show.dev = show["Deviance"],
-            show.loglik = show["Log-Likelihood"],
-            show.std = show_beta,
-            string.se = "SE",
-            string.std = "&beta;",
-            string.ci = "95% CI",
-            string.stat = "<i>t</i>",
-            collapse.ci = F, show.icc = TRUE, show.re.var = TRUE,
-            show.ngroups = TRUE, show.fstat = FALSE, show.aicc = F)[[3]]
+  sjPlot::tab_model(mdl,
+                    show.se = show["standard error"], 
+                    show.p = show["p-value"],
+                    show.stat = show["test statistic"],
+                    show.aic = show["AIC"],
+                    show.dev = show["Deviance"],
+                    show.loglik = show["Log-Likelihood"],
+                    show.std = show_beta,
+                    string.se = "SE",
+                    string.std = "&beta;",
+                    string.ci = "95% CI",
+                    string.stat = "<i>t</i>",
+                    collapse.ci = F, show.icc = TRUE, show.re.var = TRUE,
+                    show.ngroups = TRUE, show.fstat = FALSE, show.aicc = F)[[3]]
 }

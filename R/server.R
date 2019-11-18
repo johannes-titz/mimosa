@@ -15,7 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <https://www.gnu.org/licenses/>.
 
-shinyServer(function(input, output, session) {
+#' @importFrom shinyjs show hide
+#' @importFrom shinyalert shinyalert
+#' @importFrom lme4 lmer
+#' @import mlmRev
+#' @importFrom stats as.formula
+#' @noRd
+myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(),
                              level2 = data.frame(),
@@ -206,11 +212,11 @@ shinyServer(function(input, output, session) {
     
     # calc the actual model
     mdl <- tryCatch({
-      lmer(as.formula(mdl_formula), data = reactive$data)},
+      lme4::lmer(stats::as.formula(mdl_formula), data = reactive$data)},
       error = function(error_message){
         msg <- ifelse(grepl("<= number of random effects", error_message),
                       "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-        shinyalert("Error", msg)
+        shinyalert::shinyalert("Error", msg)
         message(error_message)
       }
     )

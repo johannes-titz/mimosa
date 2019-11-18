@@ -1,7 +1,7 @@
 app <- ShinyDriver$new("../")
 app$snapshotInit("mytest")
 
-app$uploadFile(datafile = "../Exam.csv") # <-- This should be the path to the file, relative to the app's tests/ directory
+app$uploadFile(datafile = "Exam.csv") # <-- This should be the path to the file, relative to the app's tests/ directory
 app$setInputs(dv = "normexam")
 app$snapshot()
 app$setInputs(l1 = "standLRT")

@@ -1,21 +1,25 @@
-library(testthat)
+# DO NOT FORGET TO BUILD THE APP FIRST because testing works through
+# loading the mimosa package via library, if you do not reinstall
+# mimosa, then the test will be run with the old package version
+# library(testthat)
 library(shinytest)
-library(dplyr)
+# library(dplyr)
 library(testthat)
-library(mlmRev)
+library(dplyr)
+# library(mlmRev)
 
 test_that("Application works", {
   # Use compareImages=FALSE because the expected image screenshots were created
   # on a Mac, and they will differ from screenshots taken on the CI platform,
   # which runs on Linux.
-  expect_pass(testApp(".", compareImages = FALSE))
+  expect_pass(testApp("tests/testthat/app/", compareImages = FALSE))
 })
 
 # these are additional tests, but they require datasets for which I do not
 # have permissions of any kind, so I will just run them locally
 
 # create version without shiny stuff (e.g. progress bars)
-script <- readLines("helper.R")
+script <- readLines("R/helper.R")
 lines <- grepl("progress|withProgress|incProgress", script)
 script[lines] <- paste("#", script[lines])
 writeLines(script, "helper2.R")
@@ -36,7 +40,7 @@ karin <- read.csv2("Joined_data_wellbeing.csv", fileEncoding = "ISO-8859-1")
 # such that there is a dependency although there are no further level
 # 2 vars
 test_that("finding grouping variable works", {
-  expect_identical("Subject", find_id(sleepstudy))
+  expect_identical("Subject", find_id(lme4::sleepstudy))
   expect_identical("ID", find_id(hsball))
   expect_identical("ID", find_id(tutorium))
   expect_identical("ID", find_id(isabell1))

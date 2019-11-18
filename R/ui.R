@@ -15,20 +15,15 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <https://www.gnu.org/licenses/>.
 
-library(shiny)
-library(shinydashboard)
-library(lme4)
-library(sjPlot)
-library(shinyalert)
-library(dplyr)
-library(shinyjs)
-library(mlmRev)
-source("helper.R")
 options(shiny.autoreload = F) # for faster testing
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 enableBookmarking("url") # not currently supported, but maybe later
 
-function(request){
+#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
+#' @importFrom shinyalert useShinyalert
+#' @importFrom shinyjs useShinyjs hidden
+#' @noRd
+myui <- function(request){
 shinyUI(
   dashboardPage(
     skin = "blue",
@@ -55,12 +50,12 @@ shinyUI(
        useShinyalert(), # for manual error handling, has to be in dashboardBody
         # Model spec and model display -----------------------------------------
         fluidRow(
-          useShinyjs(),
-          hidden(div(id = "create_model", 
+          shinyjs::useShinyjs(),
+          shinyjs::hidden(div(id = "create_model", 
           box(title = "2. Create model", status = "primary", collapsible = T,
               width = 8, uiOutput("variables")
           ))),
-          hidden(div(id = "display_model",
+          shinyjs::hidden(div(id = "display_model",
             box(title = "Model", status = "primary", collapsible = T, width = 4,
                 # level 1
                 strong("Level 1"),
@@ -76,7 +71,7 @@ shinyUI(
           )),
         # Output Table, Download -----------------------------------------------
        fluidRow(
-         hidden(div(id = "output_region",
+         shinyjs::hidden(div(id = "output_region",
                     box(title = "3. Save output table",
                         status = "primary",
                         width = 6,
