@@ -17,6 +17,6 @@ License: AGPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,
-  shinytest,sjPlot,testthat,plyr,utils,readr,stringr,Hmisc
+  sjPlot,testthat,plyr,utils,readr,stringr,Hmisc
 RoxygenNote: 6.1.1
 Suggests: shinytest
