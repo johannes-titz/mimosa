@@ -16,20 +16,19 @@ knitr::opts_chunk$set(
 Mimosa, the mixed models special agent is a shiny app for 2-level mixed models. 
 
 # Installation
-No need to install the app, just got to www.mimosa.icu and use it there. An example data file is loaded when you got to www.mimosa.icu/example.
+No need to install the app, just go to www.mimosa.icu and use it there. An example data file is loaded when you go to www.mimosa.icu/example.
 
-If you really want to use it locally, open R and install the dependencies:
+If you really want to use it locally, pull the development version from github:
 
-```{r eval = F}
-install.packages(c("dplyr", "mlmRev", "lme4", "shiny", "shinyalert",
-                   "shinydashboard", "shinyjs", "sjPlot"),
-                 repos = "http://cran.us.r-project.org")
+
+```{r echo = T, results = "hide", eval = F}
+devtools::install_github("titz", "mimosa")
 ```
 
 And now run the app:
 
 ```{r echo = T, results = "hide", eval = F}
-shiny::runGitHub("mimosa", "johannes-titz")
+shiny::run_app()
 ```
 
 Yes, it is that easy--at least under GNU/Linux! 
@@ -48,6 +47,6 @@ https://github.com/johannes-titz/mimosa/issues
 
 You can also drop me an e-mail and discuss suggestions at: johannes at titz.science or johannes.titz at gmail.com
 
-If you want to make a pull request, please run all tests in the directory *tests* and check that there are no problems. Please also follow the code style described here: http://r-pkgs.had.co.nz/r.html#style
+If you want to make a pull request, please check that you can build the mimosa package without any errors, warnings and notes. Please also follow the code style described here: http://r-pkgs.had.co.nz/r.html#style. If I like the pull request, I will run additional tests locally and if there are no problems, I will accept the request. 
 
 <!-- # References -->

@@ -7,22 +7,20 @@ models.
 
 # Installation
 
-No need to install the app, just got to www.mimosa.icu and use it there.
-An example data file is loaded when you got to www.mimosa.icu/example.
+No need to install the app, just go to www.mimosa.icu and use it there.
+An example data file is loaded when you go to www.mimosa.icu/example.
 
-If you really want to use it locally, open R and install the
-dependencies:
+If you really want to use it locally, pull the development version from
+github:
 
 ``` r
-install.packages(c("dplyr", "mlmRev", "lme4", "shiny", "shinyalert",
-                   "shinydashboard", "shinyjs", "sjPlot"),
-                 repos = "http://cran.us.r-project.org")
+devtools::install("titz", "mimosa")
 ```
 
 And now run the app:
 
 ``` r
-shiny::runGitHub("mimosa", "johannes-titz")
+shiny::run_app()
 ```
 
 Yes, it is that easy–at least under GNU/Linux\!
@@ -50,9 +48,11 @@ contributions. If you find any bugs, please use the issue tracker at:
 You can also drop me an e-mail and discuss suggestions at: johannes at
 titz.science or johannes.titz at gmail.com
 
-If you want to make a pull request, please run all tests in the
-directory *tests* and check that there are no problems. Please also
+If you want to make a pull request, please check that you can build the
+mimosa package without any errors, warnings and notes. Please also
 follow the code style described here:
-<http://r-pkgs.had.co.nz/r.html#style>
+<http://r-pkgs.had.co.nz/r.html#style>. If I like the pull request, I
+will run additional tests locally and if there are no problems, I will
+accept the request.
 
 <!-- # References -->
