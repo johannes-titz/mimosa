@@ -14,7 +14,7 @@ If you really want to use it locally, pull the development version from
 github:
 
 ``` r
-devtools::install("titz", "mimosa")
+devtools::install_github("johannes-titz/mimosa")
 ```
 
 And now run the app:

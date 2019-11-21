@@ -22,7 +22,7 @@ If you really want to use it locally, pull the development version from github:
 
 
 ```{r echo = T, results = "hide", eval = F}
-devtools::install_github("titz", "mimosa")
+devtools::install_github("johannes-titz/mimosa")
 ```
 
 And now run the app:
