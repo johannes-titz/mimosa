@@ -1,5 +1,5 @@
 Package: mimosa
-Title: Graphical User Interface for 2-level Mixed Models as a 
+Title: Graphical User Interface for 2-Level Mixed Models as a 
   Shiny-App
 Version: 0.1.0
 Authors@R: 
@@ -8,11 +8,10 @@ Authors@R:
            role = c("aut", "cre"),
            email = "johannes.titz@gmail.com",
            comment = c(ORCID = "0000-0002-1102-5719"))
-Description: Mimosa is a modern, user- and scientist-friendly 
-  graphical user interface for 2-level mixed models. Mimosa detects 
-  the grouping variable and also categorizes variables in level 1 and
-  level 2 automatically. You can also use the app online at 
-  <www.mimosa.icu>.
+Description: A modern, user- and scientist-friendly graphical user interface for
+  2-level mixed models. Mimosa detects the grouping variable and also 
+  categorizes variables in level 1 and level 2 automatically. You can also use 
+  the app online at <www.mimosa.icu>.
 License: AGPL-3
 Encoding: UTF-8
 LazyData: true
