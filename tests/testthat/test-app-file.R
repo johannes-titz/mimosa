@@ -3,7 +3,7 @@ context("app-function")
 
 library(shinytest)
 
-test_that("helloWorldApp() works", {
+test_that("mimosa works", {
   # Don't run these tests on the CRAN build servers
   skip_on_cran()
 
