@@ -20,7 +20,7 @@ devtools::install_github("johannes-titz/mimosa")
 And now run the app:
 
 ``` r
-shiny::run_app()
+mimosa::run_app()
 ```
 
 Yes, it is that easy–at least under GNU/Linux\!
