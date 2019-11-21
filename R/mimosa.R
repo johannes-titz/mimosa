@@ -1,6 +1,6 @@
 #' mimosa: A shiny app for 2-level mixed models
 #'
-#' To start the app just use the function run_app
+#' To start the app just use the function \code{\link{run_app}}
 #' 
 #'
 #' @docType package
