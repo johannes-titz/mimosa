@@ -1,7 +1,7 @@
 Package: mimosa
 Title: Graphical User Interface for 2-level Mixed Models as a 
   Shiny-App
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person(given = "Johannes",
            family = "Titz",
