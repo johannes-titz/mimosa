@@ -31,9 +31,9 @@ And now run the app:
 mimosa::run_app()
 ```
 
-Yes, it is that easy--at least under GNU/Linux! 
+Yes, it is that easy---at least under GNU/Linux! 
 
-If you have any problems installing mimosa, check that your R version is up to date (currently 3.6.1). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). 
+If you have any problems installing mimosa, check that your R version is up to date (currently 3.6.1). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/.
 
 If it still does not work drop me an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
 
