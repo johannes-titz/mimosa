@@ -155,8 +155,10 @@ who_moderates_me <- function(var_name, all_moderators){
     position <- grep(var_name, split)
     if (length(position) > 0) {
       moderates_me <- sapply(split[position], function(x) x[2])
+      return(moderates_me)
+    } else {
+      return(NULL)
     }
-    return(moderates_me)
   } else {
     return(NULL)
   }
