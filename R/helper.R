@@ -135,7 +135,7 @@ create_lvl2_constant <- function(l2){
 }
 
 create_one_slope <- function(var_name, position){
-  paste(" + &beta;<sub>", position, "j</sub>", var_name[position],
+  paste(" + &beta;<sub>", position, "j</sub>", var_name,
         "<sub>ij</sub>", sep = "")
 }
 
