@@ -25,11 +25,11 @@ script[lines] <- paste("#", script[lines])
 writeLines(script, "helper2.R")
 source("helper2.R")
 
-hsball <- read.csv("hsball.csv")
+hsball <- read.csv("tests/testthat/app/tests/hsball.csv")
 tutorium <- Hmisc::spss.get(file = "Vorlesungsdaten_Mehrebenenanalyse.sav")
 isabell1 <- Hmisc::spss.get(file = "MEA - Time & Age.sav", use.value.labels = F)
 thomas1 <- Hmisc::spss.get(file = "Online-Tagebuch_130913.sav", use.value.labels = F)
-atemm <- Hmisc::spss.get(file = "ATEMM.sav", use.value.labels = F)
+atemm <- Hmisc::spss.get(file = "tests/testthat/app/tests/ATEMM.sav", use.value.labels = F)
 
 karin <- read.csv2("Joined_data_wellbeing.csv", fileEncoding = "ISO-8859-1")
 # levels <- determine_levels(c("serial"), karin)
@@ -51,3 +51,5 @@ test_that("finding grouping variable works", {
   expect_identical(c("serial"), find_id(karin))
   #expect_equal(level2_names, c("TRUE" = 74))
 })
+
+file.remove("helper2.R")
