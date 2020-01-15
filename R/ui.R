@@ -36,7 +36,8 @@ shinyUI(
         h4("1. Load data"),
         fileInput("datafile", label = NULL,
                   accept = c("text/csv", "text/comma-separated-values",
-                           ".csv", ".sav")),
+                             "application/x-spss-sav", "application/x-spss-por",
+                             "application/spss", ".sav", ".csv")),
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
         
         # footer
