@@ -21,7 +21,7 @@
 #' for each potential grouping variable
 #' 
 #' @param d data frame
-#' 
+#' @return potential grouping variables
 #' @import sjPlot
 #' @import dplyr
 #' @importFrom plyr ldply
@@ -38,11 +38,9 @@ find_id <- function(d){
   vars <- names(d2)
   # for every potential grouping variable, check how many level-2 variables it
   # would create
-  avg_levels <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
-  avg_levels <- plyr::ldply(avg_levels, data.frame)
-  rownames(avg_levels) <- vars
+  avg_levels_mtrx <- create_avg_levels_mtrx(d2, vars)
   # this gives the number of variables that are on level 2
-  n_vars_lvl2 <- apply(avg_levels, 1, function(x) sum(x == 1, na.rm = T))
+  n_vars_lvl2 <- apply(avg_levels_mtrx, 1, function(x) sum(x == 1, na.rm = T))
   n_vars_lvl2 <- n_vars_lvl2[n_vars_lvl2 > 0]
   ids <- names(sort(n_vars_lvl2, decreasing = T))
   if (length(ids) == 0){
@@ -55,7 +53,7 @@ find_id <- function(d){
 #' @importFrom stats na.omit
 #' @noRd
 determine_levels <- function(id_name, data, ignore_na = T, show_prog = F){
-  identified_levels <- extract_levels2(data, id_name, ncol(data), ignore_na, show_prog)
+  identified_levels <- find_avg_levels(data, id_name, ncol(data), ignore_na, show_prog)
   result <- NULL
   level2 <- stats::na.omit(identified_levels == 1)
   result[[1]] <- names(level2)[!level2]
@@ -88,18 +86,23 @@ get_levels <- function(x, ignore_na = TRUE) {
 #' @param show_prog whether to show progress bar (useful for shiny and non-shiny
 #'   use)
 #' @return vector with average levels per group for each variable of d
-extract_levels2 <- function(d, group_var, var_total_length, 
+find_avg_levels <- function(d, group_var, var_total_length, 
                             ignore_na = TRUE, show_prog = F){
   if (show_prog) {
-    incProgress(1 / var_total_length, message = paste("Testing Variable ",
-                                                      group_var,
-                                                      " as grouping variable"))
+    incProgress(1 / var_total_length, message = paste("Testing Variable ", group_var, " as grouping variable"))
   }
   d <- group_by_(d, group_var)
   levels <- summarize_all(d, get_levels, ignore_na = ignore_na)
   levels[group_var] <- NA
   levels <- colMeans(levels)
   levels
+}
+
+create_avg_levels_mtrx <- function(d, vars){
+  avg_levels <- lapply(vars, function(x) t(find_avg_levels(d, x, length(vars))))
+  avg_levels <- plyr::ldply(avg_levels, data.frame)
+  rownames(avg_levels) <- vars
+  avg_levels
 }
 
 #' @importFrom Hmisc spss.get
