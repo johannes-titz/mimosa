@@ -15,6 +15,13 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <https://www.gnu.org/licenses/>.
 
+#' Tries to identify the grouping variable (id)
+#' 
+#' Works heuristically by (1) finding out how many lvl2-variables are present
+#' for each potential grouping variable
+#' 
+#' @param d data frame
+#' 
 #' @import sjPlot
 #' @import dplyr
 #' @importFrom plyr ldply
@@ -24,21 +31,22 @@ find_id <- function(d){
   d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
   d2 <- select_if(d2, function(x) length(unique(x)) != length(x))
   d2 <- select_if(d2, function(x) length(unique(x)) != 1)
-  # take only variables where every group has at least two values, this avoids
-  # taking as a group id an arbitrary variable (e.g. open field) with many
-  # possible values
+  # take only variables where a certain amount of groups has at least two
+  # values, this avoids taking as a group id an arbitrary variable (e.g. open
+  # field) with many possible values
   d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .70)
   vars <- names(d2)
-  # for every potential grouping variable, check how many level-2 vars it
+  # for every potential grouping variable, check how many level-2 variables it
   # would create
-  res <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
-  res <- plyr::ldply(res, data.frame)
-  rownames(res) <- vars
+  avg_levels <- lapply(vars, function(x) t(extract_levels2(d2, x, length(vars))))
+  avg_levels <- plyr::ldply(avg_levels, data.frame)
+  rownames(avg_levels) <- vars
   # this gives the number of variables that are on level 2
-  test2 <- apply(res, 1, function(x) sum(x == 1, na.rm = T))
-  test2 <- test2[test2 > 0]
-  ids <- names(sort(test2, decreasing = T))
+  n_vars_lvl2 <- apply(avg_levels, 1, function(x) sum(x == 1, na.rm = T))
+  n_vars_lvl2 <- n_vars_lvl2[n_vars_lvl2 > 0]
+  ids <- names(sort(n_vars_lvl2, decreasing = T))
   if (length(ids) == 0){
+    #vars <- 
     ids <- vars
   }
   ids
@@ -67,14 +75,29 @@ get_levels <- function(x, ignore_na = TRUE) {
   length_levels
 }
 
-extract_levels2 <- function(d, var, var_total_length, 
+#' Calculate average number of levels
+#' 
+#' Takes the data frame and grouping variable and returns the average number
+#' of levels over all groups for every variable
+#' 
+#' @param d data frame
+#' @param group_var the grouping variable
+#' @param var_total_length how many variables will be tested (only used for
+#'   progress bar)
+#' @param ignore_na yes, it is what is says
+#' @param show_prog whether to show progress bar (useful for shiny and non-shiny
+#'   use)
+#' @return vector with average levels per group for each variable of d
+extract_levels2 <- function(d, group_var, var_total_length, 
                             ignore_na = TRUE, show_prog = F){
-  if(show_prog) {
-    incProgress(1 / var_total_length, message = paste("Testing Variable ", var, " as grouping variable"))
+  if (show_prog) {
+    incProgress(1 / var_total_length, message = paste("Testing Variable ",
+                                                      group_var,
+                                                      " as grouping variable"))
   }
-  d <- group_by_(d, var)
+  d <- group_by_(d, group_var)
   levels <- summarize_all(d, get_levels, ignore_na = ignore_na)
-  levels[var] <- NA
+  levels[group_var] <- NA
   levels <- colMeans(levels)
   levels
 }
