@@ -49,6 +49,19 @@ myserver <- shinyServer(function(input, output, session) {
           }
         }
     })
+  output$file_area <- renderUI({
+    print(input$isSafari)
+    if(!is.null(input$isSafari)){
+      if (as.character(input$isSafari) == "TRUE") {
+        accepted_filetype <- "*"
+      } else {
+        accepted_filetype <- c("text/csv", "text/comma-separated-values",
+                               "application/x-spss-sav", "application/x-spss-por",
+                               "application/spss", ".sav", ".csv")
+      }
+      fileInput("datafile", label = NULL, accept = accepted_filetype)
+    }
+  })
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
     withProgress(message = "Loading data", value = 0, {

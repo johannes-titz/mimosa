@@ -31,13 +31,9 @@ shinyUI(
       # Sidebar-----------------------------------------------------------------
       dashboardSidebar(
         tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
-        
         # load data
         h4("1. Load data"),
-        fileInput("datafile", label = NULL,
-                  accept = c("text/csv", "text/comma-separated-values",
-                             "application/x-spss-sav", "application/x-spss-por",
-                             "application/spss", ".sav", ".csv")),
+        uiOutput("file_area"),
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
         
         # footer
@@ -48,6 +44,14 @@ shinyUI(
         HTML('<footer><font size="1"><p style="color:grey">&copy; 2019 Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>')
       ),
      dashboardBody(
+       tags$script(HTML("$(document).on('shiny:sessioninitialized', function(event) {
+  var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+               navigator.userAgent &&
+               navigator.userAgent.indexOf('CriOS') == -1 &&
+               navigator.userAgent.indexOf('FxiOS') == -1;
+  Shiny.onInputChange('isSafari', isSafari);
+});")),
+       #includeScript("checkbrowser.js"),
        useShinyalert(), # for manual error handling, has to be in dashboardBody
         # Model spec and model display -----------------------------------------
         fluidRow(
