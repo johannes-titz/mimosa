@@ -17,6 +17,7 @@
     "dv": "normexam",
     "group_id": "school",
     "interaction": "standLRT:type",
+    "isSafari": true,
     "l1": "standLRT",
     "l1_varies": "standLRT",
     "l2": "type",
@@ -25,6 +26,12 @@
     "sidebarItemExpanded": null
   },
   "output": {
+    "file_area": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label shiny-label-null\" for=\"datafile\"><\/label>\n  <div class=\"input-group\">\n    <label class=\"input-group-btn\">\n      <span class=\"btn btn-default btn-file\">\n        Browse...\n        <input id=\"datafile\" name=\"datafile\" type=\"file\" style=\"display: none;\" accept=\"*\"/>\n      <\/span>\n    <\/label>\n    <input type=\"text\" class=\"form-control\" placeholder=\"No file selected\" readonly=\"readonly\"/>\n  <\/div>\n  <div id=\"datafile_progress\" class=\"progress progress-striped active shiny-file-input-progress\">\n    <div class=\"progress-bar\"><\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+
+      ]
+    },
     "mod_l1": {
       "html": "normexam<sub>ij<\/sub> = &beta;<sub>0j<\/sub> + &beta;<sub>1j<\/sub>standLRT<sub>ij<\/sub> + e<sub>ij<\/sub>",
       "deps": [
