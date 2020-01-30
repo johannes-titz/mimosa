@@ -50,7 +50,6 @@ myserver <- shinyServer(function(input, output, session) {
         }
     })
   output$file_area <- renderUI({
-    print(input$isSafari)
     if(!is.null(input$isSafari)){
       if (as.character(input$isSafari) == "TRUE") {
         accepted_filetype <- "*"
