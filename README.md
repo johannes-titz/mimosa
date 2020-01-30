@@ -23,7 +23,7 @@ within-subjects designs almost exclusively analyze their data with
 designed for this use case. It helps the analyst by automatically
 detecting potential grouping variables and categorizing variables in
 level 1 and level 2. *Mimosa* is also researcher-oriented because it
-produces a single summary table via sjPlot (Lüdecke, 2019) that can be
+produces a single summary table via *sjPlot* (Lüdecke, 2019) that can be
 published in a scientific journal without any modifications.
 
 These benefits come at the cost of the limitation to 2-level models. If
@@ -33,12 +33,11 @@ you and you should check out the more comprehensive software GAMLj
 
 ## Installation
 
-No need to install the shiny app, just go to www.mimosa.icu and use it
-there. An example data file is loaded when you go to
-www.mimosa.icu/example.
+No need to install mimosa, just go to www.mimosa.icu and use it there.
+An example data file is loaded when you go to www.mimosa.icu/example.
 
-If you really want to use it locally, pull the development version from
-github:
+If you really want to use it locally, install from github (you need the
+package devtools for this):
 
 ``` r
 devtools::install_github("johannes-titz/mimosa")
@@ -67,11 +66,11 @@ or at johannes.titz at gmail.com.
 As an example data set we will use exam scores of 4,059 students from 65
 schools in Inner London (Goldstein et al., 1993), which is available in
 the R package *mlmRev* (Bates, Maechler, & Bolker, 2019). The variables
-are described in Table [1](#tab:data). Here, we will focus on the exam
-score as the outcome variable and use LRT and school type as a
-predictor. The standardized exam score is a total score of different
-subjects taken in a public examination at age 16. LRT is the London
-Reading Test, taken at the age of 11. Both variables are already
+are described in the table below. Here, we will focus on the exam score
+as the outcome variable and use LRT and school type as a predictor. The
+standardized exam score is a total score of different subjects taken in
+a public examination at age 16. LRT is the London Reading Test, taken at
+the age of 11. Both variables are already
 ![z](https://latex.codecogs.com/png.latex?z "z")-standardized in the
 data set. The other variables are described in more detail in Goldstein
 et al. (1993) and Nuttall, Goldstein, Prosser, & Rasbash (1989).
@@ -132,8 +131,8 @@ this null model is directly created with the most useful statistics:
 
 ![Output table.](output1.png)
 
-The null model produces an intercept of close to 0 and the confidence
-interval goes from -.12 to 0.09. The output table is created with
+The null model produces an intercept of close to 0, which makes sense
+since the data is standardized. The output table is created with
 *sjPlot* (Lüdecke, 2019). It is concise, nicely formatted and can be
 either downloaded as an HTML file or directly copy-pasted to the
 application of choice (e.g. a word processor). Additional statistics
@@ -186,27 +185,6 @@ relationship between *standLRT* and *normexam* is a bit lower for single
 gender schools than for mixed gender schools. But the effect is not
 reliable since the confidence intervals are quite wide.
 
-## Limitations
-
-Mimosa is simple and easy to use, which comes at the cost of some
-limitations. The biggest is that it can only be applied to 2-level
-models. But this shortcoming seems justified because 2-level models are
-sufficient for most behavioral research. Indeed, in a work on power
-(Arend & Schäfer, 2019), the authors only dealt with 2-level models. A
-second limitation is that only “normal” regression models can be
-specified. Logistic regression is not implemented as it requires a
-different output. Again, for many analyses in behavioral science, a
-normal regression will be sufficient. More advanced options, such as
-choosing the estimation algorithm, are not provided as they will usually
-not be used by most analysts and will overwhelm beginners. The goal of
-mimosa is to provide a simple tool that covers many use cases in
-behavorial research and is suited for beginners. Obviously, mimosa will
-be further developed and maintained for this purpose, but it will not
-become a bloated jack–of-all-trades device. Instead, if there is a need
-for other use cases, mimosa could serve as a basis for a distinct
-“sibling application”. This would follow the general philosophy of
-mimosa: Do one thing, and do it well.
-
 ## Issues and Support
 
 If you find any bugs, please use the issue tracker at:
@@ -232,14 +210,6 @@ the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
 ## References
 
 <div id="refs" class="references">
-
-<div id="ref-arend2019">
-
-Arend, M. G., & Schäfer, T. (2019). Statistical power in two-level
-models: A tutorial based on Monte Carlo simulation. *Psychological
-Methods*, *24*, 1–19. <https://doi.org/10.1037/met0000195>
-
-</div>
 
 <div id="ref-bates2019">
 
