@@ -17,7 +17,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,
   sjPlot,testthat,plyr,utils,readr,stringr,Hmisc
-RoxygenNote: 7.0.0
+RoxygenNote: 7.0.2
 Suggests: shinytest
 URL: http://github.com/johannes-titz/mimosa
 BugReports: http://github.com/johannes-titz/mimosa/issues
