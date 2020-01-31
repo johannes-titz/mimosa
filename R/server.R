@@ -39,6 +39,7 @@ myserver <- shinyServer(function(input, output, session) {
             shinyjs::show("create_model")
             shinyjs::hide("display_model")
             shinyjs::hide("output_region")
+            shinyjs::hide("help")
             
             id <- find_id(data)
             reactive$group_id_selected <- id[1]
