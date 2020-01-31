@@ -1,4 +1,12 @@
-#
+# v.0.2.0
+
+- finding the grouping variable now works more reliably (mimosa now also checks for the number of average levels, not only for the number of level-2 variables)
+- documentation was added to non-exported functions, which should make extensions easier
+- in Safari all file endings are shown, while in the other browsers only .sav and .csv are shown
+- a help box at start of mimosa shows some useful links
+- the readme now includes a proper introduction and example
+- a summary paper was added
+- several new tests were added: identifying the grouping variable, Exam data estimates from mlmRev vignette, formula display
 
 # v.0.1.1
 
