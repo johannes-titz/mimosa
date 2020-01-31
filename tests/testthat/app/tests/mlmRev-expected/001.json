@@ -1,0 +1,88 @@
+{
+  "input": {
+    "datafile": {
+      "name": [
+        "exam2.csv"
+      ],
+      "size": [
+        391689
+      ],
+      "type": [
+        "text/csv"
+      ],
+      "datapath": [
+        "0.csv"
+      ]
+    },
+    "dv": "normexam",
+    "group_id": "school",
+    "interaction": null,
+    "isSafari": true,
+    "l1": [
+      "standLRT",
+      "female"
+    ],
+    "l1_varies": null,
+    "l2": [
+      "schgendmixed",
+      "schgendboys"
+    ],
+    "output_options": null,
+    "sidebarCollapsed": false,
+    "sidebarItemExpanded": null
+  },
+  "output": {
+    "file_area": {
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label shiny-label-null\" for=\"datafile\"><\/label>\n  <div class=\"input-group\">\n    <label class=\"input-group-btn\">\n      <span class=\"btn btn-default btn-file\">\n        Browse...\n        <input id=\"datafile\" name=\"datafile\" type=\"file\" style=\"display: none;\" accept=\"*\"/>\n      <\/span>\n    <\/label>\n    <input type=\"text\" class=\"form-control\" placeholder=\"No file selected\" readonly=\"readonly\"/>\n  <\/div>\n  <div id=\"datafile_progress\" class=\"progress progress-striped active shiny-file-input-progress\">\n    <div class=\"progress-bar\"><\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+
+      ]
+    },
+    "mod_l1": {
+      "html": "normexam<sub>ij<\/sub> = &beta;<sub>0j<\/sub> + &beta;<sub>1j<\/sub>standLRT<sub>ij<\/sub> + &beta;<sub>2j<\/sub>female<sub>ij<\/sub> + e<sub>ij<\/sub>",
+      "deps": [
+
+      ]
+    },
+    "mod_l2": {
+      "html": "&beta;<sub>0j<\/sub> = &gamma;<sub>00<\/sub> + &gamma;<sub>01<\/sub>schgendmixed<sub>j<\/sub>+&gamma;<sub>02<\/sub>schgendboys<sub>j<\/sub> +u<sub>0j<\/sub><br>&beta;<sub>1j<\/sub> = &gamma;<sub>10<\/sub> <br>&beta;<sub>2j<\/sub> = &gamma;<sub>20<\/sub> ",
+      "deps": [
+
+      ]
+    },
+    "mod_r": {
+      "html": "normexam~standLRT+female+schgendmixed+schgendboys+(1|school)",
+      "deps": [
+
+      ]
+    },
+    "table_region": {
+      "html": "<html>\n<head>\n<meta http-equiv=\"Content-type\" content=\"text/html;charset=UTF-8\">\n<style>\nhtml, body { background-color: white; }\ntable { border-collapse:collapse; border:none; }\ncaption { font-weight: bold; text-align:left; }\ntd {  }\n.thead { border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; }\n.tdata { padding:0.2cm; text-align:left; vertical-align:top; }\n.arc { background-color:#f2f2f2; }\n.summary { padding-top:0.1cm; padding-bottom:0.1cm; }\n.summarydata { text-align:left; }\n.fixedparts { font-weight:bold; text-align:left; }\n.randomparts { font-weight:bold; text-align:left; padding-top:.8em; }\n.zeroparts { font-weight:bold; text-align:left; padding-top:.8em; }\n.simplexparts { font-weight:bold; text-align:left; padding-top:.8em; }\n.lasttablerow { border-bottom: double; }\n.firsttablerow {  }\n.firstsumrow { border-top:1px solid; }\n.labelcellborder { border-bottom:1px solid; }\n.depvarhead { text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal; }\n.leftalign { text-align:left; }\n.centeralign { text-align:center; }\n.firsttablecol { text-align:left; }\n.footnote { font-style:italic; border-top:double black; text-align:right; }\n.subtitle { font-weight: normal; }\n.modelcolumn1 {  }\n.modelcolumn2 {  }\n.modelcolumn3 {  }\n.modelcolumn4 {  }\n.modelcolumn5 {  }\n.modelcolumn6 {  }\n.modelcolumn7 {  }\n.col1 {  }\n.col2 {  }\n.col3 {  }\n.col4 {  }\n.col5 {  }\n<\/style>\n<\/head>\n<body>\n<table>\n  <tr>\n    <th class=\"thead firsttablerow firsttablecol col1\">&nbsp;<\/th>\n    <th colspan=\"2\" class=\"thead firsttablerow\">normexam<\/th>\n  <\/tr>\n  <tr>\n    <td class=\"depvarhead firsttablerow firsttablecol col1\">Predictors<\/td>\n    <td class=\"depvarhead firsttablerow col2\">Estimates<\/td>\n    <td class=\"depvarhead firsttablerow col3\">95% CI<\/td>\n  <\/tr>\n  <tr>\n    <td class=\"tdata firsttablecol col1\">(Intercept)<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col2\">-0.01<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col3\">-0.16&nbsp;&ndash;&nbsp;0.14<\/td>\n<\/tr>\n  <tr>\n    <td class=\"tdata firsttablecol col1\">standLRT<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col2\">0.56<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col3\">0.54&nbsp;&ndash;&nbsp;0.58<\/td>\n<\/tr>\n  <tr>\n    <td class=\"tdata firsttablecol col1\">femaleTRUE<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col2\">0.17<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col3\">0.10&nbsp;&ndash;&nbsp;0.23<\/td>\n<\/tr>\n  <tr>\n    <td class=\"tdata firsttablecol col1\">schgendmixedTRUE<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col2\">-0.16<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col3\">-0.33&nbsp;&ndash;&nbsp;0.02<\/td>\n<\/tr>\n  <tr>\n    <td class=\"tdata firsttablecol col1\">schgendboysTRUE<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col2\">0.02<\/td>\n    <td class=\"tdata centeralign modelcolumn1 col3\">-0.23&nbsp;&ndash;&nbsp;0.27<\/td>\n<\/tr>\n  <tr>\n    <td colspan=\"3\" class=\"randomparts\">Random Effects<\/td>\n  <\/tr>\n\n  <tr>\n    <td class=\"tdata leftalign summary\">&sigma;<sup>2<\/sup><\/td>\n    <td class=\"tdata summary summarydata\" colspan=\"2\">0.56<\/td>\n\n  <tr>\n    <td class=\"tdata leftalign summary\">&tau;<sub>00<\/sub> <sub>school<\/sub><\/td>\n    <td class=\"tdata summary summarydata\" colspan=\"2\">0.09<\/td>\n\n  <tr>\n    <td class=\"tdata leftalign summary\">ICC<\/td>\n    <td class=\"tdata summary summarydata\" colspan=\"2\">0.13<\/td>\n\n  <tr>\n    <td class=\"tdata leftalign summary\">N <sub>school<\/sub><\/td>\n    <td class=\"tdata summary summarydata\" colspan=\"2\">65<\/td>\n  <tr>\n    <td class=\"tdata leftalign summary firstsumrow\">Observations<\/td>\n    <td class=\"tdata summary summarydata firstsumrow\" colspan=\"2\">4059<\/td>\n  <\/tr>\n  <tr>\n    <td class=\"tdata leftalign summary\">Marginal R<sup>2<\/sup> / Conditional R<sup>2<\/sup><\/td>\n    <td class=\"tdata summary summarydata\" colspan=\"2\">0.338 / 0.425<\/td>\n  <\/tr>\n\n<\/table>\n\n<\/body><\/html>",
+      "deps": [
+
+      ]
+    },
+    "variables": {
+      "html": "<div class=\"row\">\n  <div class=\"col-sm-2\">\n    <div class=\"form-group shiny-input-container\">\n      <label class=\"control-label\" for=\"group_id\">Group ID<\/label>\n      <div>\n        <select id=\"group_id\"><option value=\"school\" selected>school<\/option>\n<option value=\"schgend\">schgend<\/option><\/select>\n        <script type=\"application/json\" data-for=\"group_id\" data-nonempty=\"\">{}<\/script>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"dv\" class=\"form-group shiny-input-radiogroup shiny-input-container\">\n      <label class=\"control-label\" for=\"dv\">Dependent Variable<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"normexam\"/>\n            <span>normexam<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"intake\"/>\n            <span>intake<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"standLRT\"/>\n            <span>standLRT<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"sex\"/>\n            <span>sex<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"student\"/>\n            <span>student<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"radio\">\n          <label>\n            <input type=\"radio\" name=\"dv\" value=\"female\"/>\n            <span>female<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"l1\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n      <label class=\"control-label\" for=\"l1\">Level 1<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"normexam\"/>\n            <span>normexam<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"intake\"/>\n            <span>intake<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"standLRT\"/>\n            <span>standLRT<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"sex\"/>\n            <span>sex<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"student\"/>\n            <span>student<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l1\" value=\"female\"/>\n            <span>female<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div data-display-if=\"input.l1.length &gt; 0\" data-ns-prefix=\"\">\n    <div class=\"col-sm-2\">\n      <div id=\"l1_varies\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n        <label class=\"control-label\" for=\"l1_varies\">Level 1 varies<\/label>\n        <div class=\"shiny-options-group\"><\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div class=\"col-sm-2\">\n    <div id=\"l2\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n      <label class=\"control-label\" for=\"l2\">Level 2<\/label>\n      <div class=\"shiny-options-group\">\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"schgend\"/>\n            <span>schgend<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"schavg\"/>\n            <span>schavg<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"vr\"/>\n            <span>vr<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"type\"/>\n            <span>type<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"schgendmixed\"/>\n            <span>schgendmixed<\/span>\n          <\/label>\n        <\/div>\n        <div class=\"checkbox\">\n          <label>\n            <input type=\"checkbox\" name=\"l2\" value=\"schgendboys\"/>\n            <span>schgendboys<\/span>\n          <\/label>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n  <div data-display-if=\"input.l1_varies.length &gt; 0 &amp; input.l2.length&gt;0\" data-ns-prefix=\"\">\n    <div class=\"col-sm-2\">\n      <div id=\"interaction\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n        <label class=\"control-label\" for=\"interaction\">Cross-level interaction<\/label>\n        <div class=\"shiny-options-group\">\n          <div class=\"checkbox\">\n            <label>\n              <input type=\"checkbox\" name=\"interaction\" value=\"\"/>\n              <span><\/span>\n            <\/label>\n          <\/div>\n        <\/div>\n      <\/div>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+        {
+          "name": "selectize",
+          "version": "0.11.2",
+          "src": {
+            "href": "shared/selectize"
+          },
+          "meta": null,
+          "script": null,
+          "stylesheet": "css/selectize.bootstrap3.css",
+          "head": "<!--[if lt IE 9]>\n<script src=\"shared/selectize/js/es5-shim.min.js\"><\/script>\n<![endif]-->\n<script src=\"shared/selectize/js/selectize.min.js\"><\/script>",
+          "attachment": null,
+          "package": null,
+          "all_files": true
+        }
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
