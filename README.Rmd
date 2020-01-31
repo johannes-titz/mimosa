@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 [![Build Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 
-*Mimosa*, the mixed models special agent is a shiny app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. At the same time there exist few user-friendly software to conduct mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. *Mimosa* is supposed to offer an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible.
+*Mimosa*, the mixed models special agent, is a shiny app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. At the same time there exist few user-friendly software to conduct mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. *Mimosa* is supposed to offer an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible.
 
 *Mimosa* is targeted at behavioral scientists who frequently use 2-level mixed models and want a tailored solution for this specific use case. For instance, researchers studying groups (e.g. students clustered in schools, individuals clustered in work groups) and researchers employing within-subjects designs almost exclusively analyze their data with 2-level mixed models. In contrast to other software, *mimosa* was designed for this use case. It helps the analyst by automatically detecting potential grouping variables and categorizing variables in level 1 and level 2. *Mimosa* is also researcher-oriented because it produces a single summary table via *sjPlot* [@ludecke2019] that can be published in a scientific journal without any modifications. 
 
@@ -74,8 +74,6 @@ In the school data set, *school* is indeed the grouping variable. The automatic 
 
 If the grouping variable is known, the procedure to categorize variables in level 1 and level 2 is as follows: Take a variable and group it by the grouping variable. Then, determine the number of unique levels of the variable (for each group). If the variable is on the second level, the number of unique levels should be one for each group. As an example, consider the school data set. It has 65 schools and a variable on the second level is *schgend*, the school gender (mixed, boys, girls). For every school, the school gender is constant, so this is a level-2 variable.
 
-## Model Specification and Output 
-
 Model specification is quite self-explanatory: First one determines the dependent variable, for which the exam score (*normexam*) appears most interesting in the school data set (see image above). The output for this null model is directly created with the most useful statistics:
 
 ![Output table.](output1.png)
@@ -95,6 +93,8 @@ In the following step, one can add a variable on level 2, for instance *type*. T
 ![Output table.](output.png)
 
 The effect of the interaction is about -0.03, meaning that the relationship between *standLRT* and *normexam* is a bit lower for single gender schools than for mixed gender schools. But the effect is not reliable since the confidence intervals are quite wide.
+
+The general conclusion for the data set might be that a reading test at age 11 can predict the final exam grade at age 16 relatively well. Furthermore, single gender schools perform somewhat better than mixed gender schools. Overall, the model explains about 43% of the total variance, which is quite good for social science.
 
 ## Issues and Support
 If you find any bugs, please use the issue tracker at:

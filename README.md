@@ -4,7 +4,7 @@
 [![Build
 Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 
-*Mimosa*, the mixed models special agent is a shiny app for 2-level
+*Mimosa*, the mixed models special agent, is a shiny app for 2-level
 mixed models. Mixed models are rapidly becoming the gold standard of
 statistical analysis techniques in the behavioral sciences. At the same
 time there exist few user-friendly software to conduct mixed model
@@ -122,8 +122,6 @@ second level is *schgend*, the school gender (mixed, boys, girls). For
 every school, the school gender is constant, so this is a level-2
 variable.
 
-## Model Specification and Output
-
 Model specification is quite self-explanatory: First one determines the
 dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
@@ -184,6 +182,12 @@ The effect of the interaction is about -0.03, meaning that the
 relationship between *standLRT* and *normexam* is a bit lower for single
 gender schools than for mixed gender schools. But the effect is not
 reliable since the confidence intervals are quite wide.
+
+The general conclusion for the data set might be that a reading test at
+age 11 can predict the final exam grade at age 16 relatively well.
+Furthermore, single gender schools perform somewhat better than mixed
+gender schools. Overall, the model explains about 43% of the total
+variance, which is quite good for social science.
 
 ## Issues and Support
 
