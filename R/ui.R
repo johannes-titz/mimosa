@@ -35,7 +35,6 @@ shinyUI(
         h4("1. Load data"),
         uiOutput("file_area"),
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
-        
         # footer
         tags$style(
           type = 'text/css',
@@ -56,6 +55,11 @@ shinyUI(
         # Model spec and model display -----------------------------------------
         fluidRow(
           shinyjs::useShinyjs(),
+          div(id = "help",
+              box(title = "Help", status = "primary",
+                      HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
+                  <p>For an example data file go to <a href="https://mimosa.icu/example" target="_blank">mimosa.icu/example</a><p>
+                  <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>'))),
           shinyjs::hidden(div(id = "create_model", 
           box(title = "2. Create model", status = "primary", collapsible = T,
               width = 8, uiOutput("variables")
@@ -99,6 +103,7 @@ shinyUI(
                                                        "p-value")
                                            )
                         )
+                    
                     )
                 )
          )
