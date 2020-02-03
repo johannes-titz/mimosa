@@ -26,6 +26,7 @@ enableBookmarking("url") # not currently supported, but maybe later
 myui <- function(request){
 shinyUI(
   dashboardPage(
+    title = "mimosa",
     skin = "blue",
     dashboardHeader(title = "mimosa"),
       # Sidebar-----------------------------------------------------------------
