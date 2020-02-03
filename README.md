@@ -4,31 +4,32 @@
 [![Build
 Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 
-*Mimosa*, the mixed models special agent, is a shiny app for 2-level
-mixed models. Mixed models are rapidly becoming the gold standard of
-statistical analysis techniques in the behavioral sciences. At the same
-time there exist few user-friendly software to conduct mixed model
-analyses. The most common tools often lack a graphical user interface,
-are proprietary, and involve a tedious process of getting data in and
-publication-ready tables out. *Mimosa* is supposed to offer an
-alternative that is free, open source, intuitive, and runs in a browser,
-making it easily accessible.
+The mixed models special agent (`mimosa`) is a `shiny` (Chang, Cheng,
+Allaire, Xie, & McPherson, 2019) app for 2-level mixed models. Mixed
+models are rapidly becoming the gold standard of statistical analysis
+techniques in the behavioral sciences. At the same time there exist few
+user-friendly software to conduct mixed model analyses. The most common
+tools often lack a graphical user interface, are proprietary, and
+involve a tedious process of getting data in and publication-ready
+tables out. The shiny app `mimosa` is supposed to offer an alternative
+that is free, open source, intuitive, and runs in a browser, making it
+easily accessible (see <https://www.mimosa.icu>).
 
-*Mimosa* is targeted at behavioral scientists who frequently use 2-level
-mixed models and want a tailored solution for this specific use case.
-For instance, researchers studying groups (e.g. students clustered in
-schools, individuals clustered in work groups) and researchers employing
-within-subjects designs almost exclusively analyze their data with
-2-level mixed models. In contrast to other software, *mimosa* was
+The software is targeted at behavioral scientists who frequently use
+2-level mixed models and want a tailored solution for this specific use
+case. For instance, researchers studying groups (e.g. students clustered
+in schools, individuals clustered in work groups) and researchers
+employing within-subjects designs almost exclusively analyze their data
+with 2-level mixed models. In contrast to other software, `mimosa` was
 designed for this use case. It helps the analyst by automatically
 detecting potential grouping variables and categorizing variables in
-level 1 and level 2. *Mimosa* is also researcher-oriented because it
-produces a single summary table via *sjPlot* (Lüdecke, 2019) that can be
-published in a scientific journal without any modifications.
+level 1 and level 2. Furthermore, `mimosa` is researcher-oriented
+because it produces a single summary table via `sjPlot` (Lüdecke, 2018)
+that can be published in a scientific journal without any modifications.
 
 These benefits come at the cost of the limitation to 2-level models. If
-you need to model more complex cases, *mimosa* might not be suited for
-you and you should check out the more comprehensive software GAMLj
+you need to model more complex cases, `mimosa` might not be suited for
+you and you should check out the more comprehensive software `GAMLj`
 (Gallucci, 2020).
 
 ## Installation
@@ -65,7 +66,7 @@ or at johannes.titz at gmail.com.
 
 As an example data set we will use exam scores of 4,059 students from 65
 schools in Inner London (Goldstein et al., 1993), which is available in
-the R package *mlmRev* (Bates, Maechler, & Bolker, 2019). The variables
+the R package `mlmRev` (Bates, Maechler, & Bolker, 2019). The variables
 are described in the table below. Here, we will focus on the exam score
 as the outcome variable and use LRT and school type as a predictor. The
 standardized exam score is a total score of different subjects taken in
@@ -89,7 +90,7 @@ et al. (1993) and Nuttall, Goldstein, Prosser, & Rasbash (1989).
 | student  | student ID (within school)                               | factor    | 650 levels                   |
 
 <span id="tab:data" label="tab:data"></span> Description of example
-data. *Note*. This data is available in the R package *mlmRev* (Bates et
+data. *Note*. This data is available in the R package `mlmRev` (Bates et
 al., 2019) and is from the study by Goldstein et al. (1993).
 
 If you want to follow the example you can now go to
@@ -131,7 +132,7 @@ this null model is directly created with the most useful statistics:
 
 The null model produces an intercept of close to 0, which makes sense
 since the data is standardized. The output table is created with
-*sjPlot* (Lüdecke, 2019). It is concise, nicely formatted and can be
+`sjPlot` (Lüdecke, 2018). It is concise, nicely formatted and can be
 either downloaded as an HTML file or directly copy-pasted to the
 application of choice (e.g. a word processor). Additional statistics
 (standard error, AIC, deviance, Log-Likelihood, standardized
@@ -140,7 +141,7 @@ coefficients, test statistic,
 in the Table Options dialog (not shown here).
 
 The model description is shown mathematically and in R syntax of the
-*lme4* package:
+`lme4` package:
 
 ![Model display.](model_display1.png)
 
@@ -223,6 +224,14 @@ multilevel modelling software review*. Retrieved from
 
 </div>
 
+<div id="ref-chang2019">
+
+Chang, W., Cheng, J., Allaire, J. J., Xie, Y., & McPherson, J. (2019).
+*Shiny: Web application framework for R*. Retrieved from
+<https://CRAN.R-project.org/package=shiny>
+
+</div>
+
 <div id="ref-gallucci2020">
 
 Gallucci, M. (2020). *GAMLj suite for jamovi*. Retrieved from
@@ -239,9 +248,9 @@ results. *Oxford Review of Education*, *19*, 425–433.
 
 </div>
 
-<div id="ref-ludecke2019">
+<div id="ref-ludecke2018">
 
-Lüdecke, D. (2019). *sjPlot: Data visualization for statistics in social
+Lüdecke, D. (2018). *sjPlot: Data visualization for statistics in social
 science*. <https://doi.org/10.5281/zenodo.1308157>
 
 </div>

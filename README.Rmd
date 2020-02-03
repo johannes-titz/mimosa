@@ -21,11 +21,11 @@ knitr::opts_chunk$set(
 
 [![Build Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 
-*Mimosa*, the mixed models special agent, is a shiny app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. At the same time there exist few user-friendly software to conduct mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. *Mimosa* is supposed to offer an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible.
+The mixed models special agent (``mimosa``) is a ``shiny`` [@chang2019] app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. At the same time there exist few user-friendly software to conduct mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. The shiny app ``mimosa`` is supposed to offer an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible (see https://www.mimosa.icu).
 
-*Mimosa* is targeted at behavioral scientists who frequently use 2-level mixed models and want a tailored solution for this specific use case. For instance, researchers studying groups (e.g. students clustered in schools, individuals clustered in work groups) and researchers employing within-subjects designs almost exclusively analyze their data with 2-level mixed models. In contrast to other software, *mimosa* was designed for this use case. It helps the analyst by automatically detecting potential grouping variables and categorizing variables in level 1 and level 2. *Mimosa* is also researcher-oriented because it produces a single summary table via *sjPlot* [@ludecke2019] that can be published in a scientific journal without any modifications. 
+The software is targeted at behavioral scientists who frequently use 2-level mixed models and want a tailored solution for this specific use case. For instance, researchers studying groups (e.g. students clustered in schools, individuals clustered in work groups) and researchers employing within-subjects designs almost exclusively analyze their data with 2-level mixed models. In contrast to other software, ``mimosa`` was designed for this use case. It helps the analyst by automatically detecting potential grouping variables and categorizing variables in level 1 and level 2. Furthermore, ``mimosa`` is researcher-oriented because it produces a single summary table via ``sjPlot`` [@ludecke2018] that can be published in a scientific journal without any modifications.
 
-These benefits come at the cost of the limitation to 2-level models. If you need to model more complex cases, *mimosa* might not be suited for you and you should check out the more comprehensive software GAMLj [@gallucci2020].
+These benefits come at the cost of the limitation to 2-level models. If you need to model more complex cases, ``mimosa`` might not be suited for you and you should check out the more comprehensive software ``GAMLj`` [@gallucci2020].
 
 ## Installation
 No need to install mimosa, just go to www.mimosa.icu and use it there. An example data file is loaded when you go to www.mimosa.icu/example.
@@ -49,7 +49,7 @@ If you have any problems installing mimosa, check that your R version is up to d
 If it still does not work drop me an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
 
 ## Using mimosa
-As an example data set we will use exam scores of 4,059 students from 65 schools in Inner London [@goldstein1993], which is available in the R package *mlmRev* [@bates2019]. The variables are described in the table below. Here, we will focus on the exam score as the outcome variable and use LRT and school type as a predictor. The standardized exam score is a total score of different subjects taken in a public examination at age 16. LRT is the London Reading Test, taken at the age of 11. Both variables are already $z$-standardized in the data set. The other variables are described in more detail in @goldstein1993 and @nuttall1989.
+As an example data set we will use exam scores of 4,059 students from 65 schools in Inner London [@goldstein1993], which is available in the R package ``mlmRev`` [@bates2019]. The variables are described in the table below. Here, we will focus on the exam score as the outcome variable and use LRT and school type as a predictor. The standardized exam score is a total score of different subjects taken in a public examination at age 16. LRT is the London Reading Test, taken at the age of 11. Both variables are already $z$-standardized in the data set. The other variables are described in more detail in @goldstein1993 and @nuttall1989.
 
   variable   description                                                data type   levels (if factor)
   ---------- ---------------------------------------------------------- ----------- ------------------------------
@@ -64,7 +64,7 @@ As an example data set we will use exam scores of 4,059 students from 65 schools
   type       school type                                                factor      Mxd, Sngl
   student    student ID (within school)                                 factor      650 levels
 
-  : []{#tab:data label="tab:data"} Description of example data. *Note*. This data is available in the R package *mlmRev* [@bates2019] and is from the study by @goldstein1993.
+  : []{#tab:data label="tab:data"} Description of example data. *Note*. This data is available in the R package ``mlmRev`` [@bates2019] and is from the study by @goldstein1993.
 
 If you want to follow the example you can now go to [www.mimosa.icu/example](www.mimosa.icu/example), which will automatically load the school data set. A big improvement over existing software is that mimosa detects the grouping variable and the hierarchical levels in the data automatically when the data is loaded:
 
@@ -78,9 +78,9 @@ Model specification is quite self-explanatory: First one determines the dependen
 
 ![Output table.](output1.png)
 
-The null model produces an intercept of close to 0, which makes sense since the data is standardized. The output table is created with *sjPlot* [@ludecke2019]. It is concise, nicely formatted and can be either downloaded as an HTML file or directly copy-pasted to the application of choice (e.g. a word processor). Additional statistics (standard error, AIC, deviance, Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be selected in the Table Options dialog (not shown here).
+The null model produces an intercept of close to 0, which makes sense since the data is standardized. The output table is created with ``sjPlot`` [@ludecke2018]. It is concise, nicely formatted and can be either downloaded as an HTML file or directly copy-pasted to the application of choice (e.g. a word processor). Additional statistics (standard error, AIC, deviance, Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be selected in the Table Options dialog (not shown here).
 
-The model description is shown mathematically and in R syntax of the *lme4* package:
+The model description is shown mathematically and in R syntax of the ``lme4`` package:
 
 ![Model display.](model_display1.png)
 
