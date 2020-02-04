@@ -107,7 +107,7 @@ data. For every potential grouping variable, mimosa checks how many
 level-2 variables would be created and how many different levels exist
 on average. Based on this, many variables can be excluded as grouping
 variables and the remaining ones can be ordered by the likelihood of
-being the correct grouping variable. This heuristic works suprisingly
+being the correct grouping variable. This heuristic works surprisingly
 well. It has been tested with a dozen of real data files that have a
 2-level structure and mimosa was always able to guess the correct
 grouping variable. Even if the heuristic should fail, one can select the
