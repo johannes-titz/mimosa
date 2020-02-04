@@ -1,5 +1,3 @@
-#
-
 # v.0.2.0
 
 - finding the grouping variable now works more reliably (mimosa now also checks for the number of average levels, not only for the number of level-2 variables)
