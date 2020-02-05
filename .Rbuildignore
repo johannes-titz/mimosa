@@ -35,7 +35,7 @@ README.Rmd$
 ^todo.Rmd$
 .png$
 ^paper.md$
-^My Library.bib$
+^library.bib$
 ^apa.csl$
 ^create_exam2\.R$
 ^logo$
