@@ -28,6 +28,6 @@ The ``GAMLj`` [@gallucci2020] module for ``jamovi`` [@thejamoviproject2019] is a
 In contrast to software packages I am aware of (including the ones discussed by @west2012), ``mimosa`` is the only one running in a browser. While this might be seen as only a minor advantage, it has clear benefits. There is no need to install or update ``mimosa`` or its dependencies and the application can be used at any place with internet connection---for instance at a colleague's office who does not have ``jamovi`` and ``GAMLj`` installed, in the classroom, or at a conference presentation for a live analysis.
 
 # Acknowledgements
-I want to sincerely thank Markus Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell Winkler for testing mimosa and giving helpful comments on the documentation.
+I want to sincerely thank Maria Reichert for writing a first scaffold for ``mimosa``. Further, I want to thank Markus Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell Winkler for testing mimosa and giving helpful comments on the documentation.
 
 # References
