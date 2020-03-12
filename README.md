@@ -212,6 +212,14 @@ build the package without any errors, warnings, or notes. Overall,
 simply stick to the R packages book: <https://r-pkgs.org/> and follow
 the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
 
+## Acknowledgements
+
+I want to sincerely thank Maria Reichert for writing a first scaffold
+for `mimosa` (see the initial commit). Further, I want to thank Markus
+Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell
+Winkler for testing mimosa and giving helpful comments on the
+documentation.
+
 ## References
 
 <div id="refs" class="references">
