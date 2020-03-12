@@ -43,3 +43,5 @@ README.Rmd$
 README.pdf
 bib_script.R
 paper.pdf
+^joss_description\.txt$
+^joss_thanks\.txt$
