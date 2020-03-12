@@ -1,23 +1,41 @@
 Package: mimosa
-Title: Graphical User Interface for 2-Level Mixed Models as a 
-  Shiny-App
+Title: Graphical User Interface for 2-Level Mixed Models as a
+    Shiny-App
 Version: 0.2.0.9000
 Authors@R: 
-    person(given = "Johannes",
-           family = "Titz",
-           role = c("aut", "cre"),
-           email = "johannes.titz@gmail.com",
-           comment = c(ORCID = "0000-0002-1102-5719"))
-Description: A modern, user- and scientist-friendly graphical user interface for
-  2-level mixed models. Mimosa detects the grouping variable and also 
-  categorizes variables in level 1 and level 2 automatically. You can also use 
-  the app online at <www.mimosa.icu>.
+    c(person(given = "Johannes",
+             family = "Titz",
+             role = c("aut", "cre"),
+             email = "johannes.titz@gmail.com",
+             comment = c(ORCID = "0000-0002-1102-5719")),
+      person(given = "Maria",
+             family = "Reichert",
+             role = "ctb",
+             email = "maria-c-reichert@web.de"))
+Description: A modern, user- and scientist-friendly graphical
+    user interface for 2-level mixed models. Mimosa detects the grouping
+    variable and also categorizes variables in level 1 and level 2
+    automatically. You can also use the app online at <www.mimosa.icu>.
 License: AGPL-3
-Encoding: UTF-8
-LazyData: true
-Imports: dplyr,mlmRev,lme4,shiny,shinyalert,shinydashboard,shinyjs,
-  sjPlot,testthat,plyr,utils,readr,stringr,Hmisc
-RoxygenNote: 7.0.2
-Suggests: shinytest
 URL: http://github.com/johannes-titz/mimosa
 BugReports: http://github.com/johannes-titz/mimosa/issues
+Imports: 
+    dplyr,
+    mlmRev,
+    lme4,
+    shiny,
+    shinyalert,
+    shinydashboard,
+    shinyjs,
+    sjPlot,
+    testthat,
+    plyr,
+    utils,
+    readr,
+    stringr,
+    Hmisc
+Suggests: 
+    shinytest
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
