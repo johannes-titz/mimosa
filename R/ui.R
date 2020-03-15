@@ -22,6 +22,7 @@ enableBookmarking("url") # not currently supported, but maybe later
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
 #' @importFrom shinyalert useShinyalert
 #' @importFrom shinyjs useShinyjs hidden
+#' @importFrom shinyBS bsTooltip
 #' @noRd
 myui <- function(request){
 shinyUI(
@@ -36,6 +37,10 @@ shinyUI(
         h4("1. Load data"),
         uiOutput("file_area"),
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
+        shinyjs::hidden(div(id = "reactive_mode_area", checkboxInput("reactive_mode",
+                                                     "Reactive mode",
+                                                     value = TRUE))),
+        shinyBS::bsTooltip("reactive_mode_area", "If the reactive mode is on, mimosa will recalculate the model after every change. If the reactive mode is off, you will need to manually click a button to recalculate the model."),
         # footer
         tags$style(
           type = 'text/css',

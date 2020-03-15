@@ -37,6 +37,7 @@ myserver <- shinyServer(function(input, output, session) {
             data <- mlmRev::Exam
             reactive$data <- data
             shinyjs::show("create_model")
+            shinyjs::show("reactive_mode_area")
             shinyjs::hide("display_model")
             shinyjs::hide("output_region")
             shinyjs::hide("help")
@@ -67,6 +68,7 @@ myserver <- shinyServer(function(input, output, session) {
     withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
     shinyjs::show("create_model")
+    shinyjs::show("reactive_mode_area")
     shinyjs::hide("display_model")
     shinyjs::hide("output_region")
     shinyjs::hide("help")
@@ -86,10 +88,12 @@ myserver <- shinyServer(function(input, output, session) {
   output$variables <- renderUI({
     if (length(reactive$group_id_selected) > 0) {
       fluidRow(
-        column(width = 2,
+        column(width = 2, align = "center",
                selectInput("group_id", label = "Group ID",
                             selected = reactive$group_id_selected,
-                            choices = reactive$group_ids)
+                            choices = reactive$group_ids),
+               # button to calculate model
+               shinyjs::hidden(div(id = "start_calculation_button", actionButton("start_calculation_button", "Estimate model", width = "100%", icon = icon("calculator"))))
         ),
         column(width = 2,
                radioButtons("dv", label = "Dependent Variable",
@@ -211,17 +215,37 @@ myserver <- shinyServer(function(input, output, session) {
 
   # create table ---------------------------------------------------------------
   output$table_region <- renderUI({
+    # try to isolate the inputs
+    if (input$reactive_mode) {
+      dv <- input$dv
+      group_id <- input$group_id
+      l1 <- input$l1
+      l2 <- input$l2
+      l1_varies <- input$l1_varies
+      interaction <- input$interaction
+      output_options <- input$output_options
+    } else {
+      if (input$start_calculation_button == 0) return()
+      input$start_calculation_button
+      dv <- isolate(input$dv)
+      group_id <- isolate(input$group_id)
+      l1 <- isolate(input$l1)
+      l2 <- isolate(input$l2)
+      l1_varies <- isolate(input$l1_varies)
+      interaction <- isolate(input$interaction)
+      output_options <- isolate(input$output_options)
+    }
     # renderTable does not work if the object is empty, as is the case when
     # no dv and grouping var is selected, workaround:
     if (is.null(input$group_id) |
-        is.null(input$dv) |
-        !input$dv %in% names(reactive$data))
-      # if you change data file, input$dv is not emptied
+        is.null(dv) |
+        !dv %in% names(reactive$data))
+      # if you change data file, dv is not emptied
       return("Select dependent variable and grouping variable"
       )
-    mdl_formula <- create_r_formula(input$dv, input$group_id, input$l1,
-                                    input$l2, input$l1_varies,
-                                    input$interaction)
+    mdl_formula <- create_r_formula(dv, group_id, l1,
+                                    l2, l1_varies,
+                                    interaction)
     reactive$r_mdl_formula <- mdl_formula
     
     # calc the actual model
@@ -235,7 +259,16 @@ myserver <- shinyServer(function(input, output, session) {
       }
     )
     
-    reactive$table <- create_table(mdl, input$l1, input$output_options)
-    HTML(create_table(mdl, input$l1, input$output_options))
+    reactive$table <- create_table(mdl, l1, output_options)
+    HTML(create_table(mdl, l1, output_options))
+  })
+  # 
+  observeEvent(input$reactive_mode, {
+    print(input$reactive_mode)
+    if (input$reactive_mode) {
+      shinyjs::hide("start_calculation_button")
+    } else {
+    shinyjs::show("start_calculation_button")
+    }
   })
 })
