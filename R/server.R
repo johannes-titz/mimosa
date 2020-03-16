@@ -262,6 +262,8 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$r_mdl_formula <- mdl_formula
     
     # calc the actual model
+    showNotification("Estimating model...", id = "estimating_model",
+                     duration = NULL, type = "message")
     mdl <- tryCatch({
       lme4::lmer(stats::as.formula(mdl_formula), data = reactive$data)},
       error = function(error_message){
@@ -271,9 +273,10 @@ myserver <- shinyServer(function(input, output, session) {
         message(error_message)
       }
     )
-    
     reactive$table <- create_table(mdl, l1, output_options)
-    HTML(create_table(mdl, l1, output_options))
+    output <- HTML(create_table(mdl, l1, output_options))
+    removeNotification(id = "estimating_model")
+    return(output)
   })
   # 
   observeEvent(input$reactive_mode, {

@@ -23,6 +23,7 @@ enableBookmarking("url") # not currently supported, but maybe later
 #' @importFrom shinyalert useShinyalert
 #' @importFrom shinyjs useShinyjs hidden
 #' @importFrom shinyBS bsTooltip
+#' @importFrom shinybusy add_busy_spinner
 #' @noRd
 myui <- function(request){
 shinyUI(
@@ -32,6 +33,9 @@ shinyUI(
     dashboardHeader(title = "mimosa"),
       # Sidebar-----------------------------------------------------------------
       dashboardSidebar(
+        shinybusy::add_busy_spinner(spin = "self-building-square",
+                                    position = "bottom-right",
+                                    margin = c(50, 0)),
         tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
         # load data
         h4("1. Load data"),
