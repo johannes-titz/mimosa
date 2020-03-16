@@ -93,7 +93,20 @@ myserver <- shinyServer(function(input, output, session) {
                             selected = reactive$group_id_selected,
                             choices = reactive$group_ids),
                # button to calculate model
-               shinyjs::hidden(div(id = "start_calculation_button", actionButton("start_calculation_button", "Estimate model", width = "100%", icon = icon("calculator"))))
+               # hide if reactive mode is on
+               if (isolate(input$reactive_mode == TRUE)) {
+               shinyjs::hidden(div(id = "start_calculation_button",
+                                   actionButton("start_calculation_button",
+                                                "Estimate model",
+                                                width = "100%",
+                                                icon = icon("calculator"))))
+                 } else {  
+                 div(id = "start_calculation_button",
+                     actionButton("start_calculation_button",
+                                  "Estimate model",
+                                  width = "100%",
+                                  icon = icon("calculator")))
+               }
         ),
         column(width = 2,
                radioButtons("dv", label = "Dependent Variable",
@@ -264,11 +277,6 @@ myserver <- shinyServer(function(input, output, session) {
   })
   # 
   observeEvent(input$reactive_mode, {
-    print(input$reactive_mode)
-    if (input$reactive_mode) {
-      shinyjs::hide("start_calculation_button")
-    } else {
-    shinyjs::show("start_calculation_button")
-    }
+      shinyjs::toggle("start_calculation_button")
   })
 })
