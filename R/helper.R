@@ -348,6 +348,11 @@ create_table <- function(mdl, l1, output_options){
 #' 
 #' Options to filter out some independent variables. At the moment only nominal
 #' variables with too many levels are filtered out.
+#' 
+#' @param ivs the independent variables (character)
+#' @param data the data frame
+#' @param n_levels_max how many levels should a variable have at max
+#' @noRd
 filter_ivs <- function(ivs, data, n_levels_max = 10) {
   data <- data[names(data) %in% ivs]
   n_levels <- sapply(data, function(x) length(levels(x)))
