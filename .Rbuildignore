@@ -45,3 +45,6 @@ bib_script.R
 paper.pdf
 ^joss_description\.txt$
 ^joss_thanks\.txt$
+^progressbar_testing\.R$
+^stackexchange_example\.R$
+^3_level_tests\.R$
