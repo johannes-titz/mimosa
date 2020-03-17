@@ -41,10 +41,11 @@ shinyUI(
         h4("1. Load data"),
         uiOutput("file_area"),
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
-        shinyjs::hidden(div(id = "reactive_mode_area", checkboxInput("reactive_mode",
-                                                     "Reactive mode",
-                                                     value = TRUE))),
-        shinyBS::bsTooltip("reactive_mode_area", "If the reactive mode is on, mimosa will recalculate the model after every change. If the reactive mode is off, you will need to manually click a button to recalculate the model."),
+        shinyjs::hidden(tags$div(id = "reactive_mode_area",
+                                 title = "If the reactive mode is on, mimosa will recalculate the model after every change. If the reactive mode is off, you will need to manually click a button to recalculate the model.",
+                                 checkboxInput("reactive_mode",
+                                                       "Reactive mode",
+                                                       value = TRUE))),
         # footer
         tags$style(
           type = 'text/css',
