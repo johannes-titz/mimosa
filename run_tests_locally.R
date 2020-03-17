@@ -40,14 +40,14 @@ karin <- read.csv2("Joined_data_wellbeing.csv", fileEncoding = "ISO-8859-1")
 # such that there is a dependency although there are no further level
 # 2 vars
 test_that("finding grouping variable works", {
-  expect_identical("Subject", find_id(lme4::sleepstudy))
   expect_identical("ID", find_id(hsball))
   expect_identical("ID", find_id(tutorium))
   expect_identical("ID", find_id(isabell1))
   expect_identical("Code", find_id(thomas1))
-  expect_identical(c("school", "schgend"), find_id(mlmRev::Exam))
-  expect_identical(c("Gruppe", "Mann", "Frau", "BildungNiedrig",
-                     "BildungHoch", "Abstinent", "Raucht"), find_id(atemm))
+ 
+  expect_identical(c("Gruppe", "Frau", "Mann", "Abstinent", "Raucht", 
+                     "BildungHoch", "BildungNiedrig"), find_id(atemm))
+  expect_identical(find_id(atemm), find_id(atemm[,14:1]))
   expect_identical(c("serial"), find_id(karin))
   #expect_equal(level2_names, c("TRUE" = 74))
 })
