@@ -343,3 +343,13 @@ create_table <- function(mdl, l1, output_options){
                     collapse.ci = F, show.icc = TRUE, show.re.var = TRUE,
                     show.ngroups = TRUE, show.fstat = FALSE, show.aicc = F)[[3]]
 }
+
+#' Filter independent variables
+#' 
+#' Options to filter out some independent variables. At the moment only nominal
+#' variables with too many levels are filtered out.
+filter_ivs <- function(ivs, data, n_levels_max = 10) {
+  data <- data[names(data) %in% ivs]
+  n_levels <- sapply(data, function(x) length(levels(x)))
+  names(n_levels[(n_levels <= n_levels_max)])
+}

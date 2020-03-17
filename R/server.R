@@ -46,8 +46,8 @@ myserver <- shinyServer(function(input, output, session) {
             reactive$group_id_selected <- id[1]
             reactive$group_ids <- id
             result <- determine_levels(id[1], data, show_prog = T)
-            reactive$level1 <- result$level1
-            reactive$level2 <- result$level2
+            reactive$level1 <- filter_ivs(result$level1, data)
+            reactive$level2 <- filter_ivs(result$level2, data)
           }
         }
     })
@@ -79,8 +79,8 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$group_id_selected <- id[1]
     reactive$group_ids <- id
     result <- determine_levels(id[1], data, show_prog = T)
-    reactive$level1 <- result$level1
-    reactive$level2 <- result$level2
+    reactive$level1 <- filter_ivs(result$level1, data)
+    reactive$level2 <- filter_ivs(result$level2, data)
     })
   })
   # variable inputs are generated in the server file since they depend on 
@@ -150,8 +150,8 @@ myserver <- shinyServer(function(input, output, session) {
   observeEvent(input$group_id, {
     reactive$group_id_selected <- input$group_id
     result <- determine_levels(input$group_id, reactive$data)
-    reactive$level1 <- result$level1
-    reactive$level2 <- result$level2
+    reactive$level1 <- filter_ivs(result$level1, reactive$data)
+    reactive$level2 <- filter_ivs(result$level2, reactive$data)
   })
 
   # prevent selecting dv as predictor by removing it from choices --------------
