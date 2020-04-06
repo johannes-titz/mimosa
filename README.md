@@ -7,25 +7,26 @@ Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://t
 The mixed models special agent (`mimosa`) is a `shiny` (Chang, Cheng,
 Allaire, Xie, & McPherson, 2019) app for 2-level mixed models. Mixed
 models are rapidly becoming the gold standard of statistical analysis
-techniques in the behavioral sciences. At the same time there exist few
-user-friendly software to conduct mixed model analyses. The most common
-tools often lack a graphical user interface, are proprietary, and
+techniques in the behavioral sciences. Yet there is only a small number
+of user-friendly programs for conducting mixed model analyses. The most
+common tools often lack a graphical user interface, are proprietary, and
 involve a tedious process of getting data in and publication-ready
-tables out. The shiny app `mimosa` is supposed to offer an alternative
-that is free, open source, intuitive, and runs in a browser, making it
-easily accessible (see <https://www.mimosa.icu>).
+tables out. An exception is the shiny app `mimosa` which offers an
+alternative that is free, open source, intuitive, and runs in a browser,
+making it easily accessible (see <https://www.mimosa.icu>).
 
 The software is targeted at behavioral scientists who frequently use
-2-level mixed models and want a tailored solution for this specific use
-case. For instance, researchers studying groups (e.g. students clustered
-in schools, individuals clustered in work groups) and researchers
-employing within-subjects designs almost exclusively analyze their data
-with 2-level mixed models. In contrast to other software, `mimosa` was
-designed for this use case. It helps the analyst by automatically
-detecting potential grouping variables and categorizing variables in
-level 1 and level 2. Furthermore, `mimosa` is researcher-oriented
-because it produces a single summary table via `sjPlot` (Lüdecke, 2018)
-that can be published in a scientific journal without any modifications.
+2-level mixed models and want a solution that is tailored for this
+particular use case. For instance, researchers studying groups
+(e.g. students clustered in schools, individuals clustered in work
+groups) and researchers employing within-subjects designs almost
+exclusively analyze their data with 2-level mixed models. Unlike other
+software, `mimosa` was designed for this use case. It helps the analyst
+by automatically detecting potential grouping variables and categorizing
+these variables in level 1 and level 2. Furthermore, `mimosa` is
+researcher-oriented because it produces a single summary table via
+`sjPlot` (Lüdecke, 2018) that can be published in a scientific journal
+without any modifications.
 
 These benefits come at the cost of the limitation to 2-level models. If
 you need to model more complex cases, `mimosa` might not be suited for
