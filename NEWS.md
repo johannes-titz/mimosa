@@ -1,4 +1,12 @@
-#
+# v.0.3.0
+- this is the release for JOSS
+- fix typos
+- add Maria Reichert as contributor
+- add acknowledgements
+- add non-reactive mode
+- add busy spinner and notifcation
+- filter independent variables
+- copy-edit paper
 
 # v.0.2.0
 
