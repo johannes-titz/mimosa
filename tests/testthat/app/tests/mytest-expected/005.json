@@ -29,7 +29,7 @@
   },
   "output": {
     "file_area": {
-      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label shiny-label-null\" for=\"datafile\"><\/label>\n  <div class=\"input-group\">\n    <label class=\"input-group-btn\">\n      <span class=\"btn btn-default btn-file\">\n        Browse...\n        <input id=\"datafile\" name=\"datafile\" type=\"file\" style=\"display: none;\" accept=\"*\"/>\n      <\/span>\n    <\/label>\n    <input type=\"text\" class=\"form-control\" placeholder=\"No file selected\" readonly=\"readonly\"/>\n  <\/div>\n  <div id=\"datafile_progress\" class=\"progress progress-striped active shiny-file-input-progress\">\n    <div class=\"progress-bar\"><\/div>\n  <\/div>\n<\/div>",
+      "html": "<div class=\"form-group shiny-input-container\">\n  <label class=\"control-label shiny-label-null\" for=\"datafile\"><\/label>\n  <div class=\"input-group\">\n    <label class=\"input-group-btn input-group-prepend\">\n      <span class=\"btn btn-default btn-file\">\n        Browse...\n        <input id=\"datafile\" name=\"datafile\" type=\"file\" style=\"display: none;\" accept=\"*\"/>\n      <\/span>\n    <\/label>\n    <input type=\"text\" class=\"form-control\" placeholder=\"No file selected\" readonly=\"readonly\"/>\n  <\/div>\n  <div id=\"datafile_progress\" class=\"progress active shiny-file-input-progress\">\n    <div class=\"progress-bar\"><\/div>\n  <\/div>\n<\/div>",
       "deps": [
 
       ]
@@ -77,9 +77,9 @@
         },
         {
           "name": "font-awesome",
-          "version": "5.3.1",
+          "version": "5.13.0",
           "src": {
-            "href": "font-awesome-5.3.1"
+            "href": "font-awesome-5.13.0"
           },
           "meta": null,
           "script": null,
