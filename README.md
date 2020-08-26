@@ -1,8 +1,32 @@
 
-# mimosa
+mimosa
+======
 
 [![Build
 Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
+
+To cite mimosa in publications use:
+
+Titz, J. (2020). mimosa: A modern graphical user interface for 2-level
+mixed models. *Journal of Open Source Software, 5*(49), 2116.
+<a href="https://doi.org/10.21105/joss.02116" class="uri">https://doi.org/10.21105/joss.02116</a>
+
+A BibTeX entry for LaTeX users is
+
+    @article{titz2020,
+      title = {mimosa: {A} modern graphical user interface for 2-level mixed models},
+      author = {Titz, Johannes},
+      year = {2020},
+      journal = {Journal of Open Source Software},
+      volume = {5},
+      pages = {2116},
+      doi = {10.21105/joss.02116},
+      number = {49}
+    }
+
+Introduction
+------------
 
 The mixed models special agent (`mimosa`) is a `shiny` (Chang, Cheng,
 Allaire, Xie, & McPherson, 2019) app for 2-level mixed models. Mixed
@@ -13,7 +37,8 @@ common tools often lack a graphical user interface, are proprietary, and
 involve a tedious process of getting data in and publication-ready
 tables out. An exception is the shiny app `mimosa` which offers an
 alternative that is free, open source, intuitive, and runs in a browser,
-making it easily accessible (see <https://www.mimosa.icu>).
+making it easily accessible (see
+<a href="https://www.mimosa.icu" class="uri">https://www.mimosa.icu</a>).
 
 The software is targeted at behavioral scientists who frequently use
 2-level mixed models and want a solution that is tailored for this
@@ -33,7 +58,8 @@ you need to model more complex cases, `mimosa` might not be suited for
 you and you should check out the more comprehensive software `GAMLj`
 (Gallucci, 2020).
 
-## Installation
+Installation
+------------
 
 No need to install mimosa, just go to www.mimosa.icu and use it there.
 An example data file is loaded when you go to www.mimosa.icu/example.
@@ -41,29 +67,26 @@ An example data file is loaded when you go to www.mimosa.icu/example.
 If you really want to use it locally, install from github (you need the
 package devtools for this):
 
-``` r
-devtools::install_github("johannes-titz/mimosa")
-```
+    devtools::install_github("johannes-titz/mimosa")
 
 And now run the app:
 
-``` r
-mimosa::run_app()
-```
+    mimosa::run_app()
 
-Yes, it is that easy—at least under GNU/Linux\!
+Yes, it is that easy—at least under GNU/Linux!
 
 If you have any problems installing mimosa, check that your R version is
 up to date (currently 3.6.2). If you are using Windows, enable TLS 1.2
 in the Internet Options Advanced tab (see
-<https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
+<a href="https://github.com/r-lib/remotes/issues/130#issuecomment-423830669" class="uri">https://github.com/r-lib/remotes/issues/130#issuecomment-423830669</a>).
 Under Windows, you will also need Rtools to build the package:
-<https://cran.r-project.org/bin/windows/Rtools/>.
+<a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>.
 
 If it still does not work drop me an e-mail at johannes at titz.science
 or at johannes.titz at gmail.com.
 
-## Using mimosa
+Using mimosa
+------------
 
 As an example data set we will use exam scores of 4,059 students from 65
 schools in Inner London (Goldstein et al., 1993), which is available in
@@ -78,7 +101,7 @@ data set. The other variables are described in more detail in Goldstein
 et al. (1993) and Nuttall, Goldstein, Prosser, & Rasbash (1989).
 
 | variable | description                                              | data type | levels (if factor)           |
-| :------- | :------------------------------------------------------- | :-------- | :--------------------------- |
+|:---------|:---------------------------------------------------------|:----------|:-----------------------------|
 | school   | school ID                                                | factor    | 65 levels                    |
 | normexam | standardized exam score                                  | numeric   |                              |
 | schgend  | school gender                                            | factor    | mixed, boys, girls           |
@@ -156,14 +179,12 @@ here, but you can check the results on your own at
 [www.mimosa.icu/example](www.mimosa.icu/example). The effect for
 *standLRT* is .56. One can add a random component to the effect, which
 will result in an estimate for the variance in the population of the
-*standLRT* effect ![\\tau\_\\mathrm{11
-school.standLRT}](https://latex.codecogs.com/png.latex?%5Ctau_%5Cmathrm%7B11%20school.standLRT%7D
-"\\tau_\\mathrm{11 school.standLRT}") (not shown here). It is only 0.01,
-but the square root
-![\\sqrt{0.01}=.1](https://latex.codecogs.com/png.latex?%5Csqrt%7B0.01%7D%3D.1
-"\\sqrt{0.01}=.1") is usually more interesting, giving the estimated
-population standard deviation for the estimated population effect of
-.56.
+*standLRT* effect
+![\\tau\_\\mathrm{11 school.standLRT}](https://latex.codecogs.com/png.latex?%5Ctau_%5Cmathrm%7B11%20school.standLRT%7D "\tau_\mathrm{11 school.standLRT}")
+(not shown here). It is only 0.01, but the square root
+![\\sqrt{0.01}=.1](https://latex.codecogs.com/png.latex?%5Csqrt%7B0.01%7D%3D.1 "\sqrt{0.01}=.1")
+is usually more interesting, giving the estimated population standard
+deviation for the estimated population effect of .56.
 
 In the following step, one can add a variable on level 2, for instance
 *type*. The resulting model shows that, compared to mixed schools,
@@ -191,18 +212,20 @@ Furthermore, single gender schools perform somewhat better than mixed
 gender schools. Overall, the model explains about 43% of the total
 variance, which is quite good for social science.
 
-## Issues and Support
+Issues and Support
+------------------
 
 If you find any bugs, please use the issue tracker at:
 
-<https://github.com/johannes-titz/mimosa/issues>
+<a href="https://github.com/johannes-titz/mimosa/issues" class="uri">https://github.com/johannes-titz/mimosa/issues</a>
 
 If you need answers on how to use the package, drop me an e-mail at
 johannes at titz.science or johannes.titz at gmail.com
 
-## Contributing
+Contributing
+------------
 
-Comments and feedback of any kind are very welcome\! I will thoroughly
+Comments and feedback of any kind are very welcome! I will thoroughly
 consider every suggestion on how to improve the code, the documentation,
 and the presented examples. Even minor things, such as suggestions for
 better wording or improving grammar in any part of the package, are more
@@ -210,10 +233,13 @@ than welcome.
 
 If you want to make a pull request, please check that you can still
 build the package without any errors, warnings, or notes. Overall,
-simply stick to the R packages book: <https://r-pkgs.org/> and follow
-the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
+simply stick to the R packages book:
+<a href="https://r-pkgs.org/" class="uri">https://r-pkgs.org/</a> and
+follow the code style described here:
+<a href="http://r-pkgs.had.co.nz/r.html#style" class="uri">http://r-pkgs.had.co.nz/r.html#style</a>
 
-## Acknowledgements
+Acknowledgments
+---------------
 
 I want to sincerely thank Maria Reichert for writing a first scaffold
 for `mimosa` (see the initial commit). Further, I want to thank Markus
@@ -221,9 +247,10 @@ Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell
 Winkler for testing mimosa and giving helpful comments on the
 documentation.
 
-## References
+References
+----------
 
-<div id="refs" class="references">
+<div id="refs" class="references hanging-indent">
 
 <div id="ref-bates2019">
 

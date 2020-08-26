@@ -22,6 +22,27 @@ knitr::opts_chunk$set(
 [![Build Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 
+To cite mimosa in publications use:
+
+Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116
+
+A BibTeX entry for LaTeX users is
+
+```
+@article{titz2020,
+  title = {mimosa: {A} modern graphical user interface for 2-level mixed models},
+  author = {Titz, Johannes},
+  year = {2020},
+  journal = {Journal of Open Source Software},
+  volume = {5},
+  pages = {2116},
+  doi = {10.21105/joss.02116},
+  number = {49}
+}
+```
+
+## Introduction
+
 The mixed models special agent (``mimosa``) is a ``shiny`` [@chang2019] app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. Yet there is only a small number of user-friendly programs for conducting mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. An exception is the shiny app ``mimosa`` which offers an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible (see https://www.mimosa.icu).
 
 The software is targeted at behavioral scientists who frequently use 2-level mixed models and want a solution that is tailored for this particular use case. For instance, researchers studying groups (e.g. students clustered in schools, individuals clustered in work groups) and researchers employing within-subjects designs almost exclusively analyze their data with 2-level mixed models. Unlike other software, ``mimosa`` was designed for this use case. It helps the analyst by automatically detecting potential grouping variables and categorizing these variables in level 1 and level 2. Furthermore, ``mimosa`` is researcher-oriented because it produces a single summary table via ``sjPlot`` [@ludecke2018] that can be published in a scientific journal without any modifications.
@@ -109,7 +130,7 @@ Comments and feedback of any kind are very welcome! I will thoroughly consider e
 
 If you want to make a pull request, please check that you can still build the package without any errors, warnings, or notes. Overall, simply stick to the R packages book: https://r-pkgs.org/ and follow the code style described here: http://r-pkgs.had.co.nz/r.html#style
 
-## Acknowledgements
+## Acknowledgments
 I want to sincerely thank Maria Reichert for writing a first scaffold for ``mimosa`` (see the initial commit). Further, I want to thank Markus Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell Winkler for testing mimosa and giving helpful comments on the documentation.
 
 ## References

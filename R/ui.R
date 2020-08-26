@@ -70,7 +70,8 @@ shinyUI(
               box(title = "Help", status = "primary",
                       HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
                   <p>For an example data file go to <a href="https://mimosa.icu/example" target="_blank">mimosa.icu/example</a><p>
-                  <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>'))),
+                  <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>
+                  <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. https://doi.org/10.21105/joss.02116'))),
           shinyjs::hidden(div(id = "create_model", 
           box(title = "2. Create model", status = "primary", collapsible = T,
               width = 8, uiOutput("variables")
