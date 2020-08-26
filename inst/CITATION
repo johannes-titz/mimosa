@@ -1,0 +1,13 @@
+citHeader("To cite mimosa in publications use:")
+
+citEntry(entry = "Article",
+  title = "Mimosa: A Modern Graphical User Interface for 2-Level Mixed Models",
+  author = personList(as.person("Johannes Titz")),
+  year = "2020",
+  journal = "Journal of Open Source Software",
+  volume = "5",
+  pages = "2116",
+  doi = "10.21105/joss.02116",
+  number = "49",
+  textVersion  = "Titz, J. (2020). mimosa: A Modern Graphical User Interface for 2-level Mixed Models. Journal of Open Source Software, 5(49), 2116. https://doi.org/10.21105/joss.02116"
+  )
