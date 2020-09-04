@@ -38,6 +38,8 @@ Imports:
     Hmisc
 Suggests: 
     shinytest
+Remotes:
+    johannes-titz/sjPlot@stdB
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
