@@ -1,4 +1,8 @@
-#
+# v0.4.0
+
+- upstream problem with p-values for unstandardized coefficients was fixed
+- update tests for unstandardized coefficients (see last bullet point)
+- add JOSS doi and citation to readme and shiny page
 
 # v.0.3.0
 - this is the release for JOSS
