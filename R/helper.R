@@ -27,7 +27,7 @@
 #' @import dplyr
 #' @importFrom plyr ldply
 #' @examples find_id(mlmRev::Exam)
-#' @noRd
+#' @export
 find_id <- function(d){
   # first check data types and variation of variables
   d2 <- select_if(d, function(x) is.integer(x) | is.character(x) | is.factor(x))
@@ -69,7 +69,7 @@ find_id <- function(d){
 #' each level
 #' @examples determine_levels(find_id(mlmRev::Exam)[1], mlmRev::Exam)
 #' @importFrom stats na.omit
-#' @noRd
+#' @export
 determine_levels <- function(group_variable, data, ignore_na = T,
                              show_prog = F){
   identified_levels <- find_avg_levels(data, group_variable, ncol(data),
@@ -123,7 +123,7 @@ find_avg_levels <- function(data, group_var, var_total_length,
   if (show_prog) {
     incProgress(1 / var_total_length, message = paste("Testing Variable ", group_var, " as grouping variable"))
   }
-  data <- group_by_(data, group_var)
+  data <- group_by_at(data, group_var)
   levels <- summarize_all(data, get_levels, ignore_na = ignore_na)
   levels[group_var] <- NA
   levels <- colMeans(levels)
