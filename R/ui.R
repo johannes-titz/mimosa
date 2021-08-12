@@ -44,8 +44,8 @@ shinyUI(
         shinyjs::hidden(tags$div(id = "reactive_mode_area",
                                  title = "If the reactive mode is on, mimosa will recalculate the model after every change. If the reactive mode is off, you will need to manually click a button to recalculate the model.",
                                  checkboxInput("reactive_mode",
-                                                       "Reactive mode",
-                                                       value = TRUE))),
+                                               "Reactive mode",
+                                               value = TRUE))),
         # footer
         tags$style(
           type = 'text/css',
@@ -113,8 +113,29 @@ shinyUI(
                                                        "standardized coefficients",
                                                        "test statistic",
                                                        "p-value")
-                                           )
                         )
+                    ),
+                    
+                    box(title = "Family",collapsed = T,
+                        status = "primary",
+                        collapsible = T, width = 2,
+                        radioButtons("family",
+                                           "Output options",
+                                           choices = c("gaussian",
+                                                       "binomial")
+                        )
+                    ),
+                    
+                    box(title = "Optimizer",collapsed = T,
+                        status = "primary",
+                        collapsible = T, width = 2,
+                        numericInput("nAGQ", "Number of AGQ points", 1),
+                        # radioButtons("optimizer",
+                        #                    "Output options",
+                        #                    choices = c("Nelder_Mead",
+                        #                                "bobyqa")
+                        # )
+                    )
                     
                     )
                 )
