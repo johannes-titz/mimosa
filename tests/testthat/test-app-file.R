@@ -47,10 +47,10 @@ test_that("estimates are correct for Exam data", {
 
 test_that("finding grouping variable works", {
   # first variable is always the correct id
-  expect_identical("schoolNR", find_id(mlmRev::bdf))
+  expect_identical(c("classNR", "schoolNR"), find_id(mlmRev::bdf))
   expect_identical(c("school", "schgend"), find_id(mlmRev::Exam))
   expect_identical(find_id(mlmRev::Exam), find_id(mlmRev::Exam[10:1]))
-  expect_identical("Subject", find_id(lme4::sleepstudy))
+  expect_identical(c("Subject", "Days"), find_id(lme4::sleepstudy))
   expect_identical(c("district", "livch", "use", "urban"), find_id(mlmRev::Contraception))
   expect_identical(find_id(mlmRev::Contraception), find_id(mlmRev::Contraception[,6:1]))
   expect_identical("id", find_id(mlmRev::Early))

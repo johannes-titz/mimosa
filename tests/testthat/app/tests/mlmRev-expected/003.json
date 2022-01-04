@@ -15,6 +15,7 @@
       ]
     },
     "dv": "normexam",
+    "family": "gaussian",
     "group_id": "school",
     "interaction": null,
     "isSafari": true,
@@ -24,6 +25,7 @@
     ],
     "l1_varies": "standLRT",
     "l2": "type",
+    "nAGQ": 1,
     "output_options": null,
     "reactive_mode": true,
     "sidebarCollapsed": false,
@@ -83,9 +85,9 @@
         },
         {
           "name": "font-awesome",
-          "version": "5.13.0",
+          "version": "5.15.3",
           "src": {
-            "href": "font-awesome-5.13.0"
+            "href": "font-awesome-5.15.3"
           },
           "meta": null,
           "script": null,

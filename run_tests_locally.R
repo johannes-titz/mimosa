@@ -35,6 +35,7 @@ karin <- read.csv2("Joined_data_wellbeing.csv", fileEncoding = "ISO-8859-1")
 # levels <- determine_levels(c("serial"), karin)
 # level2_names <- table(grepl("post|pre|baseline|", levels$level2))["TRUE"]
 
+isabell2 <- Hmisc::spss.get(file = "mimosa_isabell/MEA Daten - Mimosa.sav", use.value.labels = F)
 # test with available data in R and own data
 # atemm is problematic because too many dummy-vars are introduced
 # such that there is a dependency although there are no further level
@@ -44,7 +45,7 @@ test_that("finding grouping variable works", {
   expect_identical("ID", find_id(tutorium))
   expect_identical("ID", find_id(isabell1))
   expect_identical("Code", find_id(thomas1))
- 
+  expect_identical(c("ID", "Min.Unpuenkt", "Pktl.02", "Pktl.02i", "Pktl.01", "Pktl.01i", "SF"), find_id(isabell2))
   expect_identical(c("Gruppe", "Frau", "Mann", "Abstinent", "Raucht", 
                      "BildungHoch", "BildungNiedrig"), find_id(atemm))
   expect_identical(find_id(atemm), find_id(atemm[,14:1]))

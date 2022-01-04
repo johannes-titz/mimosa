@@ -15,6 +15,7 @@
       ]
     },
     "dv": "MATHACH",
+    "family": "gaussian",
     "group_id": "ID",
     "interaction": [
       "MINORITY:SIZE",
@@ -31,6 +32,7 @@
       "SIZE",
       "SECTOR"
     ],
+    "nAGQ": 1,
     "output_options": null,
     "reactive_mode": true,
     "sidebarCollapsed": false,
@@ -90,9 +92,9 @@
         },
         {
           "name": "font-awesome",
-          "version": "5.13.0",
+          "version": "5.15.3",
           "src": {
-            "href": "font-awesome-5.13.0"
+            "href": "font-awesome-5.15.3"
           },
           "meta": null,
           "script": null,

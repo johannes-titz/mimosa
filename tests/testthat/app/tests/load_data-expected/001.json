@@ -15,12 +15,14 @@
       ]
     },
     "dv": null,
+    "family": "gaussian",
     "group_id": "serial",
     "interaction": null,
     "isSafari": true,
     "l1": null,
     "l1_varies": null,
     "l2": null,
+    "nAGQ": 1,
     "output_options": null,
     "reactive_mode": true,
     "sidebarCollapsed": false,
@@ -56,9 +58,9 @@
         },
         {
           "name": "font-awesome",
-          "version": "5.13.0",
+          "version": "5.15.3",
           "src": {
-            "href": "font-awesome-5.13.0"
+            "href": "font-awesome-5.15.3"
           },
           "meta": null,
           "script": null,
