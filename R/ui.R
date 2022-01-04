@@ -116,7 +116,7 @@ shinyUI(
                         )
                     ),
                     
-                    box(title = "Family",collapsed = T,
+                    shinyjs::hidden(box(title = "Family",collapsed = T,
                         status = "primary",
                         collapsible = T, width = 2,
                         radioButtons("family",
@@ -124,9 +124,9 @@ shinyUI(
                                            choices = c("gaussian",
                                                        "binomial")
                         )
-                    ),
+                    )),
                     
-                    box(title = "Optimizer",collapsed = T,
+                    shinyjs::hidden(box(title = "Optimizer",collapsed = T,
                         status = "primary",
                         collapsible = T, width = 2,
                         numericInput("nAGQ", "Number of AGQ points", 1),
@@ -137,7 +137,7 @@ shinyUI(
                         # )
                     )
                     
-                    )
+                    ))
                 )
          )
      )
