@@ -36,6 +36,10 @@ karin <- read.csv2("Joined_data_wellbeing.csv", fileEncoding = "ISO-8859-1")
 # level2_names <- table(grepl("post|pre|baseline|", levels$level2))["TRUE"]
 
 isabell2 <- Hmisc::spss.get(file = "mimosa_isabell/MEA Daten - Mimosa.sav", use.value.labels = F)
+isabell3 <- Hmisc::spss.get(file = "mimosa_isabell/MEA Daten - Gruppe 1 - vollständig.sav", use.value.labels = F)
+
+kerner1 <- Hmisc::spss.get(file = "Nur EG 12.1.sav", use.value.labels = F)
+
 # test with available data in R and own data
 # atemm is problematic because too many dummy-vars are introduced
 # such that there is a dependency although there are no further level
