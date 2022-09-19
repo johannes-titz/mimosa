@@ -4,7 +4,12 @@
 \alias{run_app}
 \title{Starts the mimosa shiny app}
 \usage{
-run_app()
+run_app(host = getOption("shiny.host"), port = getOption("shiny.port"))
+}
+\arguments{
+\item{host}{default is from getOption shiny.host}
+
+\item{port}{default is from getOption shiny.port}
 }
 \description{
 Starts the mimosa shiny app
