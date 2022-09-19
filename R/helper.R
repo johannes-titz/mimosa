@@ -48,7 +48,7 @@ find_id <- function(d){
   # levels
   df <- df %>% 
     arrange(desc(n_variables_lvl2), desc(sum_of_reverse_levels), variables)
-  df2 <- df %>% filter(n_variables_lvl2 >= 1)
+  df2 <- df %>% dplyr::filter(n_variables_lvl2 >= 1)
   group_variables <- as.character(df2$variables)
   if (length(group_variables) == 0) {
     group_variables <- as.character(df$variables)
