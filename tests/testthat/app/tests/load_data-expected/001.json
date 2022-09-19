@@ -43,7 +43,7 @@
           "name": "selectize",
           "version": "0.12.4",
           "src": {
-            "href": "shared/selectize"
+            "href": "selectize-0.12.4"
           },
           "meta": null,
           "script": [
@@ -53,14 +53,13 @@
           "stylesheet": "css/selectize.bootstrap3.css",
           "head": null,
           "attachment": null,
-          "package": null,
           "all_files": true
         },
         {
           "name": "font-awesome",
-          "version": "5.15.3",
+          "version": "6.1.1",
           "src": {
-            "href": "font-awesome-5.15.3"
+            "href": "font-awesome-6.1.1"
           },
           "meta": null,
           "script": null,
