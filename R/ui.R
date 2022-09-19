@@ -20,7 +20,6 @@ options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 enableBookmarking("url") # not currently supported, but maybe later
 
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
-#' @importFrom shinyalert useShinyalert
 #' @importFrom shinyjs useShinyjs hidden
 #' @importFrom shinyBS bsTooltip
 #' @importFrom shinybusy add_busy_spinner
@@ -62,7 +61,6 @@ shinyUI(
   Shiny.onInputChange('isSafari', isSafari);
 });")),
        #includeScript("checkbrowser.js"),
-       useShinyalert(), # for manual error handling, has to be in dashboardBody
         # Model spec and model display -----------------------------------------
         fluidRow(
           shinyjs::useShinyjs(),
