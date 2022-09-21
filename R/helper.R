@@ -25,7 +25,6 @@
 #' @return potential grouping variables
 #' @import sjPlot
 #' @import dplyr
-#' @importFrom plyr ldply
 #' @examples find_id(mlmRev::Exam)
 #' @export
 find_id <- function(d){
@@ -141,7 +140,7 @@ find_avg_levels <- function(data, group_var, var_total_length,
 #' @noRd
 create_avg_levels_mtrx <- function(data, variables){
   avg_levels <- lapply(variables, function(x) t(find_avg_levels(data, x, length(variables))))
-  avg_levels <- plyr::ldply(avg_levels, data.frame)
+  avg_levels <- do.call(rbind.data.frame, avg_levels)
   rownames(avg_levels) <- variables
   avg_levels
 }

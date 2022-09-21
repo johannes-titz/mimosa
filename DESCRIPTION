@@ -30,7 +30,6 @@ Imports:
     shinydashboard,
     shinyjs,
     sjPlot,
-    plyr,
     utils,
     readr,
     stringr,
