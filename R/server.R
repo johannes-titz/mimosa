@@ -14,16 +14,16 @@ myserver <- shinyServer(function(input, output, session) {
                              table = NULL)
   # example data set for tutorial in paper -------------------------------------
   observe({
-        query <- parseQueryString(session$clientData$url_search)
-        if (!is.null(query[['example']])) {
-          if (query[['example']] == "school") {
-            data <- mlmRev::Exam
+        #query <- parseQueryString(session$clientData$url_search)
+        #if (!is.null(query[['example']])) {
+        #  if (query[['example']] == "school") {
+        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy")) {
+            data <- eval(parse(text = input$examplefile))
             reactive$data <- data
             shinyjs::show("create_model")
             shinyjs::show("reactive_mode_area")
             shinyjs::hide("display_model")
             shinyjs::hide("output_region")
-            shinyjs::hide("help")
             
             id <- find_id(data)
             reactive$group_id_selected <- id[1]
@@ -32,7 +32,7 @@ myserver <- shinyServer(function(input, output, session) {
             reactive$level1 <- filter_ivs(result$level1, data)
             reactive$level2 <- filter_ivs(result$level2, data)
           }
-        }
+        #}
     })
   output$file_area <- renderUI({
     if(!is.null(input$isSafari)){
@@ -54,7 +54,7 @@ myserver <- shinyServer(function(input, output, session) {
     shinyjs::show("reactive_mode_area")
     shinyjs::hide("display_model")
     shinyjs::hide("output_region")
-    shinyjs::hide("help")
+    #shinyjs::hide("help")
     data <- load_data(input$datafile)
     reactive$data <- data
     
