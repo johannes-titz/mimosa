@@ -24,7 +24,6 @@ myserver <- shinyServer(function(input, output, session) {
             shinyjs::show("reactive_mode_area")
             shinyjs::hide("display_model")
             shinyjs::hide("output_region")
-            
             id <- find_id(data)
             reactive$group_id_selected <- id[1]
             reactive$group_ids <- id
@@ -35,16 +34,11 @@ myserver <- shinyServer(function(input, output, session) {
         #}
     })
   output$file_area <- renderUI({
-    if(!is.null(input$isSafari)){
-      if (as.character(input$isSafari) == "TRUE") {
-        accepted_filetype <- "*"
-      } else {
-        accepted_filetype <- c("text/csv", "text/comma-separated-values",
-                               "application/x-spss-sav", "application/x-spss-por",
-                               "application/spss", ".sav", ".csv")
-      }
-      fileInput("datafile", label = NULL, accept = accepted_filetype)
-    }
+    accepted_filetype <- c("text/csv", "text/comma-separated-values",
+                           "application/x-spss-sav", "application/x-spss-por",
+                           "application/spss", ".sav", ".csv")
+    fileInput("datafile", label = "1. Load your Data (.csv or .sav SPSS)",
+              accept = accepted_filetype)
   })
   # read in data file, determine ID and level of variables----------------------
   observeEvent(input$datafile, {
@@ -57,7 +51,7 @@ myserver <- shinyServer(function(input, output, session) {
     #shinyjs::hide("help")
     data <- load_data(input$datafile)
     reactive$data <- data
-    
+
     id <- find_id(data)
     reactive$group_id_selected <- id[1]
     reactive$group_ids <- id
@@ -66,7 +60,7 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$level2 <- filter_ivs(result$level2, data)
     })
   })
-  # variable inputs are generated in the server file since they depend on 
+  # variable inputs are generated in the server file since they depend on
   # reactive values
   output$variables <- renderUI({
     if (length(reactive$group_id_selected) > 0) {
@@ -83,7 +77,7 @@ myserver <- shinyServer(function(input, output, session) {
                                                 "Estimate model",
                                                 width = "100%",
                                                 icon = icon("calculator"))))
-                 } else {  
+                 } else {
                  div(id = "start_calculation_button",
                      actionButton("start_calculation_button",
                                   "Estimate model",
@@ -97,16 +91,16 @@ myserver <- shinyServer(function(input, output, session) {
                             choices = reactive$level1)
         ),
         column(width = 2,
-               checkboxGroupInput("l1", label = "Level 1", 
+               checkboxGroupInput("l1", label = "Level 1",
                                   choiceNames = reactive$level1,
                                   choiceValues = reactive$level1)
         ),
-        conditionalPanel(condition = "input.l1.length > 0", 
+        conditionalPanel(condition = "input.l1.length > 0",
         column(width = 2,
                checkboxGroupInput("l1_varies", label = "Level 1 varies")
         )),
         column(width = 2,
-               checkboxGroupInput("l2", label = "Level 2", 
+               checkboxGroupInput("l2", label = "Level 2",
                                   choiceNames = reactive$level2,
                                   choiceValues = reactive$level2)
         ),
@@ -120,7 +114,7 @@ myserver <- shinyServer(function(input, output, session) {
       )
     }
   })
-  
+
   # download table -------------------------------------------------------------
   output$download <- downloadHandler(
     filename = paste(Sys.Date(), "mimosa.html", sep = ""),
@@ -128,7 +122,7 @@ myserver <- shinyServer(function(input, output, session) {
       writeLines(reactive$table, file)
     }
   )
-  
+
   # update levels, when group variable changes ---------------------------------
   observeEvent(input$group_id, {
     reactive$group_id_selected <- input$group_id
@@ -243,7 +237,7 @@ myserver <- shinyServer(function(input, output, session) {
                                     l2, l1_varies,
                                     interaction)
     reactive$r_mdl_formula <- mdl_formula
-    
+
     # calc the actual model
     showNotification("Estimating model...", id = "estimating_model",
                      duration = NULL, type = "message")
@@ -268,7 +262,7 @@ myserver <- shinyServer(function(input, output, session) {
     removeNotification(id = "estimating_model")
     return(output)
   })
-  # 
+  #
   observeEvent(input$reactive_mode, {
       shinyjs::toggle("start_calculation_button")
   })
