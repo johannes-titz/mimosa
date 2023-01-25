@@ -78,31 +78,31 @@ ui_body <- dashboardBody(
                   "test statistic",
                   "p-value")
               )
-          )#,
+          ),
           
-          # shinyjs::hidden(
-          #   box(title = "Family",collapsed = T,
-          #       status = "primary",
-          #       collapsible = T, width = 2,
-          #       radioButtons("family",
-          #                    "Output options",
-          #                    choices = c("gaussian",
-          #                                "binomial")
-          #       )
-          #   )),
+          shinyjs::hidden(
+            box(title = "Family",collapsed = T,
+                status = "primary",
+                collapsible = T, width = 2,
+                radioButtons("family",
+                             "Output options",
+                             choices = c("gaussian",
+                                         "binomial")
+                )
+            )),
 
-          # shinyjs::hidden(box(title = "Optimizer",collapsed = T,
-          #                     status = "primary",
-          #                     collapsible = T, width = 2,
-          #                     numericInput("nAGQ", "Number of AGQ points", 1),
-          # radioButtons("optimizer",
-          #                    "Output options",
-          #                    choices = c("Nelder_Mead",
-          #                                "bobyqa")
-          # )
-      )
-
-    )),
+          shinyjs::hidden(box(title = "Optimizer",collapsed = T,
+                              status = "primary",
+                              collapsible = T, width = 2,
+                              numericInput("nAGQ", "Number of AGQ points", 1),
+                              radioButtons("optimizer",
+                                           "Output options",
+                                           choices = c("Nelder_Mead",
+                                                       "bobyqa")
+                                           )
+                              )                    
+                           )
+      ))),
   fluidRow(
     div(id = "help",
         box(title = "Help", status = "primary",
