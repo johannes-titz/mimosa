@@ -90,7 +90,7 @@ As an example data set we will use exam scores of 4,059 students from 65 schools
 
 If you want to follow the example you can now go to [www.mimosa.icu/example](www.mimosa.icu/example), which will automatically load the school data set. A big improvement over existing software is that mimosa detects the grouping variable and the hierarchical levels in the data automatically when the data is loaded:
 
-![Model creation dialog.](create_model2.png)
+![Model creation dialog.](images/create_model2.png)
 
 In the school data set, *school* is indeed the grouping variable. The automatic selection process works by analyzing the structure of the data. For every potential grouping variable, mimosa checks how many level-2 variables would be created and how many different levels exist on average. Based on this, many variables can be excluded as grouping variables and the remaining ones can be ordered by the likelihood of being the correct grouping variable. This heuristic works surprisingly well. It has been tested with a dozen of real data files that have a 2-level structure and mimosa was always able to guess the correct grouping variable. Even if the heuristic should fail, one can select the correct grouping variable manually.
 
@@ -98,21 +98,21 @@ If the grouping variable is known, the procedure to categorize variables in leve
 
 Model specification is quite self-explanatory: First one determines the dependent variable, for which the exam score (*normexam*) appears most interesting in the school data set (see image above). The output for this null model is directly created with the most useful statistics:
 
-![Output table.](output1.png)
+![Output table.](images/output1.png)
 
 The null model produces an intercept of close to 0, which makes sense since the data is standardized. The output table is created with ``sjPlot`` [@ludecke2018]. It is concise, nicely formatted and can be either downloaded as an HTML file or directly copy-pasted to the application of choice (e.g. a word processor). Additional statistics (standard error, AIC, deviance, Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be selected in the Table Options dialog (not shown here).
 
 The model description is shown mathematically and in R syntax of the ``lme4`` package:
 
-![Model display.](model_display1.png)
+![Model display.](images/model_display1.png)
 
 In the next step one can select the independent variables on level 1, after which one can further specify if these variables should be modeled as random or fixed effects. For the example data set, one can add *standLRT* (a standardized listening and reading test score). The output table as well as the model description adapts each time a change is made. Note that, to avoid redundancy, this updated table is not shown here, but you can check the results on your own at [www.mimosa.icu/example](www.mimosa.icu/example). The effect for *standLRT* is .56. One can add a random component to the effect, which will result in an estimate for the variance in the population of the *standLRT* effect $\tau_\mathrm{11 school.standLRT}$ (not shown here). It is only 0.01, but the square root $\sqrt{0.01}=.1$ is usually more interesting, giving the estimated population standard deviation for the estimated population effect of .56.
 
 In the following step, one can add a variable on level 2, for instance *type*. The resulting model shows that, compared to mixed schools, single schools perform somewhat better (not displayed here). If at least one level-1 variable varies and a level-2 variable is selected, cross-level interactions can also be specified. If the level-1 variable does not vary, this option is not available because the idea of an interaction is that one can predict the size of an effect on level 1 by using a level-2 variable. In the exemplary analysis, only one interaction is available, between *standLRT* and *type*. By selecting it we arrive at the final model:
 
-![Model creation dialog.](create_model.png)
+![Model creation dialog.](images/create_model.png)
 
-![Output table.](output.png)
+![Output table.](images/output.png)
 
 The effect of the interaction is about -0.03, meaning that the relationship between *standLRT* and *normexam* is a bit lower for single gender schools than for mixed gender schools. But the effect is not reliable since the confidence intervals are quite wide.
 

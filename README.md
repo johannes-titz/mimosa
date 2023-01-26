@@ -1,6 +1,5 @@
 
-mimosa
-======
+# mimosa
 
 [![Build
 Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
@@ -10,7 +9,7 @@ To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level
 mixed models. *Journal of Open Source Software, 5*(49), 2116.
-<a href="https://doi.org/10.21105/joss.02116" class="uri">https://doi.org/10.21105/joss.02116</a>
+<https://doi.org/10.21105/joss.02116>
 
 A BibTeX entry for LaTeX users is
 
@@ -25,8 +24,7 @@ A BibTeX entry for LaTeX users is
       number = {49}
     }
 
-Introduction
-------------
+## Introduction
 
 The mixed models special agent (`mimosa`) is a `shiny` (Chang, Cheng,
 Allaire, Xie, & McPherson, 2019) app for 2-level mixed models. Mixed
@@ -37,8 +35,7 @@ common tools often lack a graphical user interface, are proprietary, and
 involve a tedious process of getting data in and publication-ready
 tables out. An exception is the shiny app `mimosa` which offers an
 alternative that is free, open source, intuitive, and runs in a browser,
-making it easily accessible (see
-<a href="https://www.mimosa.icu" class="uri">https://www.mimosa.icu</a>).
+making it easily accessible (see <https://www.mimosa.icu>).
 
 The software is targeted at behavioral scientists who frequently use
 2-level mixed models and want a solution that is tailored for this
@@ -58,8 +55,7 @@ you need to model more complex cases, `mimosa` might not be suited for
 you and you should check out the more comprehensive software `GAMLj`
 (Gallucci, 2020).
 
-Installation
-------------
+## Installation
 
 No need to install mimosa, just go to www.mimosa.icu and use it there.
 An example data file is loaded when you go to www.mimosa.icu/example.
@@ -67,26 +63,29 @@ An example data file is loaded when you go to www.mimosa.icu/example.
 If you really want to use it locally, install from github (you need the
 package devtools for this):
 
-    devtools::install_github("johannes-titz/mimosa")
+``` r
+devtools::install_github("johannes-titz/mimosa")
+```
 
 And now run the app:
 
-    mimosa::run_app()
+``` r
+mimosa::run_app()
+```
 
 Yes, it is that easy—at least under GNU/Linux!
 
 If you have any problems installing mimosa, check that your R version is
 up to date (currently 3.6.2). If you are using Windows, enable TLS 1.2
 in the Internet Options Advanced tab (see
-<a href="https://github.com/r-lib/remotes/issues/130#issuecomment-423830669" class="uri">https://github.com/r-lib/remotes/issues/130#issuecomment-423830669</a>).
+<https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
-<a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>.
+<https://cran.r-project.org/bin/windows/Rtools/>.
 
 If it still does not work drop me an e-mail at johannes at titz.science
 or at johannes.titz at gmail.com.
 
-Using mimosa
-------------
+## Using mimosa
 
 As an example data set we will use exam scores of 4,059 students from 65
 schools in Inner London (Goldstein et al., 1993), which is available in
@@ -123,7 +122,7 @@ automatically load the school data set. A big improvement over existing
 software is that mimosa detects the grouping variable and the
 hierarchical levels in the data automatically when the data is loaded:
 
-![Model creation dialog.](create_model2.png)
+![Model creation dialog.](images/create_model2.png)
 
 In the school data set, *school* is indeed the grouping variable. The
 automatic selection process works by analyzing the structure of the
@@ -152,7 +151,7 @@ dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
 this null model is directly created with the most useful statistics:
 
-![Output table.](output1.png)
+![Output table.](images/output1.png)
 
 The null model produces an intercept of close to 0, which makes sense
 since the data is standardized. The output table is created with
@@ -167,7 +166,7 @@ in the Table Options dialog (not shown here).
 The model description is shown mathematically and in R syntax of the
 `lme4` package:
 
-![Model display.](model_display1.png)
+![Model display.](images/model_display1.png)
 
 In the next step one can select the independent variables on level 1,
 after which one can further specify if these variables should be modeled
@@ -180,9 +179,9 @@ here, but you can check the results on your own at
 *standLRT* is .56. One can add a random component to the effect, which
 will result in an estimate for the variance in the population of the
 *standLRT* effect
-![\\tau\_\\mathrm{11 school.standLRT}](https://latex.codecogs.com/png.latex?%5Ctau_%5Cmathrm%7B11%20school.standLRT%7D "\tau_\mathrm{11 school.standLRT}")
+![\tau\_\mathrm{11 school.standLRT}](https://latex.codecogs.com/png.latex?%5Ctau_%5Cmathrm%7B11%20school.standLRT%7D "\tau_\mathrm{11 school.standLRT}")
 (not shown here). It is only 0.01, but the square root
-![\\sqrt{0.01}=.1](https://latex.codecogs.com/png.latex?%5Csqrt%7B0.01%7D%3D.1 "\sqrt{0.01}=.1")
+![\sqrt{0.01}=.1](https://latex.codecogs.com/png.latex?%5Csqrt%7B0.01%7D%3D.1 "\sqrt{0.01}=.1")
 is usually more interesting, giving the estimated population standard
 deviation for the estimated population effect of .56.
 
@@ -197,9 +196,9 @@ using a level-2 variable. In the exemplary analysis, only one
 interaction is available, between *standLRT* and *type*. By selecting it
 we arrive at the final model:
 
-![Model creation dialog.](create_model.png)
+![Model creation dialog.](images/create_model.png)
 
-![Output table.](output.png)
+![Output table.](images/output.png)
 
 The effect of the interaction is about -0.03, meaning that the
 relationship between *standLRT* and *normexam* is a bit lower for single
@@ -212,18 +211,16 @@ Furthermore, single gender schools perform somewhat better than mixed
 gender schools. Overall, the model explains about 43% of the total
 variance, which is quite good for social science.
 
-Issues and Support
-------------------
+## Issues and Support
 
 If you find any bugs, please use the issue tracker at:
 
-<a href="https://github.com/johannes-titz/mimosa/issues" class="uri">https://github.com/johannes-titz/mimosa/issues</a>
+<https://github.com/johannes-titz/mimosa/issues>
 
 If you need answers on how to use the package, drop me an e-mail at
 johannes at titz.science or johannes.titz at gmail.com
 
-Contributing
-------------
+## Contributing
 
 Comments and feedback of any kind are very welcome! I will thoroughly
 consider every suggestion on how to improve the code, the documentation,
@@ -233,13 +230,10 @@ than welcome.
 
 If you want to make a pull request, please check that you can still
 build the package without any errors, warnings, or notes. Overall,
-simply stick to the R packages book:
-<a href="https://r-pkgs.org/" class="uri">https://r-pkgs.org/</a> and
-follow the code style described here:
-<a href="http://r-pkgs.had.co.nz/r.html#style" class="uri">http://r-pkgs.had.co.nz/r.html#style</a>
+simply stick to the R packages book: <https://r-pkgs.org/> and follow
+the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
 
-Acknowledgments
----------------
+## Acknowledgments
 
 I want to sincerely thank Maria Reichert for writing a first scaffold
 for `mimosa` (see the initial commit). Further, I want to thank Markus
@@ -247,20 +241,21 @@ Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell
 Winkler for testing mimosa and giving helpful comments on the
 documentation.
 
-References
-----------
+## References
 
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+line-spacing="2">
 
-<div id="ref-bates2019">
+<div id="ref-bates2019" class="csl-entry">
 
-Bates, D., Maechler, M., & Bolker, B. (2019). *mlmRev: Examples from
-multilevel modelling software review*. Retrieved from
+Bates, D., Maechler, M., & Bolker, B. (2019). *<span
+class="nocase">mlmRev</span>: Examples from multilevel modelling
+software review*. Retrieved from
 <https://CRAN.R-project.org/package=mlmRev>
 
 </div>
 
-<div id="ref-chang2019">
+<div id="ref-chang2019" class="csl-entry">
 
 Chang, W., Cheng, J., Allaire, J. J., Xie, Y., & McPherson, J. (2019).
 *Shiny: Web application framework for R*. Retrieved from
@@ -268,14 +263,14 @@ Chang, W., Cheng, J., Allaire, J. J., Xie, Y., & McPherson, J. (2019).
 
 </div>
 
-<div id="ref-gallucci2020">
+<div id="ref-gallucci2020" class="csl-entry">
 
 Gallucci, M. (2020). *GAMLj suite for jamovi*. Retrieved from
 <https://github.com/gamlj/gamlj>
 
 </div>
 
-<div id="ref-goldstein1993">
+<div id="ref-goldstein1993" class="csl-entry">
 
 Goldstein, H., Rasbash, J., Yang, M., Woodhouse, G., Pan, H., Nuttall,
 D., & Thomas, S. (1993). A multilevel analysis of school examination
@@ -284,14 +279,15 @@ results. *Oxford Review of Education*, *19*, 425–433.
 
 </div>
 
-<div id="ref-ludecke2018">
+<div id="ref-ludecke2018" class="csl-entry">
 
-Lüdecke, D. (2018). *sjPlot: Data visualization for statistics in social
-science*. <https://doi.org/10.5281/zenodo.1308157>
+Lüdecke, D. (2018). *<span class="nocase">sjPlot</span>: Data
+visualization for statistics in social science*.
+<https://doi.org/10.5281/zenodo.1308157>
 
 </div>
 
-<div id="ref-nuttall1989">
+<div id="ref-nuttall1989" class="csl-entry">
 
 Nuttall, D. L., Goldstein, H., Prosser, R., & Rasbash, J. (1989).
 Differential school effectiveness. *International Journal of Educational
