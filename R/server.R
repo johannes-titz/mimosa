@@ -4,7 +4,7 @@
 #' @import mlmRev
 #' @importFrom stats as.formula
 #' @noRd
-myserver <- shinyServer(function(input, output, session) {
+server <- shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(level1 = data.frame(),
                              level2 = data.frame(),
