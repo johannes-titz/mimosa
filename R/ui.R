@@ -37,7 +37,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
 #' @importFrom shinydashboard dashboardBody box
 #' @importFrom shinyjs useShinyjs hidden extendShinyjs
 #' @noRd
-ui_body <- dashboardBody(
+ui_body <- shinydashboard::dashboardBody(
   shinyjs::useShinyjs(),
   shinyjs::extendShinyjs(script = "www/script.js", functions = c("collapse")),
   # Model spec and model display -----------------------------------------
