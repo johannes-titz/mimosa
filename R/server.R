@@ -14,9 +14,14 @@ myserver <- shinyServer(function(input, output, session) {
                              table = NULL)
   # example data set for tutorial in paper -------------------------------------
   observe({
-        #query <- parseQueryString(session$clientData$url_search)
-        #if (!is.null(query[['example']])) {
-        #  if (query[['example']] == "school") {
+    # old mechanism through url
+        query <- parseQueryString(session$clientData$url_search)
+        print(query)
+        if (!is.null(query[['example']])) {
+         if (query[['example']] == "school") {
+           updateSelectInput(session, "examplefile", selected = "mlmRev::Exam")
+         }
+        }
         if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy")) {
             data <- eval(parse(text = input$examplefile))
             reactive$data <- data
