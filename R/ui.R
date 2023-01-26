@@ -2,7 +2,11 @@
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 enableBookmarking("url") # not currently supported, but maybe later
 
-ui_sidebar <- dashboardSidebar(
+#' @importFrom shinydashboard dashboardSidebar
+#' @importFrom shinybusy add_busy_spinner
+#' @importFrom shinyjs hidden
+#' @noRd
+ui_sidebar <- shinydashboard::dashboardSidebar(
   shinybusy::add_busy_spinner(spin = "self-building-square",
                               position = "bottom-right",
                               margin = c(50, 0)),
@@ -30,6 +34,9 @@ ui_sidebar <- dashboardSidebar(
   HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa v. 0.5.0 &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
 )
 
+#' @importFrom shinydashboard dashboardBody box
+#' @importFrom shinyjs useShinyjs hidden extendShinyjs
+#' @noRd
 ui_body <- dashboardBody(
   shinyjs::useShinyjs(),
   shinyjs::extendShinyjs(script = "www/script.js", functions = c("collapse")),
@@ -113,10 +120,8 @@ ui_body <- dashboardBody(
   )
 )
 
-#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
-#' @importFrom shinyjs useShinyjs hidden
+#' @importFrom shinydashboard dashboardPage dashboardHeader
 #' @importFrom shinyBS bsTooltip
-#' @importFrom shinybusy add_busy_spinner
 #' @noRd
 myui <- function() {
   dashboardPage(
@@ -125,5 +130,5 @@ myui <- function() {
   # Sidebar-----------------------------------------------------------------
   sidebar = ui_sidebar,
   body = ui_body,
-)
+  )
 }
