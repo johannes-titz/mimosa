@@ -54,7 +54,7 @@ server <- shinyServer(function(input, output, session) {
     shinyjs::hide("display_model")
     shinyjs::hide("output_region")
     #shinyjs::hide("help")
-    data <- load_data(input$datafile)
+    data <- load_data(input$datafile$name, input$datafile$datapath)
     reactive$data <- data
 
     id <- find_id(data)
