@@ -6,7 +6,7 @@
 - update tests for unstandardized coefficients (see last bullet point)
 - add JOSS doi and citation to readme and shiny page
 
-# v.0.3.0
+# v0.3.0
 - this is the release for JOSS
 - fix typos
 - add Maria Reichert as contributor
@@ -16,7 +16,7 @@
 - filter independent variables
 - copy-edit paper
 
-# v.0.2.0
+# v0.2.0
 
 - finding the grouping variable now works more reliably (mimosa now also checks for the number of average levels, not only for the number of level-2 variables)
 - documentation was added to non-exported functions, which should make extensions easier
@@ -26,13 +26,13 @@
 - a summary paper was added
 - several new tests were added: identifying the grouping variable, Exam data estimates from mlmRev vignette, formula display
 
-# v.0.1.1
+# v0.1.1
 
 - fix problem with interaction formula in model display
 - fix problem with NA variable names in model display
 - make R package structure runable at shinyapps.io
 - add test for model display
 
-# v.0.1.0
+# v0.1.0
 
 First Release
