@@ -152,7 +152,7 @@ who_moderates_me <- function(var_name, all_moderators){
 #' Filter independent variables
 #' 
 #' Options to filter out some independent variables. At the moment only nominal
-#' variables with too many levels are filtered out.
+#' variables with too many levels are filtered out in mimosa.
 #' 
 #' @param ivs the independent variables (character)
 #' @param data the data frame
@@ -164,6 +164,8 @@ filter_ivs <- function(ivs, data, n_levels_max = 10) {
   names(n_levels[(n_levels <= n_levels_max)])
 }
 
+#' check if all values of a vector are integers
+#' 
 #' @noRd
 is_integer <- function(x) {
   ifelse(is.numeric(x), all(floor(x) == x, na.rm = TRUE), FALSE)
