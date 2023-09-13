@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper.R
 \name{find_id}
 \alias{find_id}
-\title{Tries to identify the grouping variable (id)}
+\title{Tries to find the grouping variable (id)}
 \usage{
 find_id(d)
 }
