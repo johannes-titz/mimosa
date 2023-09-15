@@ -29,7 +29,7 @@ A data frame with 2k rows and 15 columns:
 <https://github.com/MultiLevelAnalysis/Datasets-third-edition-Multilevel-book/tree/master/chapter%202/popularity>
 }
 \usage{
-popular2
+data(popular2)
 }
 \description{
 The popularity data in popular2 are simulated data for 2000 pupils in 100

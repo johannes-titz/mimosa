@@ -11,7 +11,8 @@
 #' variable: pupil popularity as rated by their teacher, on a scale from 1 to
 #' 10. The explanatory variables are pupil gender (boy = 0, girl = 1), pupil
 #' extraversion (10-point scale), and teacher experience in years.
-#'
+#' 
+#' @usage data(popular2)
 #' @format ## `popular2`
 #' A data frame with 2k rows and 15 columns:
 #' \describe{
