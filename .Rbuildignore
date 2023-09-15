@@ -65,3 +65,4 @@ _\.new\.png$
 ^Rprofile\.site$
 ^Dockerfile$
 ^data_orig$
+^\.github$
