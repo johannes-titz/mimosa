@@ -4,11 +4,9 @@
 ^\.Rprofile$
 .DAT$
 shiny_bookmarks
-.sav$
 ^thomas/Bildschirmfoto 2019-07-16 um 09.59.12.png$
 README.Rmd$
 ^.travis.yml$
-^Joined_data_wellbeing.csv$
 ^LICENSE.html$
 ^LICENSE.md$
 ^bookmark_test.R$
@@ -16,12 +14,9 @@ README.Rmd$
 ^comparison_with_lm.R$
 ^cranlogs.R$
 ^google_occurence.R$
-^hsball_null.csv$
-^hsball.csv$
 ^lmer.R$
 ^old.R$
 ^index.html$
-^input_tbl.csv$
 ^run_tests_locally.R$
 ^understanding_r2.R$
 ^todos.md$
@@ -63,3 +58,10 @@ paper.pdf
 ^thomas\.R$
 ^mimosa_isabell$
 _\.new\.png$
+^data-raw$
+^joss$
+^oldtests$
+^test-app-file\.R$
+^Rprofile\.site$
+^Dockerfile$
+^data_orig$
