@@ -76,8 +76,8 @@ mimosa::run_app()
 Yes, it is that easy—at least under GNU/Linux!
 
 If you have any problems installing mimosa, check that your R version is
-up to date (currently 3.6.2). If you are using Windows, enable TLS 1.2
-in the Internet Options Advanced tab (see
+up to date (currently 4.3). If you are using Windows, enable TLS 1.2 in
+the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
 <https://cran.r-project.org/bin/windows/Rtools/>.
