@@ -14,7 +14,8 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
   # load data
   uiOutput("file_area"),
   selectInput("examplefile", "OR use example data sets:",
-              c("", "Exam" = "mlmRev::Exam", "sleepstudy" = "lme4::sleepstudy"),
+              c("", "Exam" = "mlmRev::Exam", "sleepstudy" = "lme4::sleepstudy",
+                "Popularity2" = "mimosa::popular2"),
               selected = F, width = "150px"),
   shinyjs::hidden(tags$div(
     id = "reactive_mode_area",

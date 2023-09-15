@@ -22,7 +22,7 @@ server <- shinyServer(function(input, output, session) {
            updateSelectInput(session, "examplefile", selected = "mlmRev::Exam")
          }
         }
-        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy")) {
+        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy", "mimosa::popular2")) {
             data <- eval(parse(text = input$examplefile))
             reactive$data <- data
             shinyjs::show("create_model")
