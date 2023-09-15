@@ -9,7 +9,7 @@ test_that("finding grouping variable works", {
                     use.value.labels = F)
   )
   atemm <- Hmisc::spss.get(test_path("data", "ATEMM.sav"), use.value.labels = F)
-  karin <- read.csv2(test_path("data", "Joined_data_wellbeing.csv"), 
+  karin <- read.csv2(test_path("data", "Joined_data_wellbeing_small.csv"), 
                      fileEncoding = "ISO-8859-1")
   
   isabell2 <- Hmisc::spss.get(test_path("data", "MeaMimosa.sav"), 
