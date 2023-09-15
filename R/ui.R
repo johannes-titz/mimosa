@@ -37,8 +37,11 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
 #' @importFrom shinydashboard dashboardBody box
 #' @importFrom shinyjs useShinyjs hidden extendShinyjs
 #' @noRd
-ui_body <- shinydashboard::dashboardBody(
-  shinyjs::useShinyjs(),
+ui_body <- function(testing = F) {
+  shinydashboard::dashboardBody(
+  # shinytest2 does not react to shinyjs when called from command line, only
+  # from rstudio, so we do not turn on shinyjs when in testing
+  if (!testing) shinyjs::useShinyjs(),
   shinyjs::extendShinyjs(script = "www/script.js", functions = c("collapse")),
   # Model spec and model display -----------------------------------------
   fluidRow(
@@ -119,16 +122,18 @@ ui_body <- shinydashboard::dashboardBody(
                   <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. https://doi.org/10.21105/joss.02116')))
   )
 )
+}
 
 #' @importFrom shinydashboard dashboardPage dashboardHeader
 #' @importFrom shinyBS bsTooltip
 #' @noRd
 myui <- function() {
+  message(getOption("shiny.testmode"))
   dashboardPage(
   skin = "red",
   header = dashboardHeader(title = "mimosa"),
   # Sidebar-----------------------------------------------------------------
   sidebar = ui_sidebar,
-  body = ui_body,
+  body = ui_body(testing = getOption("shiny.testmode")),
   )
 }

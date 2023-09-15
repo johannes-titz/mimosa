@@ -1,10 +1,8 @@
-
 test_that("finding grouping variable works", {
   hsball <- read.csv(test_path("data", "hsball.csv"))
-  tutorium <- suppressWarnings(
-    Hmisc::spss.get(test_path("data", "Vorlesungsdaten_Mehrebenenanalyse.sav"))
-  )
-  isabell1 <- Hmisc::spss.get(test_path("data", "MEA - Time & Age.sav"), 
+  tutorium <- Hmisc::spss.get(test_path("data", "vl.sav"),
+                               use.value.labels = F)
+  isabell1 <- Hmisc::spss.get(test_path("data", "MeaTimeAge.sav"), 
                               use.value.labels = F)
   thomas1 <- suppressWarnings(
     Hmisc::spss.get(test_path("data", "Online-Tagebuch_130913.sav"),
@@ -14,14 +12,14 @@ test_that("finding grouping variable works", {
   karin <- read.csv2(test_path("data", "Joined_data_wellbeing.csv"), 
                      fileEncoding = "ISO-8859-1")
   
-  isabell2 <- Hmisc::spss.get(test_path("data", "MEA Daten - Mimosa.sav"), 
+  isabell2 <- Hmisc::spss.get(test_path("data", "MeaMimosa.sav"), 
                               use.value.labels = F)
   isabell3 <- Hmisc::spss.get(
-    test_path("data", "MEA Daten - Gruppe 1 - vollständig.sav"), 
+    test_path("data", "MeaGruppe1Vollstaendig.sav"), 
     use.value.labels = F
   )
   
-  kerner1 <- Hmisc::spss.get(test_path("data", "Nur EG 12.1.sav"), 
+  kerner1 <- Hmisc::spss.get(test_path("data", "NurEG12-1.sav"), 
                              use.value.labels = F)
   
   # atemm is problematic because too many dummy-vars are introduced
