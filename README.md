@@ -1,8 +1,7 @@
 
 # mimosa
 
-[![Build
-Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
+[![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 
 To cite mimosa in publications use:
@@ -122,7 +121,10 @@ automatically load the school data set. A big improvement over existing
 software is that mimosa detects the grouping variable and the
 hierarchical levels in the data automatically when the data is loaded:
 
-![Model creation dialog.](images/create_model2.png)
+<figure>
+<img src="images/create_model2.png" alt="Model creation dialog." />
+<figcaption aria-hidden="true">Model creation dialog.</figcaption>
+</figure>
 
 In the school data set, *school* is indeed the grouping variable. The
 automatic selection process works by analyzing the structure of the
@@ -151,7 +153,10 @@ dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
 this null model is directly created with the most useful statistics:
 
-![Output table.](images/output1.png)
+<figure>
+<img src="images/output1.png" alt="Output table." />
+<figcaption aria-hidden="true">Output table.</figcaption>
+</figure>
 
 The null model produces an intercept of close to 0, which makes sense
 since the data is standardized. The output table is created with
@@ -166,7 +171,10 @@ in the Table Options dialog (not shown here).
 The model description is shown mathematically and in R syntax of the
 `lme4` package:
 
-![Model display.](images/model_display1.png)
+<figure>
+<img src="images/model_display1.png" alt="Model display." />
+<figcaption aria-hidden="true">Model display.</figcaption>
+</figure>
 
 In the next step one can select the independent variables on level 1,
 after which one can further specify if these variables should be modeled
@@ -196,9 +204,15 @@ using a level-2 variable. In the exemplary analysis, only one
 interaction is available, between *standLRT* and *type*. By selecting it
 we arrive at the final model:
 
-![Model creation dialog.](images/create_model.png)
+<figure>
+<img src="images/create_model.png" alt="Model creation dialog." />
+<figcaption aria-hidden="true">Model creation dialog.</figcaption>
+</figure>
 
-![Output table.](images/output.png)
+<figure>
+<img src="images/output.png" alt="Output table." />
+<figcaption aria-hidden="true">Output table.</figcaption>
+</figure>
 
 The effect of the interaction is about -0.03, meaning that the
 relationship between *standLRT* and *normexam* is a bit lower for single
@@ -248,8 +262,8 @@ line-spacing="2">
 
 <div id="ref-bates2019" class="csl-entry">
 
-Bates, D., Maechler, M., & Bolker, B. (2019). *<span
-class="nocase">mlmRev</span>: Examples from multilevel modelling
+Bates, D., Maechler, M., & Bolker, B. (2019).
+*<span class="nocase">mlmRev</span>: Examples from multilevel modelling
 software review*. Retrieved from
 <https://CRAN.R-project.org/package=mlmRev>
 

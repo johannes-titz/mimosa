@@ -13,13 +13,11 @@ knitr::opts_chunk$set(
   comment = "#>",
   fig.path = "man/figures/README-",
   out.width = "100%"
-  
 )
 ```
 
 # mimosa
-
-[![Build Status](https://travis-ci.org/johannes-titz/mimosa.svg?branch=master)](https://travis-ci.org/johannes-titz/mimosa)
+[![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 
 To cite mimosa in publications use:
