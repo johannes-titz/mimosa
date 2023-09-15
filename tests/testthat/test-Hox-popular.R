@@ -6,7 +6,7 @@ test_that("Hox Example Popularity is reproducible", {
   options(shiny.testmode = T)
   app <- AppDriver$new(run_app())
   
-  app$upload_file(datafile = test_path("data", "popular2.csv"))
+  app$upload_file(datafile = test_path("data", "popular2.sav"))
   
   app$set_inputs(dv = "popular")
   outputtable <- app$get_value(output = "table_region")$html
