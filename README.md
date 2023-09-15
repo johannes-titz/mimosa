@@ -2,6 +2,7 @@
 # mimosa
 
 [![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 
 To cite mimosa in publications use:
