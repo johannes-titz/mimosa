@@ -14,7 +14,7 @@ create_table <- function(mdl, l1, output_options) {
   show <- check %in% output_options
   names(show) <- check
   
-  if (length(l1) > 0 & show["standardized coefficients"]){
+  if (length(l1) > 0 & show["standardized coefficients"]) {
     show_beta <- T
   } else {
     show_beta <- NULL

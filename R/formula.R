@@ -6,7 +6,7 @@
 #' @param interaction whether there is an interaction for the specific beta
 #' @return the formula as html
 #' @noRd
-create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL){
+create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL) {
   beta_varies <- ifelse(beta_varies, paste(" + u<sub>", beta_nmbr, "j",
                                            "</sub>", sep =""), "")
   interaction <- ifelse(!is.null(interaction),
@@ -26,7 +26,7 @@ create_mdl2_formula <- function(beta_nmbr, beta_varies, interaction = NULL){
 #' @param l2 variables on level 2
 #' @return the formula for the constant as html (Beta_0j)
 #' @noRd
-create_lvl2_constant <- function(l2){
+create_lvl2_constant <- function(l2) {
   part <- paste("&gamma;<sub>0", 1:length(l2), "</sub>", l2, "<sub>j</sub>",
                 collapse = "+", sep ="")
   part <- paste("+", part)
@@ -41,7 +41,7 @@ create_lvl2_constant <- function(l2){
 #' @param position the position of the variable
 #' @return the formula for one slope as html
 #' @noRd
-create_one_slope <- function(var_name, position){
+create_one_slope <- function(var_name, position) {
   paste(" + &beta;<sub>", position, "j</sub>", var_name,
         "<sub>ij</sub>", sep = "")
 }
@@ -51,7 +51,7 @@ create_one_slope <- function(var_name, position){
 #' @param dv dependent variable
 #' @param l1 level 1 variables
 #' @noRd
-create_equation <- function(dv, l1 = NULL){
+create_equation <- function(dv, l1 = NULL) {
   slopes <- paste(mapply(create_one_slope, l1, seq(l1)), collapse = "")
   constant <- " &beta;<sub>0j</sub>"
   error <- " + e<sub>ij</sub>"
@@ -73,7 +73,7 @@ create_equation <- function(dv, l1 = NULL){
 #' @return the r model formula for lme4
 #' @noRd
 create_r_formula <- function(dv, group_id, l1 = NULL, l2 = NULL,
-                             l1_varies = NULL, interaction = NULL){
+                             l1_varies = NULL, interaction = NULL) {
   fixed <- paste(c(l1, l2), collapse = "+")
   
   # random intercept model without any ivs
