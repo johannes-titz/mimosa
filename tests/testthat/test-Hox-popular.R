@@ -42,4 +42,6 @@ test_that("Hox Example Popularity is reproducible", {
   expect_true(grepl('2">0.55', outputtable))
   # tau seems to differ slightly
   # ICC not clear
+  # se and t-values also differ slightly, not the best test case, but even in
+  # the manual they say that thes values are different from the ones in the book
 })
