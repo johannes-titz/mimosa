@@ -129,12 +129,13 @@ ui_body <- function(testing = F) {
 #' @importFrom shinyBS bsTooltip
 #' @noRd
 myui <- function() {
-  message(getOption("shiny.testmode"))
+  testmode <- getOption("shiny.testmode")
+  testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
   skin = "red",
   header = dashboardHeader(title = "mimosa"),
   # Sidebar-----------------------------------------------------------------
   sidebar = ui_sidebar,
-  body = ui_body(testing = getOption("shiny.testmode")),
+  body = ui_body(testing = testmode),
   )
 }
