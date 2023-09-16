@@ -120,7 +120,9 @@ ui_body <- function(testing = F) {
             collapsible = T,
             HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>
-                  <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. https://doi.org/10.21105/joss.02116')))
+                  <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. <a href ="https://doi.org/10.21105/joss.02116">https://doi.org/10.21105/joss.02116</a>
+                  <p>A good introduction to mixed models in German is available in <a href="https://www.pearson.de/datenanalyse-mit-r-fortgeschrittene-verfahren-9783868944136">Burkhardt, Titz, & Sedlmeier (2022)</a></p>
+                 <p>If you want to support my work and/or you use R a lot, please check out the <a href="https://a.co/d/aOiGKhr">Essential R Cheatsheets</a>.</p>')))
   )
 )
 }
