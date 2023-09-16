@@ -1,4 +1,18 @@
-#
+# v0.5.0
+
+- use shinytest2 for tests
+- allow to select examples from menu
+- add popular2 as example data set
+- add hox poular2 as test
+- test loading of datasets without gui
+- add github actions check and coverage with badges
+- improve Dockerfile
+- get rid of plyr as dependency
+- some helper functions are now exported because they are useful even without the gui
+- add port and host as parameters for run_app
+- simplify link for school example in help
+- remove safari check as it seems to work fine now
+- clean up interface code
 
 # v0.4.0
 
