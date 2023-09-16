@@ -1,35 +1,32 @@
-FROM rocker/r-base:latest
+#it would be interesting to try out the alpine image, but then dependencies
+# must be handled manually; or arch
+FROM rocker/r-ver:4
 
 MAINTAINER Johannes Titz "shiny@titz.science"
-# Based on some guides
 
 # getting system deps via: https://www.jumpingrivers.com/blog/shiny-auto-docker/?
-# can we start with a minimum r-installation?
-RUN apt-get update -qq && apt-get -y --no-install-recommends install \
-    libxml2-dev \
-    libcairo2-dev \
-    libsqlite3-dev \
-    libmariadbd-dev \
-    libpq-dev \
-    libssh2-1-dev \
-    unixodbc-dev \
-    libcurl4-openssl-dev \
-    libssl-dev
+# just call glue_sys_reqs (see R/docker.R)
+RUN apt-get update -qq && apt-get install -y --no-install-recommends \
+  cmake \
+  libicu-dev \
+  make \
+  pandoc \
+  zlib1g-dev \
+  && apt-get clean
 
+## needed?
 ## update system libraries
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get clean
 
-# do we need this?
-# system library dependency for the euler app
-#RUN apt-get update && apt-get install -y \
-#    libmpfr-dev \
-#    cmake \
-#    && rm -rf /var/lib/apt/lists/*
-
 # mimosa app from github with all deps
 RUN R -e "install.packages('remotes')"
+RUN R -e "remotes::install_github('johannes-titz/mimosa')"
+RUN strip /usr/local/lib/R/site-library/*/libs/*.so
+
+# update mimosa and deps if necessary
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
 RUN R -e "remotes::install_github('johannes-titz/mimosa')"
 
 # expose port

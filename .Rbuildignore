@@ -66,3 +66,4 @@ _\.new\.png$
 ^Dockerfile$
 ^data_orig$
 ^\.github$
+^R/docker\.R$
