@@ -32,7 +32,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
     type = 'text/css',
     "footer{position: absolute; bottom:1%; left: 5%; padding:5px;}"
   ),
-  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa v. 0.5.0 &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
+  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa v0.5.0 &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
 )
 
 #' @importFrom shinydashboard dashboardBody box
@@ -122,7 +122,7 @@ ui_body <- function(testing = F) {
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>
                   <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. <a href ="https://doi.org/10.21105/joss.02116">https://doi.org/10.21105/joss.02116</a>
                   <p>A good introduction to mixed models in German is available in <a href="https://www.pearson.de/datenanalyse-mit-r-fortgeschrittene-verfahren-9783868944136">Burkhardt, Titz, & Sedlmeier (2022)</a></p>
-                 <p>If you want to support my work and/or you use R a lot, please check out the <a href="https://a.co/d/aOiGKhr">Essential R Cheatsheets</a>.</p>')))
+                 <p>If you want to support my work and/or you use R a lot, please check out the <a href="https://a.co/d/50rPzyh">Essential R Cheatsheets</a>.</p>')))
   )
 )
 }
@@ -135,7 +135,7 @@ myui <- function() {
   testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
   skin = "red",
-  header = dashboardHeader(title = "mimosa"),
+  header = dashboardHeader(title = "mimosa v0.5.0"),
   # Sidebar-----------------------------------------------------------------
   sidebar = ui_sidebar,
   body = ui_body(testing = testmode),
