@@ -35,7 +35,7 @@ common tools often lack a graphical user interface, are proprietary, and
 involve a tedious process of getting data in and publication-ready
 tables out. An exception is the shiny app `mimosa` which offers an
 alternative that is free, open source, intuitive, and runs in a browser,
-making it easily accessible (see <https://www.mimosa.icu>).
+making it easily accessible (see <https://mimosa.icu>).
 
 The software is targeted at behavioral scientists who frequently use
 2-level mixed models and want a solution that is tailored for this
@@ -57,8 +57,9 @@ you and you should check out the more comprehensive software `GAMLj`
 
 ## Installation
 
-No need to install mimosa, just go to www.mimosa.icu and use it there.
-An example data file is loaded when you go to www.mimosa.icu/example.
+No need to install mimosa, just go to <https://mimosa.icu> and use it
+there. An example data file is loaded when you go to
+<https://mimosa.icu/example>.
 
 If you really want to use it locally, install from github (you need the
 package devtools for this):
@@ -117,10 +118,10 @@ data. *Note*. This data is available in the R package `mlmRev` (Bates et
 al., 2019) and is from the study by Goldstein et al. (1993).
 
 If you want to follow the example you can now go to
-[www.mimosa.icu/example](www.mimosa.icu/example), which will
-automatically load the school data set. A big improvement over existing
-software is that mimosa detects the grouping variable and the
-hierarchical levels in the data automatically when the data is loaded:
+<https://mimosa.icu/example>, which will automatically load the school
+data set. A big improvement over existing software is that mimosa
+detects the grouping variable and the hierarchical levels in the data
+automatically when the data is loaded:
 
 <figure>
 <img src="images/create_model2.png" alt="Model creation dialog." />
@@ -184,10 +185,9 @@ as random or fixed effects. For the example data set, one can add
 table as well as the model description adapts each time a change is
 made. Note that, to avoid redundancy, this updated table is not shown
 here, but you can check the results on your own at
-[www.mimosa.icu/example](www.mimosa.icu/example). The effect for
-*standLRT* is .56. One can add a random component to the effect, which
-will result in an estimate for the variance in the population of the
-*standLRT* effect
+<https://mimosa.icu/example>. The effect for *standLRT* is .56. One can
+add a random component to the effect, which will result in an estimate
+for the variance in the population of the *standLRT* effect
 ![\tau\_\mathrm{11 school.standLRT}](https://latex.codecogs.com/png.latex?%5Ctau_%5Cmathrm%7B11%20school.standLRT%7D "\tau_\mathrm{11 school.standLRT}")
 (not shown here). It is only 0.01, but the square root
 ![\sqrt{0.01}=.1](https://latex.codecogs.com/png.latex?%5Csqrt%7B0.01%7D%3D.1 "\sqrt{0.01}=.1")

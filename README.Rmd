@@ -42,14 +42,14 @@ A BibTeX entry for LaTeX users is
 
 ## Introduction
 
-The mixed models special agent (``mimosa``) is a ``shiny`` [@chang2019] app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. Yet there is only a small number of user-friendly programs for conducting mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. An exception is the shiny app ``mimosa`` which offers an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible (see https://www.mimosa.icu).
+The mixed models special agent (``mimosa``) is a ``shiny`` [@chang2019] app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. Yet there is only a small number of user-friendly programs for conducting mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. An exception is the shiny app ``mimosa`` which offers an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible (see https://mimosa.icu).
 
 The software is targeted at behavioral scientists who frequently use 2-level mixed models and want a solution that is tailored for this particular use case. For instance, researchers studying groups (e.g. students clustered in schools, individuals clustered in work groups) and researchers employing within-subjects designs almost exclusively analyze their data with 2-level mixed models. Unlike other software, ``mimosa`` was designed for this use case. It helps the analyst by automatically detecting potential grouping variables and categorizing these variables in level 1 and level 2. Furthermore, ``mimosa`` is researcher-oriented because it produces a single summary table via ``sjPlot`` [@ludecke2018] that can be published in a scientific journal without any modifications.
 
 These benefits come at the cost of the limitation to 2-level models. If you need to model more complex cases, ``mimosa`` might not be suited for you and you should check out the more comprehensive software ``GAMLj`` [@gallucci2020].
 
 ## Installation
-No need to install mimosa, just go to www.mimosa.icu and use it there. An example data file is loaded when you go to www.mimosa.icu/example.
+No need to install mimosa, just go to https://mimosa.icu and use it there. An example data file is loaded when you go to https://mimosa.icu/example.
 
 If you really want to use it locally, install from github (you need the package devtools for this):
 
@@ -87,7 +87,7 @@ As an example data set we will use exam scores of 4,059 students from 65 schools
 
   : []{#tab:data label="tab:data"} Description of example data. *Note*. This data is available in the R package ``mlmRev`` [@bates2019] and is from the study by @goldstein1993.
 
-If you want to follow the example you can now go to [www.mimosa.icu/example](www.mimosa.icu/example), which will automatically load the school data set. A big improvement over existing software is that mimosa detects the grouping variable and the hierarchical levels in the data automatically when the data is loaded:
+If you want to follow the example you can now go to [https://mimosa.icu/example](https://mimosa.icu/example), which will automatically load the school data set. A big improvement over existing software is that mimosa detects the grouping variable and the hierarchical levels in the data automatically when the data is loaded:
 
 ![Model creation dialog.](images/create_model2.png)
 
@@ -105,7 +105,7 @@ The model description is shown mathematically and in R syntax of the ``lme4`` pa
 
 ![Model display.](images/model_display1.png)
 
-In the next step one can select the independent variables on level 1, after which one can further specify if these variables should be modeled as random or fixed effects. For the example data set, one can add *standLRT* (a standardized listening and reading test score). The output table as well as the model description adapts each time a change is made. Note that, to avoid redundancy, this updated table is not shown here, but you can check the results on your own at [www.mimosa.icu/example](www.mimosa.icu/example). The effect for *standLRT* is .56. One can add a random component to the effect, which will result in an estimate for the variance in the population of the *standLRT* effect $\tau_\mathrm{11 school.standLRT}$ (not shown here). It is only 0.01, but the square root $\sqrt{0.01}=.1$ is usually more interesting, giving the estimated population standard deviation for the estimated population effect of .56.
+In the next step one can select the independent variables on level 1, after which one can further specify if these variables should be modeled as random or fixed effects. For the example data set, one can add *standLRT* (a standardized listening and reading test score). The output table as well as the model description adapts each time a change is made. Note that, to avoid redundancy, this updated table is not shown here, but you can check the results on your own at [https://mimosa.icu/example](https://mimosa.icu/example). The effect for *standLRT* is .56. One can add a random component to the effect, which will result in an estimate for the variance in the population of the *standLRT* effect $\tau_\mathrm{11 school.standLRT}$ (not shown here). It is only 0.01, but the square root $\sqrt{0.01}=.1$ is usually more interesting, giving the estimated population standard deviation for the estimated population effect of .56.
 
 In the following step, one can add a variable on level 2, for instance *type*. The resulting model shows that, compared to mixed schools, single schools perform somewhat better (not displayed here). If at least one level-1 variable varies and a level-2 variable is selected, cross-level interactions can also be specified. If the level-1 variable does not vary, this option is not available because the idea of an interaction is that one can predict the size of an effect on level 1 by using a level-2 variable. In the exemplary analysis, only one interaction is available, between *standLRT* and *type*. By selecting it we arrive at the final model:
 
