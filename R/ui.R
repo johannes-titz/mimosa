@@ -1,5 +1,5 @@
 #options(shiny.autoreload = T) # for faster testing, not stable
-options(shiny.sanitize.errors = FALSE) # (handle errors manually)
+#options(shiny.sanitize.errors = T) # (handle errors manually)
 enableBookmarking("url") # not currently supported, but maybe later
 
 #' @importFrom shinydashboard dashboardSidebar
@@ -134,10 +134,10 @@ myui <- function() {
   testmode <- getOption("shiny.testmode")
   testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
-  skin = "red",
-  header = dashboardHeader(title = "mimosa v0.5.0"),
-  # Sidebar-----------------------------------------------------------------
-  sidebar = ui_sidebar,
-  body = ui_body(testing = testmode),
+    skin = "red",
+    header = dashboardHeader(title = "mimosa v0.5.0"),
+    # Sidebar-----------------------------------------------------------------
+    sidebar = ui_sidebar,
+    body = ui_body(testing = testmode),
   )
 }

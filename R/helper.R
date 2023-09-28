@@ -10,7 +10,7 @@
 #' @import dplyr
 #' @examples find_id(mlmRev::Exam)
 #' @export
-find_id <- function(d){
+find_id <- function(d) {
   # first check data types and variation of variables
   d2 <- select_if(d, function(x) is_integer(x) | is.character(x) | is.factor(x))
   d2 <- select_if(d2, function(x) length(unique(x)) != length(x))
@@ -20,6 +20,7 @@ find_id <- function(d){
   # field) with many possible values
   d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .60)
   variables <- names(d2)
+
   # sort variables by number of reverse levels
   avg_levels_mtrx <- create_avg_levels_mtrx(d2, variables)
   sum_of_reverse_levels <- colSums(avg_levels_mtrx, na.rm = T)
@@ -34,6 +35,12 @@ find_id <- function(d){
   group_variables <- as.character(df2$variables)
   if (length(group_variables) == 0) {
     group_variables <- as.character(df$variables)
+  }
+  # if still empty, there is probably no id
+  if (length(group_variables) == 0) {
+    showNotification("There seems to be no proper grouping variable (ID). The analysis will likely not work. Please check the structure of your data!",
+                     duration = NULL)
+    group_variables <- names(d)
   }
   group_variables
 }

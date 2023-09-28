@@ -1,5 +1,4 @@
 #' @importFrom shinyjs show hide
-#' @importFrom shinyalert shinyalert
 #' @importFrom lme4 lmer
 #' @import mlmRev
 #' @importFrom stats as.formula
@@ -55,6 +54,8 @@ server <- shinyServer(function(input, output, session) {
     shinyjs::hide("output_region")
     #shinyjs::hide("help")
     data <- load_data(input$datafile$name, input$datafile$datapath)
+    # otherwise the app will crash when load_data fails
+    req(data)
     reactive$data <- data
 
     id <- find_id(data)
@@ -255,12 +256,15 @@ server <- shinyServer(function(input, output, session) {
         lme4::lmer(stats::as.formula(mdl_formula), data = reactive$data)
       }
     },
-      error = function(error_message){
-        msg <- ifelse(grepl("<= number of random effects", error_message),
-                      "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-        shinyalert::shinyalert("Error", msg)
-        message(error_message)
-      }
+    error = function(error_message) {
+      msg <- ifelse(grepl("<= number of random effects", error_message),
+                    "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
+      showModal(modalDialog(
+        title = "Error",
+        msg,
+        easyClose = TRUE
+      ))
+    }
     )
     reactive$table <- create_table(mdl, l1, output_options)
     output <- HTML(create_table(mdl, l1, output_options))
@@ -269,6 +273,6 @@ server <- shinyServer(function(input, output, session) {
   })
   #
   observeEvent(input$reactive_mode, {
-      shinyjs::toggle("start_calculation_button")
+    shinyjs::toggle("start_calculation_button")
   })
 })

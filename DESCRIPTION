@@ -24,7 +24,6 @@ Imports:
     mlmRev,
     lme4,
     shiny,
-    shinyalert,
     shinyBS,
     shinybusy,
     shinydashboard,
