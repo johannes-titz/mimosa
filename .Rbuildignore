@@ -67,3 +67,4 @@ _\.new\.png$
 ^data_orig$
 ^\.github$
 ^R/docker\.R$
+^Dockerfile\.arch$
