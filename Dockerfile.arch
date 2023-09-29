@@ -1,0 +1,29 @@
+FROM archlinux:latest
+
+RUN yes | pacman -Syu
+
+# deps for building
+RUN yes | pacman -S make gcc gcc-fortran cmake r
+
+# mimosa app from github with all deps
+RUN R -e "install.packages('remotes', repos = 'http://cran.r-project.org')"
+RUN R -e "remotes::install_github('johannes-titz/mimosa')"
+
+# update mimosa and deps if necessary
+ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
+RUN R -e "remotes::install_github('johannes-titz/mimosa')"
+
+# rm package archive
+RUN rm /var/cache/pacman/pkg/*
+
+# remove build deps from above
+RUN yes| pacman -R make gcc gcc-fortran cmake
+
+# remove orphaned packages?
+# RUN pacman -Qqd | pacman -Rsu -
+
+# expose port
+EXPOSE 3838
+
+# run mimosa
+CMD ["R", "-e", "mimosa::run_app(port = 3838, host = '0.0.0.0')"]
