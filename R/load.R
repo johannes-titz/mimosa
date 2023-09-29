@@ -12,25 +12,12 @@
 #' @noRd
 load_data <- function(name, datapath) {
   ext <- tools::file_ext(name)
-  data <- tryCatch({
-    d <- switch(ext,
-                sav = Hmisc::spss.get(datapath, use.value.labels = F),
-                csv = load_csv(datapath),
-                validate("Invalid file; Please upload a .csv or .sav file")
-    )
-  },
-  error = function(error_message) {
-    msg <- "Sorry, I could not read your data. Please check that it is in the SPSS format .sav or a regular .csv file with a comma or a semicolon as the separator."
-      showModal(modalDialog(
-      title = "Error",
-      msg,
-      easyClose = TRUE
-    ))
-    # will grey out app
-    #message(error_message)
-  }
+  d <- switch(ext,
+              sav = Hmisc::spss.get(datapath, use.value.labels = F),
+              csv = load_csv(datapath),
+              validate("Invalid file; Please upload a .csv or .sav file")
   )
-  data
+  d
 }
 
 #' check for diferent csv types and encoding

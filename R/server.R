@@ -53,7 +53,18 @@ server <- shinyServer(function(input, output, session) {
     shinyjs::hide("display_model")
     shinyjs::hide("output_region")
     #shinyjs::hide("help")
-    data <- load_data(input$datafile$name, input$datafile$datapath)
+    data <- tryCatch({
+      load_data(input$datafile$name, input$datafile$datapath)
+      },
+      error = function(error_message) {
+        msg <- "Sorry, I could not read your data. Please check that it is in the SPSS format .sav or a regular .csv file with a comma or a semicolon as the separator."
+        showModal(modalDialog(
+          title = "Error",
+          msg,
+          easyClose = TRUE
+        ))
+      }
+    )
     # otherwise the app will crash when load_data fails
     req(data)
     reactive$data <- data

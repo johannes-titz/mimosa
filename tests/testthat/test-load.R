@@ -10,5 +10,5 @@ test_that("load_data() handles all input types", {
   expect_equal(load_data("Exam.csv", csv), csv_df)
   expect_equal(load_data("Joined_data_wellbeing_small.csv", csv2), csv2_df)
   expect_equal(load_data("ATEMM.sav", sav), sav_df)
-  expect_error(load_data("blah", path_csv), "I could not read your data")
+  expect_error(load_data("blah.rnd", csv), "Invalid file")
 })
