@@ -1,4 +1,7 @@
-#
+# v0.5.1
+
+- improve uploading of files; if it does not succeed, an error is displayed
+- improve error display in general: get rid of shinyalert, use modalDialog and showModal, req data in file upload, do not sanitize errors anymore
 
 # v0.5.0
 

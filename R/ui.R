@@ -135,7 +135,7 @@ myui <- function() {
   testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
     skin = "red",
-    header = dashboardHeader(title = "mimosa v0.5.0"),
+    header = dashboardHeader(title = "mimosa v0.5.1"),
     # Sidebar-----------------------------------------------------------------
     sidebar = ui_sidebar,
     body = ui_body(testing = testmode),
