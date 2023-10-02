@@ -68,3 +68,4 @@ _\.new\.png$
 ^\.github$
 ^R/docker\.R$
 ^Dockerfile\.arch$
+^stats\.R$
