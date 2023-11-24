@@ -40,6 +40,10 @@ A BibTeX entry for LaTeX users is
 }
 ```
 
+## Quick Start Youtube-Tutorial
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dXJnF9QMo7s?si=8-WUokG-Y893Cd3h" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ## Introduction
 
 The mixed models special agent (``mimosa``) is a ``shiny`` [@chang2019] app for 2-level mixed models. Mixed models are rapidly becoming the gold standard of statistical analysis techniques in the behavioral sciences. Yet there is only a small number of user-friendly programs for conducting mixed model analyses. The most common tools often lack a graphical user interface, are proprietary, and involve a tedious process of getting data in and publication-ready tables out. An exception is the shiny app ``mimosa`` which offers an alternative that is free, open source, intuitive, and runs in a browser, making it easily accessible (see https://mimosa.icu).

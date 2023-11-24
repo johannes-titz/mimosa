@@ -24,6 +24,11 @@ A BibTeX entry for LaTeX users is
       number = {49}
     }
 
+## Quick Start Youtube-Tutorial
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/dXJnF9QMo7s?si=8-WUokG-Y893Cd3h" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+</iframe>
+
 ## Introduction
 
 The mixed models special agent (`mimosa`) is a `shiny` (Chang, Cheng,
