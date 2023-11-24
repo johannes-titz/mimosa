@@ -26,8 +26,7 @@ A BibTeX entry for LaTeX users is
 
 ## Quick Start Youtube-Tutorial
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dXJnF9QMo7s?si=8-WUokG-Y893Cd3h" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-</iframe>
+<div class="vembedr"> <div> <iframe src="https://www.youtube.com/embed/dXJnF9QMo7s" width="533" height="300" frameborder="0" allowfullscreen="" data-external="1"></iframe> </div> </div>
 
 ## Introduction
 

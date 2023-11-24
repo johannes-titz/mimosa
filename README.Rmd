@@ -2,7 +2,7 @@
 output: 
   github_document:
     pandoc_args: --webtex
-
+always_allow_html: true
 bibliography: "library.bib"
 csl: apa.csl
 ---
@@ -42,7 +42,7 @@ A BibTeX entry for LaTeX users is
 
 ## Quick Start Youtube-Tutorial
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dXJnF9QMo7s?si=8-WUokG-Y893Cd3h" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+`r vembedr::embed_url("https://www.youtube.com/watch?v=dXJnF9QMo7s")`
 
 ## Introduction
 
