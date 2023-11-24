@@ -3,7 +3,8 @@ library(shinytest2)
 # https://multilevel-analysis.sites.uu.nl/wp-content/uploads/sites/27/2018/07/Mplus-tutorial.pdf
 test_that("Hox Example Popularity is reproducible", {
   # to modify shinyjs behavior so that R CMD check also runs
-  options(shiny.testmode = T)
+  #skip_on_ci()
+  options(shiny.testmode = F)
   app <- AppDriver$new(run_app())
   
   app$upload_file(datafile = test_path("data", "popular2.sav"))
