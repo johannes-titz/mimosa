@@ -42,7 +42,7 @@ A BibTeX entry for LaTeX users is
 
 ## Quick Start Youtube-Tutorial
 
-`r vembedr::embed_url("https://www.youtube.com/watch?v=dXJnF9QMo7s")`
+[![Watch the video](https://img.youtube.com/vi/dXJnF9QMo7s/maxresdefault.jpg)](https://youtu.be/dXJnF9QMo7s)
 
 ## Introduction
 
