@@ -2,9 +2,8 @@
 # mimosa
 
 [![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
-
+<!-- [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa) -->
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level
@@ -230,6 +229,14 @@ age 11 can predict the final exam grade at age 16 relatively well.
 Furthermore, single gender schools perform somewhat better than mixed
 gender schools. Overall, the model explains about 43% of the total
 variance, which is quite good for social science.
+
+## Testing
+
+Mimosa includes many automated tests with a test coverage of around 90%.
+Unfortunately, `shinytest2` leads to problems when testing via github
+actions. Thus, I run the tests locally on my GNU/Linux system and no
+badge is shown for the testcoverage. In the future I will try to include
+non-GUI tests to simplify automated testing via github actions.
 
 ## Issues and Support
 

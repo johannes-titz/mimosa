@@ -18,9 +18,8 @@ knitr::opts_chunk$set(
 
 # mimosa
 [![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
-
+<!-- [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa) -->
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116
@@ -53,6 +52,7 @@ The software is targeted at behavioral scientists who frequently use 2-level mix
 These benefits come at the cost of the limitation to 2-level models. If you need to model more complex cases, ``mimosa`` might not be suited for you and you should check out the more comprehensive software ``GAMLj`` [@gallucci2020].
 
 ## Installation
+
 No need to install mimosa, just go to https://mimosa.icu and use it there. An example data file is loaded when you go to https://mimosa.icu/example.
 
 If you really want to use it locally, install from github (you need the package devtools for this):
@@ -121,7 +121,12 @@ The effect of the interaction is about -0.03, meaning that the relationship betw
 
 The general conclusion for the data set might be that a reading test at age 11 can predict the final exam grade at age 16 relatively well. Furthermore, single gender schools perform somewhat better than mixed gender schools. Overall, the model explains about 43% of the total variance, which is quite good for social science.
 
+## Testing
+
+Mimosa includes many automated tests with a test coverage of around 90%. Unfortunately, `shinytest2` leads to problems when testing via github actions. Thus, I run the tests locally on my GNU/Linux system and no badge is shown for the testcoverage. In the future I will try to include non-GUI tests to simplify automated testing via github actions.
+
 ## Issues and Support
+
 If you find any bugs, please use the issue tracker at:
 
 https://github.com/johannes-titz/mimosa/issues
@@ -129,11 +134,13 @@ https://github.com/johannes-titz/mimosa/issues
 If you need answers on how to use the package, drop me an e-mail at johannes at titz.science or johannes.titz at gmail.com
 
 ## Contributing
+
 Comments and feedback of any kind are very welcome! I will thoroughly consider every suggestion on how to improve the code, the documentation, and the presented examples. Even minor things, such as suggestions for better wording or improving grammar in any part of the package, are more than welcome.
 
 If you want to make a pull request, please check that you can still build the package without any errors, warnings, or notes. Overall, simply stick to the R packages book: https://r-pkgs.org/ and follow the code style described here: http://r-pkgs.had.co.nz/r.html#style
 
 ## Acknowledgments
+
 I want to sincerely thank Maria Reichert for writing a first scaffold for ``mimosa`` (see the initial commit). Further, I want to thank Markus Burkhardt, Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell Winkler for testing mimosa and giving helpful comments on the documentation.
 
 ## References
