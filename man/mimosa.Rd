@@ -2,8 +2,27 @@
 % Please edit documentation in R/mimosa.R
 \docType{package}
 \name{mimosa}
+\alias{mimosa-package}
 \alias{mimosa}
 \title{mimosa: A shiny app for 2-level mixed models}
 \description{
 To start the app just use the function \code{\link{run_app}}
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{http://github.com/johannes-titz/mimosa}
+  \item Report bugs at \url{http://github.com/johannes-titz/mimosa/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Johannes Titz \email{johannes.titz@gmail.com} (\href{https://orcid.org/0000-0002-1102-5719}{ORCID})
+
+Other contributors:
+\itemize{
+  \item Maria Reichert \email{maria-c-reichert@web.de} [contributor]
+}
+
+}
+\keyword{internal}
