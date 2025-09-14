@@ -18,7 +18,7 @@ find_id <- function(d) {
   # take only variables where a certain amount of groups has at least two
   # values, this avoids taking as a group id an arbitrary variable (e.g. open
   # field) with many possible values
-  d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .60)
+  d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .33)
   variables <- names(d2)
 
   # sort variables by number of reverse levels
