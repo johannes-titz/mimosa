@@ -5,4 +5,5 @@ glue_sys_reqs <- function() {
   base_pkgs <- rownames(installed.packages(priority = "base"))
   deps_vec <- deps_vec[!(deps_vec %in% base_pkgs)]
   cmd <- vetiver:::glue_sys_reqs(deps_vec)
+  cmd
 }
