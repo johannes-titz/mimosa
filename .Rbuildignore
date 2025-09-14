@@ -69,3 +69,5 @@ _\.new\.png$
 ^R/docker\.R$
 ^Dockerfile\.arch$
 ^stats\.R$
+^luis$
+^shinyproxy\.sql$
