@@ -32,7 +32,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
     type = 'text/css',
     "footer{position: absolute; bottom:1%; left: 5%; padding:5px;}"
   ),
-  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa v0.5.0 &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
+  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>plyr and dplyr for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
 )
 
 #' @importFrom shinydashboard dashboardBody box
@@ -135,7 +135,8 @@ myui <- function() {
   testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
     skin = "red",
-    header = dashboardHeader(title = "mimosa v0.5.1"),
+    header = dashboardHeader(title = paste0("mimosa v",
+                                            utils::packageVersion("mimosa"))),
     # Sidebar-----------------------------------------------------------------
     sidebar = ui_sidebar,
     body = ui_body(testing = testmode),
