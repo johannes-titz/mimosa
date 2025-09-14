@@ -3,7 +3,6 @@
 #' To start the app just use the function \code{\link{run_app}}
 #' 
 #'
-#' @docType package
 #' @name mimosa
-NULL
-#> NULL
+#' @keywords internal
+"_PACKAGE"
