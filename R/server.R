@@ -143,6 +143,14 @@ server <- shinyServer(function(input, output, session) {
   # update levels, when group variable changes ---------------------------------
   observeEvent(input$group_id, {
     reactive$group_id_selected <- input$group_id
+    repeated <- prop.table(table(table(reactive$data[input$group_id]) > 1))["TRUE"]
+    msg <- paste0("Only ", round(repeated, 2) * 100, 
+                  " % of groups have repeated measures; random effects may be unreliable.")
+    if ( repeated < .5)
+      showModal(modalDialog(
+        title = "Warning",
+        msg
+      ))
     result <- determine_levels(input$group_id, reactive$data)
     reactive$level1 <- filter_ivs(result$level1, reactive$data)
     reactive$level2 <- filter_ivs(result$level2, reactive$data)
