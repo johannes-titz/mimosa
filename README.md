@@ -80,6 +80,21 @@ mimosa::run_app()
 
 Yes, it is that easy—at least under GNU/Linux!
 
+### Browser-only webR build
+
+Mimosa can also be exported as a static Shinylive app that runs Shiny
+for R directly in the browser with webR, without a Shiny Server process:
+
+``` r
+install.packages("shinylive")
+source("tools/build-shinylive.R")
+httpuv::runStaticServer("docs")
+```
+
+The generated `docs/` directory can be deployed to static hosting such
+as GitHub Pages. Package availability depends on precompiled WebAssembly
+binaries from the webR package repository.
+
 If you have any problems installing mimosa, check that your R version is
 up to date (currently 4.3). If you are using Windows, enable TLS 1.2 in
 the Internet Options Advanced tab (see

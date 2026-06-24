@@ -15,7 +15,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
   uiOutput("file_area"),
   selectInput("examplefile", "OR use example data sets:",
               c("", "Exam" = "mlmRev::Exam", "sleepstudy" = "lme4::sleepstudy",
-                "Popularity2" = "mimosa::popular2"),
+                "Popularity2" = "popular2"),
               selected = F, width = "150px"),
   shinyjs::hidden(tags$div(
     id = "reactive_mode_area",
@@ -36,14 +36,13 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
 )
 
 #' @importFrom shinydashboard dashboardBody box
-#' @importFrom shinyjs useShinyjs hidden extendShinyjs
+#' @importFrom shinyjs useShinyjs hidden
 #' @noRd
 ui_body <- function(testing = F) {
   shinydashboard::dashboardBody(
   # shinytest2 does not react to shinyjs when called from command line, only
   # from rstudio, so we do not turn on shinyjs when in testing
   if (!testing) shinyjs::useShinyjs(),
-  shinyjs::extendShinyjs(script = "www/script.js", functions = c("collapse")),
   # Model spec and model display -----------------------------------------
   fluidRow(
     shinyjs::hidden(
@@ -133,10 +132,13 @@ ui_body <- function(testing = F) {
 myui <- function() {
   testmode <- getOption("shiny.testmode")
   testmode <- ifelse(is.null(testmode), F, testmode)
+  mimosa_version <- tryCatch(
+    utils::packageVersion("mimosa"),
+    error = function(e) "webR"
+  )
   dashboardPage(
     skin = "red",
-    header = dashboardHeader(title = paste0("mimosa v",
-                                            utils::packageVersion("mimosa"))),
+    header = dashboardHeader(title = paste0("mimosa v", mimosa_version)),
     # Sidebar-----------------------------------------------------------------
     sidebar = ui_sidebar,
     body = ui_body(testing = testmode),

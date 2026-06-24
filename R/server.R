@@ -1,5 +1,5 @@
 #' @importFrom shinyjs show hide
-#' @importFrom lme4 lmer
+#' @importFrom lme4 glmer lmer
 #' @import mlmRev
 #' @importFrom stats as.formula
 #' @noRd
@@ -15,14 +15,19 @@ server <- shinyServer(function(input, output, session) {
   observe({
     # old mechanism through url
         query <- parseQueryString(session$clientData$url_search)
-        print(query)
         if (!is.null(query[['example']])) {
          if (query[['example']] == "school") {
            updateSelectInput(session, "examplefile", selected = "mlmRev::Exam")
          }
         }
-        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy", "mimosa::popular2")) {
-            data <- eval(parse(text = input$examplefile))
+        old_popular2_value <- paste0("mimosa", "::", "popular2")
+        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy",
+                                     "popular2", old_popular2_value)) {
+            data <- switch(input$examplefile,
+                           "mlmRev::Exam" = mlmRev::Exam,
+                           "lme4::sleepstudy" = lme4::sleepstudy,
+                           "popular2" = popular2,
+                           popular2)
             reactive$data <- data
             shinyjs::show("create_model")
             shinyjs::show("reactive_mode_area")

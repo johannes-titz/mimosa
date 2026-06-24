@@ -70,4 +70,5 @@ _\.new\.png$
 ^Dockerfile\.arch$
 ^stats\.R$
 ^luis$
+^docs$
 ^shinyproxy\.sql$
