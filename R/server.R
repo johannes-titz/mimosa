@@ -86,6 +86,7 @@ server <- shinyServer(function(input, output, session) {
   # reactive values
   output$variables <- renderUI({
     if (length(reactive$group_id_selected) > 0) {
+      dv_choices <- filter_dvs(reactive$level1, reactive$data)
       fluidRow(
         column(width = 2, align = "center",
                selectInput("group_id", label = "Group ID",
@@ -108,9 +109,12 @@ server <- shinyServer(function(input, output, session) {
                }
         ),
         column(width = 2,
-               radioButtons("dv", label = "Dependent Variable",
+               radioButtons("dv", label = "Dependent variable (numeric only)",
                             selected = character(0),
-                            choices = reactive$level1)
+                            choices = dv_choices),
+               if (length(dv_choices) == 0) {
+                 helpText("No numeric level-1 variables available as dependent variables.")
+               }
         ),
         column(width = 2,
                checkboxGroupInput("l1", label = "Level 1",
@@ -263,6 +267,9 @@ server <- shinyServer(function(input, output, session) {
       # if you change data file, dv is not emptied
       return("Select dependent variable and grouping variable"
       )
+    if (!is.numeric(reactive$data[[dv]])) {
+      return("Select a numeric dependent variable.")
+    }
     mdl_formula <- create_r_formula(dv, group_id, l1,
                                     l2, l1_varies,
                                     interaction)

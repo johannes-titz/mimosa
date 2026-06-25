@@ -231,6 +231,19 @@ filter_ivs <- function(ivs, data, n_levels_max = 10) {
   names(n_levels[(n_levels <= n_levels_max)])
 }
 
+#' Filter dependent variables
+#'
+#' Dependent variables for the Gaussian mixed model must be numeric.
+#'
+#' @param dvs potential dependent variables
+#' @param data the data frame
+#' @noRd
+filter_dvs <- function(dvs, data) {
+  data <- data[names(data) %in% dvs]
+  is_numeric <- vapply(data, is.numeric, logical(1))
+  names(data)[is_numeric]
+}
+
 #' Select columns matching a predicate
 #'
 #' @noRd

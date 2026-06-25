@@ -66,3 +66,21 @@ test_that("grouping variable is found in two-level mlmRev datasets", {
   expect_identical("region", find_id(mlmRev::Mmmec))
   expect_identical("Subject", find_id(mlmRev::Oxboys))
 })
+
+test_that("dependent variables are restricted to numeric variables", {
+  data <- data.frame(
+    numeric_score = c(1.2, 2.4, 3.1),
+    integer_score = c(1L, 2L, 3L),
+    group = factor(c("a", "a", "b")),
+    condition = c("x", "y", "x")
+  )
+
+  expect_identical(
+    c("numeric_score", "integer_score"),
+    filter_dvs(names(data), data)
+  )
+  expect_identical(
+    "integer_score",
+    filter_dvs(c("integer_score", "condition"), data)
+  )
+})
