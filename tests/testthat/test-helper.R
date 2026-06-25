@@ -29,11 +29,40 @@ test_that("finding grouping variable works", {
   expect_identical("ID", find_id(tutorium))
   expect_identical("ID", find_id(isabell1))
   expect_identical("Code", find_id(thomas1))
-  expect_identical(c("ID", "Min.Unpuenkt", "Pktl.02", "Pktl.02i", "Pktl.01", 
-                     "Pktl.01i", "SF"), find_id(isabell2))
+  expect_identical("ID", find_id(isabell2))
+  expect_identical(c("ID", "VPCODE"), find_id(isabell3))
   expect_identical(c("Gruppe", "Frau", "Mann", "Abstinent", "Raucht", 
                      "BildungHoch", "BildungNiedrig"), find_id(atemm))
   # what is this?
   expect_identical(find_id(atemm), find_id(atemm[, 14:1]))
   expect_identical(c("serial"), find_id(karin))
+})
+
+test_that("grouping variable explanation is returned", {
+  hsball <- read.csv(test_path("data", "hsball.csv"))
+  explanation <- explain_find_id(hsball)
+
+  expect_true(is.data.frame(explanation))
+  expect_true(all(c(
+    "variable",
+    "n_groups",
+    "repeated_group_prop",
+    "repeated_row_prop",
+    "median_n",
+    "n_variables_lvl2",
+    "final_score",
+    "is_candidate"
+  ) %in% names(explanation)))
+  expect_identical("ID", explanation$variable[1])
+  expect_true(explanation$is_candidate[1])
+  expect_true(explanation$repeated_row_prop[1] > 0)
+})
+
+test_that("grouping variable is found in two-level mlmRev datasets", {
+  expect_identical("district", find_id(mlmRev::Contraception))
+  expect_identical("id", find_id(mlmRev::Early))
+  expect_identical("school", find_id(mlmRev::Exam))
+  expect_identical("school", find_id(mlmRev::Hsb82))
+  expect_identical("region", find_id(mlmRev::Mmmec))
+  expect_identical("Subject", find_id(mlmRev::Oxboys))
 })

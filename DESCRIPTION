@@ -20,7 +20,6 @@ License: AGPL-3
 URL: http://github.com/johannes-titz/mimosa
 BugReports: http://github.com/johannes-titz/mimosa/issues
 Imports: 
-    dplyr,
     mlmRev,
     lme4,
     shiny,
@@ -30,8 +29,6 @@ Imports:
     shinyjs,
     sjPlot,
     utils,
-    readr,
-    stringr,
     Hmisc
 Suggests: 
     shinytest2,

@@ -1,41 +1,16 @@
 #' Tries to find the grouping variable (id)
 #' 
-#' Works heuristically by (1) checking how many level-2-variables are present
-#' for every potential grouping variable and (2) how many reverse levels are
-#' present for every potential grouping variable.
+#' Ranks candidate grouping variables using diagnostics from
+#' \code{explain_find_id()}.
 #' 
 #' @param d data frame
 #' @return potential grouping variables
 #' @import sjPlot
-#' @import dplyr
 #' @examples find_id(mlmRev::Exam)
 #' @export
 find_id <- function(d) {
-  # first check data types and variation of variables
-  d2 <- select_if(d, function(x) is_integer(x) | is.character(x) | is.factor(x))
-  d2 <- select_if(d2, function(x) length(unique(x)) != length(x))
-  d2 <- select_if(d2, function(x) length(unique(x)) != 1)
-  # take only variables where a certain amount of groups has at least two
-  # values, this avoids taking as a group id an arbitrary variable (e.g. open
-  # field) with many possible values
-  d2 <- select_if(d2, function(x) prop.table(table(table(x) > 1))["TRUE"] >= .33)
-  variables <- names(d2)
-
-  # sort variables by number of reverse levels
-  avg_levels_mtrx <- create_avg_levels_mtrx(d2, variables)
-  sum_of_reverse_levels <- colSums(avg_levels_mtrx, na.rm = T)
-  # this gives the number of variables that are on level 2
-  n_variables_lvl2 <- apply(avg_levels_mtrx, 1, function(x) sum(x == 1, na.rm = T))
-  df <- data.frame(variables, n_variables_lvl2, sum_of_reverse_levels)
-  # sort descending by number of lvl2 variables and by sum of reverse average
-  # levels
-  df <- df %>% 
-    arrange(desc(n_variables_lvl2), desc(sum_of_reverse_levels), variables)
-  df2 <- df %>% dplyr::filter(n_variables_lvl2 >= 1)
-  group_variables <- as.character(df2$variables)
-  if (length(group_variables) == 0) {
-    group_variables <- as.character(df$variables)
-  }
+  diagnostics <- explain_find_id(d)
+  group_variables <- as.character(diagnostics$variable[diagnostics$is_candidate])
   # if still empty, there is probably no id
   if (length(group_variables) == 0) {
     showNotification("There seems to be no proper grouping variable (ID). The analysis will likely not work. Please check the structure of your data!",
@@ -43,6 +18,85 @@ find_id <- function(d) {
     group_variables <- names(d)
   }
   group_variables
+}
+
+#' Explain grouping variable detection
+#'
+#' Returns one row per possible grouping variable with diagnostics used by
+#' \code{find_id()}.
+#'
+#' @param d data frame
+#' @return data frame with candidate scores and diagnostics
+#' @examples explain_find_id(mlmRev::Exam)
+#' @export
+explain_find_id <- function(d) {
+  # first check data types and variation of variables
+  d2 <- select_columns(d, function(x) is_integer(x) | is.character(x) | is.factor(x))
+  d2 <- select_columns(d2, function(x) length(unique(x)) != length(x))
+  d2 <- select_columns(d2, function(x) length(unique(x)) != 1)
+  # take only variables where a certain amount of groups has at least two
+  # values, this avoids taking as a group id an arbitrary variable (e.g. open
+  # field) with many possible values
+  d2 <- select_columns(d2, function(x) isTRUE(prop.table(table(table(x) > 1))["TRUE"] >= .33))
+  variables <- names(d2)
+  if (length(variables) == 0) {
+    return(empty_id_explanation())
+  }
+
+  # sort variables by number of reverse levels
+  avg_levels_mtrx <- create_avg_levels_mtrx(d2, variables)
+  sum_of_reverse_levels <- colSums(avg_levels_mtrx, na.rm = T)
+  # this gives the number of variables that are on level 2
+  n_variables_lvl2 <- apply(avg_levels_mtrx, 1, function(x) sum(x == 1, na.rm = T))
+  diagnostics <- do.call(rbind, lapply(variables, function(variable) {
+    score_group_candidate(d2, variable)
+  }))
+  diagnostics$n_variables_lvl2 <- n_variables_lvl2[diagnostics$variable]
+  diagnostics$sum_of_reverse_levels <- sum_of_reverse_levels[diagnostics$variable]
+  diagnostics$level2_variable_prop <- diagnostics$n_variables_lvl2 / pmax(ncol(d2) - 1, 1)
+  max_lvl2 <- max(diagnostics$n_variables_lvl2, na.rm = TRUE)
+  if (!is.finite(max_lvl2) || max_lvl2 == 0) {
+    max_lvl2 <- 1
+  }
+  diagnostics$level2_count_score <- sqrt(diagnostics$n_variables_lvl2 /
+                                           max_lvl2)
+  max_reverse_levels <- max(diagnostics$sum_of_reverse_levels, na.rm = TRUE)
+  if (!is.finite(max_reverse_levels) || max_reverse_levels == 0) {
+    max_reverse_levels <- 1
+  }
+  diagnostics$reverse_level_score <- diagnostics$sum_of_reverse_levels /
+    max_reverse_levels
+  diagnostics$final_score <- with(diagnostics,
+    0.50 * level2_count_score +
+      0.20 * reverse_level_score +
+      0.10 * repeated_row_prop +
+      0.06 * repeated_group_prop +
+      0.05 * group_count_score +
+      0.04 * median_n_score +
+      0.03 * name_score +
+      0.02 * (1 - missing_prop)
+  )
+  best_score <- max(diagnostics$final_score, na.rm = TRUE)
+  if (!is.finite(best_score)) {
+    best_score <- 0
+  }
+  has_level2_evidence <- any(diagnostics$n_variables_lvl2 >= 1)
+  if (has_level2_evidence) {
+    diagnostics$is_candidate <- diagnostics$n_variables_lvl2 >= 1 &
+      diagnostics$final_score >= 0.75 * best_score
+  } else {
+    diagnostics$is_candidate <- seq_len(nrow(diagnostics)) == 1 &
+      diagnostics$final_score >= 0.40
+  }
+  diagnostics <- diagnostics[order(
+    -diagnostics$is_candidate,
+    -diagnostics$final_score,
+    -diagnostics$n_variables_lvl2,
+    diagnostics$sum_of_reverse_levels,
+    diagnostics$variable
+  ), ]
+  rownames(diagnostics) <- NULL
+  diagnostics
 }
 
 #' Determines variables on level 1 and level 2
@@ -112,10 +166,16 @@ find_avg_levels <- function(data, group_var, var_total_length,
   if (show_prog) {
     incProgress(1 / var_total_length, message = paste("Testing Variable ", group_var, " as grouping variable"))
   }
-  data <- group_by_at(data, group_var)
-  levels <- summarize_all(data, get_levels, ignore_na = ignore_na)
+  group_values <- data[[group_var]]
+  groups <- split(seq_len(nrow(data)), group_values, drop = TRUE)
+  if (anyNA(group_values)) {
+    groups <- c(groups, list(which(is.na(group_values))))
+  }
+  levels <- vapply(groups, function(rows) {
+    vapply(data[rows, , drop = FALSE], get_levels, numeric(1), ignore_na = ignore_na)
+  }, numeric(ncol(data)))
+  levels <- rowMeans(levels)
   levels[group_var] <- NA
-  levels <- colMeans(levels)
   levels
 }
 
@@ -169,6 +229,114 @@ filter_ivs <- function(ivs, data, n_levels_max = 10) {
   data <- data[names(data) %in% ivs]
   n_levels <- sapply(data, function(x) length(levels(x)))
   names(n_levels[(n_levels <= n_levels_max)])
+}
+
+#' Select columns matching a predicate
+#'
+#' @noRd
+select_columns <- function(data, predicate) {
+  keep <- vapply(data, predicate, logical(1))
+  data[!is.na(keep) & keep]
+}
+
+#' Score one grouping-variable candidate
+#'
+#' @noRd
+score_group_candidate <- function(data, variable) {
+  values <- data[[variable]]
+  missing_prop <- mean(is.na(values))
+  non_missing <- !is.na(values)
+  sizes <- table(values[non_missing])
+  n_groups <- length(sizes)
+  repeated <- sizes >= 2
+  repeated_group_prop <- if (n_groups > 0) mean(repeated) else 0
+  repeated_row_prop <- if (sum(non_missing) > 0) {
+    sum(sizes[repeated]) / sum(non_missing)
+  } else {
+    0
+  }
+  median_n <- if (n_groups > 0) stats::median(as.numeric(sizes)) else 0
+  max_n <- if (n_groups > 0) max(as.numeric(sizes)) else 0
+  group_count_score <- score_group_count(n_groups, nrow(data))
+  median_n_score <- score_median_n(median_n)
+  name_score <- score_candidate_name(variable)
+
+  data.frame(
+    variable = variable,
+    n_groups = n_groups,
+    repeated_group_prop = repeated_group_prop,
+    repeated_row_prop = repeated_row_prop,
+    median_n = median_n,
+    max_n = max_n,
+    missing_prop = missing_prop,
+    group_count_score = group_count_score,
+    median_n_score = median_n_score,
+    name_score = name_score,
+    stringsAsFactors = FALSE
+  )
+}
+
+#' Score whether the number of groups is plausible
+#'
+#' @noRd
+score_group_count <- function(n_groups, n_rows) {
+  if (n_rows == 0 || n_groups <= 1 || n_groups >= n_rows) {
+    return(0)
+  }
+  group_ratio <- n_groups / n_rows
+  if (group_ratio <= 0.5) {
+    return(1)
+  }
+  max(0, 1 - ((group_ratio - 0.5) / 0.5))
+}
+
+#' Score the typical cluster size
+#'
+#' @noRd
+score_median_n <- function(median_n) {
+  if (is.na(median_n) || median_n < 2) {
+    return(0)
+  }
+  pmin(1, median_n / 4)
+}
+
+#' Small prior for common grouping-variable names
+#'
+#' @noRd
+score_candidate_name <- function(variable) {
+  pattern <- paste(
+    c("id", "subject", "subj", "person", "participant", "student",
+      "pupil", "school", "class", "cluster", "group", "gruppe",
+      "team", "site", "dyad", "family", "household", "code", "serial"),
+    collapse = "|"
+  )
+  ifelse(grepl(pattern, variable, ignore.case = TRUE), 1, 0)
+}
+
+#' Empty result with the same columns as explain_find_id()
+#'
+#' @noRd
+empty_id_explanation <- function() {
+  data.frame(
+    variable = character(0),
+    n_groups = integer(0),
+    repeated_group_prop = numeric(0),
+    repeated_row_prop = numeric(0),
+    median_n = numeric(0),
+    max_n = numeric(0),
+    missing_prop = numeric(0),
+    group_count_score = numeric(0),
+    median_n_score = numeric(0),
+    name_score = numeric(0),
+    n_variables_lvl2 = numeric(0),
+    sum_of_reverse_levels = numeric(0),
+    level2_variable_prop = numeric(0),
+    level2_count_score = numeric(0),
+    reverse_level_score = numeric(0),
+    final_score = numeric(0),
+    is_candidate = logical(0),
+    stringsAsFactors = FALSE
+  )
 }
 
 #' check if all values of a vector are integers

@@ -4,8 +4,6 @@
 #' 
 #' @importFrom Hmisc spss.get
 #' @importFrom utils read.csv read.csv2 count.fields
-#' @importFrom readr guess_encoding
-#' @importFrom stringr str_match
 #' @param name name of file
 #' @param datapath the actual path
 #' @return data as an R object or an error
@@ -23,14 +21,34 @@ load_data <- function(name, datapath) {
 #' check for diferent csv types and encoding
 #' @noRd
 load_csv <- function(path) {
-  encoding <- unlist(readr::guess_encoding(path)[1, 1])
   L <- readLines(path, n = 1)
   numfields_semicolon <- count.fields(textConnection(L), sep = ";")
   numfields_colon <- count.fields(textConnection(L), sep = ",")
   if (numfields_semicolon == 1) {
-    data <- utils::read.csv(path, fileEncoding = encoding)
+    data <- read_csv_with_fallback(path, utils::read.csv)
   } else if (numfields_colon == 1) {
-    data <- utils::read.csv2(path, fileEncoding = encoding)
+    data <- read_csv_with_fallback(path, utils::read.csv2)
   }
   data
+}
+
+#' Read CSV data using base R encodings
+#'
+#' @noRd
+read_csv_with_fallback <- function(path, reader) {
+  encodings <- c("", "UTF-8", "ISO-8859-1", "latin1")
+  for (encoding in encodings) {
+    data <- tryCatch(
+      if (encoding == "") {
+        reader(path)
+      } else {
+        reader(path, fileEncoding = encoding)
+      },
+      error = function(e) NULL
+    )
+    if (!is.null(data)) {
+      return(data)
+    }
+  }
+  reader(path)
 }

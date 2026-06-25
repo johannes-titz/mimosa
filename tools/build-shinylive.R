@@ -20,6 +20,10 @@ if (dir.exists(stage_dir)) {
 }
 on.exit(unlink(stage_dir, recursive = TRUE), add = TRUE)
 
+if (dir.exists(site_dir)) {
+  unlink(site_dir, recursive = TRUE)
+}
+
 dir.create(stage_dir, recursive = TRUE)
 dir.create(file.path(stage_dir, "R"), recursive = TRUE)
 dir.create(file.path(stage_dir, "data"), recursive = TRUE)
