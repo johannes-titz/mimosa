@@ -43,6 +43,38 @@ ui_body <- function(testing = F) {
   # shinytest2 does not react to shinyjs when called from command line, only
   # from rstudio, so we do not turn on shinyjs when in testing
   if (!testing) shinyjs::useShinyjs(),
+  tags$head(tags$style(HTML(
+    ".mimosa-tooltip {
+       position: relative;
+       cursor: help;
+       border-bottom: 1px dotted #777;
+     }
+     .mimosa-tooltip .mimosa-tooltip-box {
+       visibility: hidden;
+       opacity: 0;
+       position: absolute;
+       left: 0;
+       bottom: 1.8em;
+       width: 280px;
+       z-index: 9999;
+       padding: 8px 10px;
+       border-radius: 4px;
+       border: 1px solid #b7a200;
+       background: #fff7b2;
+       color: #111;
+       font-size: 12px;
+       line-height: 1.35;
+       text-align: left;
+       white-space: normal;
+       transition: opacity 0.15s ease-in-out;
+     }
+     .mimosa-tooltip:hover .mimosa-tooltip-box,
+     .mimosa-tooltip:focus .mimosa-tooltip-box {
+       visibility: visible;
+       opacity: 1;
+     }
+     }"
+  ))),
   # Model spec and model display -----------------------------------------
   fluidRow(
     shinyjs::hidden(

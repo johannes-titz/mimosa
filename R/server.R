@@ -295,10 +295,30 @@ server <- shinyServer(function(input, output, session) {
         msg,
         easyClose = TRUE
       ))
+      NULL
     }
     )
+    if (is.null(mdl)) {
+      removeNotification(id = "estimating_model")
+      return("Model could not be estimated. Please simplify the model and try again.")
+    }
+    if (lme4::isSingular(mdl)) {
+      removeNotification(id = "estimating_model")
+      msg <- paste(
+        "The model has a singular fit, which usually means the random-effects",
+        "structure is too complex for the data. Try removing variables from",
+        "<<Level 1 varies>>, removing cross-level interactions, or using fewer",
+        "predictors."
+      )
+      showModal(modalDialog(
+        title = "Singular fit",
+        msg,
+        easyClose = TRUE
+      ))
+      return("Model has a singular fit. Please simplify the random-effects structure.")
+    }
     reactive$table <- create_table(mdl, l1, output_options)
-    output <- HTML(create_table(mdl, l1, output_options))
+    output <- HTML(reactive$table)
     removeNotification(id = "estimating_model")
     return(output)
   })
