@@ -13,9 +13,8 @@ find_id(d)
 potential grouping variables
 }
 \description{
-Works heuristically by (1) checking how many level-2-variables are present
-for every potential grouping variable and (2) how many reverse levels are
-present for every potential grouping variable.
+Ranks candidate grouping variables using diagnostics from
+\code{explain_find_id()}.
 }
 \examples{
 find_id(mlmRev::Exam)
