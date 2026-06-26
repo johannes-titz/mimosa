@@ -31,6 +31,7 @@ dir.create(file.path(stage_dir, "data"), recursive = TRUE)
 invisible(file.copy(file.path(root, "inst", "shinylive", "app.R"), stage_dir, overwrite = TRUE))
 invisible(file.copy(file.path(root, "R", c(
   "load.R",
+  "examples.R",
   "helper.R",
   "formula.R",
   "output.R",

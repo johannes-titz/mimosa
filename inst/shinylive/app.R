@@ -1,6 +1,7 @@
 if (requireNamespace("webr", quietly = TRUE)) {
   webr::install(c(
     "Hmisc",
+    "insight",
     "lme4",
     "mlmRev",
     "shiny",
@@ -27,6 +28,7 @@ if (requireNamespace("Hmisc", quietly = TRUE)) {
 
 load("data/popular2.rda")
 source("R/load.R", local = TRUE)
+source("R/examples.R", local = TRUE)
 source("R/helper.R", local = TRUE)
 source("R/formula.R", local = TRUE)
 source("R/output.R", local = TRUE)
