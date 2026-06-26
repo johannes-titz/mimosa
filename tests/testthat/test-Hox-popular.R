@@ -12,8 +12,16 @@ test_that("Hox Example Popularity is reproducible", {
   app <- AppDriver$new(mimosa::run_app())
   
   app$upload_file(datafile = test_path("data", "popular2.sav"))
+  app$wait_for_idle()
   
-  app$set_inputs(dv = "popular")
+  app$set_inputs(
+    dv = "popular",
+    l1 = character(0),
+    l1_varies = character(0),
+    l2 = character(0),
+    interaction = character(0)
+  )
+  app$wait_for_idle()
   outputtable <- app$get_value(output = "table_region")$html
   # intercept
   expect_html_value(outputtable, "5.08")
@@ -29,6 +37,7 @@ test_that("Hox Example Popularity is reproducible", {
   app$set_inputs(l1 = c("extrav", "sex"),  l2 = c("texp"))
   app$set_inputs(l1_varies = c("extrav"))
   app$set_inputs(interaction = c("extrav:texp"))
+  app$wait_for_idle()
 
   outputtable <- app$get_value(output = "table_region")$html
   # a teacher with 0 years of experience has an expected popularity of -1.207

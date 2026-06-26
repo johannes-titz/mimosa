@@ -95,9 +95,19 @@ load_example_dataset <- function(key) {
     "mlmRev::Mmmec" = mlmRev::Mmmec,
     "mlmRev::Oxboys" = mlmRev::Oxboys,
     "lme4::sleepstudy" = lme4::sleepstudy,
-    "popular2" = popular2,
+    "popular2" = load_package_dataset("popular2"),
     NULL
   )
+}
+
+#' Load a package dataset by name
+#'
+#' @param name dataset name
+#' @noRd
+load_package_dataset <- function(name) {
+  data_env <- new.env(parent = emptyenv())
+  utils::data(list = name, package = "mimosa", envir = data_env)
+  data_env[[name]]
 }
 
 #' HTML option tags for example data sets
