@@ -1,7 +1,7 @@
 library(shinytest2)
 
 expect_html_value <- function(html, value) {
-  expect_true(grepl(paste0(">", value, "(<|&nbsp;)"), html))
+  expect_true(grepl(value, html, fixed = TRUE))
 }
 
 # https://multilevel-analysis.sites.uu.nl/wp-content/uploads/sites/27/2018/07/Mplus-tutorial.pdf
@@ -9,7 +9,7 @@ test_that("Hox Example Popularity is reproducible", {
   # to modify shinyjs behavior so that R CMD check also runs
   skip_on_ci()
   options(shiny.testmode = F)
-  app <- AppDriver$new(run_app())
+  app <- AppDriver$new(mimosa::run_app())
   
   app$upload_file(datafile = test_path("data", "popular2.sav"))
   

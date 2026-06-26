@@ -101,13 +101,13 @@ server <- shinyServer(function(input, output, session) {
                # button to calculate model
                # hide if reactive mode is on
                if (isolate(input$reactive_mode == TRUE)) {
-               shinyjs::hidden(div(id = "start_calculation_button",
+               shinyjs::hidden(div(id = "start_calculation_button_area",
                                    actionButton("start_calculation_button",
                                                 "Estimate model",
                                                 width = "100%",
                                                 icon = icon("calculator"))))
                  } else {
-                 div(id = "start_calculation_button",
+                 div(id = "start_calculation_button_area",
                      actionButton("start_calculation_button",
                                   "Estimate model",
                                   width = "100%",
@@ -333,7 +333,7 @@ server <- shinyServer(function(input, output, session) {
   })
   #
   observeEvent(input$reactive_mode, {
-    shinyjs::toggle("start_calculation_button")
+    shinyjs::toggle("start_calculation_button_area")
   })
 })
 
