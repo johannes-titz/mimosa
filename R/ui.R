@@ -10,13 +10,21 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
   shinybusy::add_busy_spinner(spin = "self-building-square",
                               position = "bottom-right",
                               margin = c(50, 0)),
-  tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
+  tags$head(tags$style(HTML(
+    ".sidebar {padding-left: 8px;}
+     .example-dataset-select-tooltip {
+       border-bottom: 0;
+       cursor: default;
+     }
+     .example-dataset-select-tooltip .mimosa-tooltip-box {
+       bottom: auto;
+       top: 1.8em;
+       width: 240px;
+     }"
+  ))),
   # load data
   uiOutput("file_area"),
-  selectInput("examplefile", "OR use example data sets:",
-              c("", "Exam" = "mlmRev::Exam", "sleepstudy" = "lme4::sleepstudy",
-                "Popularity2" = "popular2"),
-              selected = F, width = "150px"),
+  uiOutput("examplefile_area"),
   shinyjs::hidden(tags$div(
     id = "reactive_mode_area",
     title = paste(
@@ -69,7 +77,8 @@ ui_body <- function(testing = F) {
        transition: opacity 0.15s ease-in-out;
      }
      .mimosa-tooltip:hover .mimosa-tooltip-box,
-     .mimosa-tooltip:focus .mimosa-tooltip-box {
+     .mimosa-tooltip:focus .mimosa-tooltip-box,
+     .mimosa-tooltip:focus-within .mimosa-tooltip-box {
        visibility: visible;
        opacity: 1;
      }

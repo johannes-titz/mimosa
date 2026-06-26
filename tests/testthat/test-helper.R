@@ -59,6 +59,7 @@ test_that("grouping variable explanation is returned", {
 })
 
 test_that("grouping variable is found in two-level mlmRev datasets", {
+  expect_identical("school", find_id(mlmRev::Chem97))
   expect_identical("district", find_id(mlmRev::Contraception))
   expect_identical("id", find_id(mlmRev::Early))
   expect_identical("school", find_id(mlmRev::Exam))
@@ -82,5 +83,49 @@ test_that("dependent variables are restricted to numeric variables", {
   expect_identical(
     "integer_score",
     filter_dvs(c("integer_score", "condition"), data)
+  )
+})
+
+test_that("example data set choices include two-level mlmRev data", {
+  choices <- unname(example_dataset_choices())
+  expected <- c(
+    "mlmRev::Exam",
+    "mlmRev::Chem97",
+    "mlmRev::Contraception",
+    "mlmRev::Early",
+    "mlmRev::Hsb82",
+    "mlmRev::Mmmec",
+    "mlmRev::Oxboys"
+  )
+
+  expect_true(all(expected %in% choices))
+  expect_s3_class(load_example_dataset("mlmRev::Chem97"), "data.frame")
+  expect_s3_class(load_example_dataset("mlmRev::Contraception"), "data.frame")
+  expect_s3_class(load_example_dataset("mlmRev::Oxboys"), "data.frame")
+  expect_s3_class(load_example_dataset("mimosa::popular2"), "data.frame")
+  expect_true(nzchar(example_dataset_description("mlmRev::Exam")))
+  expect_true(grepl("students nested in schools", example_dataset_description("mlmRev::Chem97"), fixed = TRUE))
+})
+
+test_that("Exam example defaults select the tutorial model", {
+  result <- determine_levels("school", mlmRev::Exam)
+  level1 <- filter_ivs(result$level1, mlmRev::Exam)
+  dv_choices <- filter_dvs(level1, mlmRev::Exam)
+
+  expect_identical(
+    "normexam",
+    default_exam_value("mlmRev::Exam", "normexam", dv_choices)
+  )
+  expect_identical(
+    c("standLRT", "sex"),
+    default_exam_values("mlmRev::Exam", c("standLRT", "sex"), level1)
+  )
+  expect_identical(
+    "standLRT",
+    default_exam_values("mlmRev::Exam", "standLRT", c("standLRT", "sex"))
+  )
+  expect_identical(
+    character(0),
+    default_exam_values("lme4::sleepstudy", c("standLRT", "sex"), level1)
   )
 })

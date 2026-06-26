@@ -11,6 +11,13 @@ server <- shinyServer(function(input, output, session) {
                              group_id_selected = character(0),
                              group_ids = character(0),
                              table = NULL)
+  output$examplefile_area <- renderUI({
+    selected <- input$examplefile
+    if (is.null(selected)) {
+      selected <- "mlmRev::Exam"
+    }
+    example_dataset_select(selected)
+  })
   # example data set for tutorial in paper -------------------------------------
   observe({
     # old mechanism through url
@@ -20,14 +27,8 @@ server <- shinyServer(function(input, output, session) {
            updateSelectInput(session, "examplefile", selected = "mlmRev::Exam")
          }
         }
-        old_popular2_value <- paste0("mimosa", "::", "popular2")
-        if (input$examplefile %in% c("mlmRev::Exam", "lme4::sleepstudy",
-                                     "popular2", old_popular2_value)) {
-            data <- switch(input$examplefile,
-                           "mlmRev::Exam" = mlmRev::Exam,
-                           "lme4::sleepstudy" = lme4::sleepstudy,
-                           "popular2" = popular2,
-                           popular2)
+        data <- load_example_dataset(input$examplefile)
+        if (!is.null(data)) {
             reactive$data <- data
             shinyjs::show("create_model")
             shinyjs::show("reactive_mode_area")
@@ -87,6 +88,11 @@ server <- shinyServer(function(input, output, session) {
   output$variables <- renderUI({
     if (length(reactive$group_id_selected) > 0) {
       dv_choices <- filter_dvs(reactive$level1, reactive$data)
+      default_dv <- default_exam_value(input$examplefile, "normexam", dv_choices)
+      default_l1 <- default_exam_values(input$examplefile, c("standLRT", "sex"),
+                                        reactive$level1)
+      default_l1_varies <- default_exam_values(input$examplefile, "standLRT",
+                                               default_l1)
       fluidRow(
         column(width = 2, align = "center",
                selectInput("group_id", label = "Group ID",
@@ -110,7 +116,7 @@ server <- shinyServer(function(input, output, session) {
         ),
         column(width = 2,
                radioButtons("dv", label = "Dependent variable (numeric only)",
-                            selected = character(0),
+                            selected = default_dv,
                             choices = dv_choices),
                if (length(dv_choices) == 0) {
                  helpText("No numeric level-1 variables available as dependent variables.")
@@ -119,11 +125,14 @@ server <- shinyServer(function(input, output, session) {
         column(width = 2,
                checkboxGroupInput("l1", label = "Level 1",
                                   choiceNames = reactive$level1,
-                                  choiceValues = reactive$level1)
+                                  choiceValues = reactive$level1,
+                                  selected = default_l1)
         ),
         conditionalPanel(condition = "input.l1.length > 0",
         column(width = 2,
-               checkboxGroupInput("l1_varies", label = "Level 1 varies")
+               checkboxGroupInput("l1_varies", label = "Level 1 varies",
+                                  choices = default_l1,
+                                  selected = default_l1_varies)
         )),
         column(width = 2,
                checkboxGroupInput("l2", label = "Level 2",
@@ -327,3 +336,30 @@ server <- shinyServer(function(input, output, session) {
     shinyjs::toggle("start_calculation_button")
   })
 })
+
+#' Default selected value for the Exam example
+#'
+#' @param examplefile selected example data set
+#' @param value default value
+#' @param choices available choices
+#' @noRd
+default_exam_value <- function(examplefile, value, choices) {
+  values <- default_exam_values(examplefile, value, choices)
+  if (length(values) == 0) {
+    return(character(0))
+  }
+  values[1]
+}
+
+#' Default selected values for the Exam example
+#'
+#' @param examplefile selected example data set
+#' @param values default values
+#' @param choices available choices
+#' @noRd
+default_exam_values <- function(examplefile, values, choices) {
+  if (!identical(examplefile, "mlmRev::Exam")) {
+    return(character(0))
+  }
+  values[values %in% choices]
+}
