@@ -35,7 +35,7 @@ create_table <- function(mdl, l1, output_options) {
     collapse.ci = F, show.icc = TRUE, show.re.var = TRUE,
     show.ngroups = TRUE, show.fstat = FALSE, show.aicc = F
   )[[3]]
-  table <- move_tau_to_predictor_table(table)
+  table <- move_random_components_to_predictor_table(table, mdl)
   table <- add_fixed_effect_variance(table, calculate_fixed_effect_variance(mdl))
   add_summary_tooltips(table, mdl)
 }
@@ -142,14 +142,16 @@ add_summary_tooltips <- function(table, mdl) {
   table
 }
 
-#' Move tau variance components into the fixed-effects table
+#' Move random-effect variance/correlation components into the predictor table
 #'
 #' @param table HTML table created by sjPlot
+#' @param mdl fitted lme4 model
 #' @noRd
-move_tau_to_predictor_table <- function(table) {
+move_random_components_to_predictor_table <- function(table, mdl) {
   rows <- strsplit(table, "\n", fixed = TRUE)[[1]]
   tau_rows <- extract_tau_rows(rows)
-  if (length(tau_rows$values) == 0) {
+  rho_values <- extract_intercept_rhos(mdl)
+  if (length(tau_rows$values) == 0 && length(rho_values) == 0) {
     return(rename_random_effects_section(table))
   }
   old_colspan <- get_model_colspan(table)
@@ -157,17 +159,45 @@ move_tau_to_predictor_table <- function(table) {
     return(rename_random_effects_section(table))
   }
   rows <- remove_tau_rows(rows, tau_rows$remove)
-  rows <- add_tau_header(rows, old_colspan + 2)
-  rows <- add_tau_cells(rows, tau_rows$values, old_colspan + 2)
+  rows <- remove_rho_rows(rows)
+  new_columns <- 0
+  if (length(tau_rows$values) > 0) {
+    new_columns <- new_columns + 1
+    rows <- add_random_component_header(rows, old_colspan + 1 + new_columns, "&tau;")
+    rows <- add_random_component_cells(
+      rows,
+      tau_rows$values,
+      old_colspan + 1 + new_columns,
+      format_tau_tooltip
+    )
+  }
+  if (length(rho_values) > 0) {
+    new_columns <- new_columns + 1
+    rows <- add_random_component_header(rows, old_colspan + 1 + new_columns, "&rho;")
+    rows <- add_random_component_cells(
+      rows,
+      rho_values,
+      old_colspan + 1 + new_columns,
+      format_intercept_rho_tooltip
+    )
+  }
   table <- paste(rows, collapse = "\n")
   table <- gsub(
     paste0("colspan=\"", old_colspan, "\""),
-    paste0("colspan=\"", old_colspan + 1, "\""),
+    paste0("colspan=\"", old_colspan + new_columns, "\""),
     table,
     fixed = TRUE
   )
   table <- rename_random_effects_section(table)
-  set_randomparts_colspan(table, old_colspan + 2)
+  set_randomparts_colspan(table, old_colspan + 1 + new_columns)
+}
+
+#' Backwards-compatible wrapper
+#'
+#' @param table HTML table created by sjPlot
+#' @noRd
+move_tau_to_predictor_table <- function(table) {
+  move_random_components_to_predictor_table(table, NULL)
 }
 
 #' Extract tau values from sjPlot summary rows
@@ -233,50 +263,102 @@ remove_tau_rows <- function(rows, remove) {
   rows[-remove]
 }
 
-#' Add tau column header
+#' Remove rho summary rows from sjPlot output
 #'
 #' @param rows HTML table split into lines
-#' @param tau_col numeric column index for CSS class
 #' @noRd
-add_tau_header <- function(rows, tau_col) {
-  header_index <- grep("<td class=\"depvarhead", rows, fixed = TRUE)
-  header_index <- header_index[length(header_index)]
-  tau_header <- paste0(
-    "    <td class=\"depvarhead firsttablerow col",
-    tau_col,
-    "\">",
-    "&tau;",
-    "</td>"
-  )
-  append(rows, tau_header, after = header_index)
+remove_rho_rows <- function(rows) {
+  rho_lines <- grep("&rho;<sub>", rows, fixed = TRUE)
+  if (length(rho_lines) == 0) {
+    return(rows)
+  }
+  remove <- integer(0)
+  for (line_index in rho_lines) {
+    value_index <- line_index + 1
+    remove <- c(remove, line_index - 1, line_index, value_index)
+    if (value_index + 1 <= length(rows) && !nzchar(trimws(rows[value_index + 1]))) {
+      remove <- c(remove, value_index + 1)
+    }
+  }
+  rows[-unique(remove)]
 }
 
-#' Add tau cells to fixed-effect rows
+#' Extract intercept/slope correlations from a fitted model
+#'
+#' @param mdl fitted lme4 model
+#' @noRd
+extract_intercept_rhos <- function(mdl) {
+  if (is.null(mdl)) {
+    return(list())
+  }
+  values <- list()
+  varcorr <- lme4::VarCorr(mdl)
+  for (group in names(varcorr)) {
+    correlations <- attr(varcorr[[group]], "correlation")
+    if (is.null(correlations) || !"(Intercept)" %in% colnames(correlations)) {
+      next
+    }
+    terms <- setdiff(colnames(correlations), "(Intercept)")
+    for (term in terms) {
+      rho <- correlations["(Intercept)", term]
+      if (!is.finite(rho)) {
+        next
+      }
+      values[[term]] <- append(
+        values[[term]],
+        list(list(group = group, value = format_table_number(rho)))
+      )
+    }
+  }
+  values
+}
+
+#' Add random-component column header
 #'
 #' @param rows HTML table split into lines
-#' @param tau_values named list mapping predictor labels to tau values
-#' @param tau_col numeric column index for CSS class
+#' @param col numeric column index for CSS class
+#' @param label column label
 #' @noRd
-add_tau_cells <- function(rows, tau_values, tau_col) {
+add_random_component_header <- function(rows, col, label) {
+  header_index <- grep("<td class=\"depvarhead", rows, fixed = TRUE)
+  header_index <- header_index[length(header_index)]
+  header <- paste0(
+    "    <td class=\"depvarhead firsttablerow col",
+    col,
+    "\">",
+    label,
+    "</td>"
+  )
+  append(rows, header, after = header_index)
+}
+
+#' Add random-component cells to fixed-effect rows
+#'
+#' @param rows HTML table split into lines
+#' @param values named list mapping predictor labels to values
+#' @param col numeric column index for CSS class
+#' @param tooltip_fun function that creates a tooltip from a row label and value
+#' @noRd
+add_random_component_cells <- function(rows, values, col, tooltip_fun) {
   row_starts <- grep("<td class=\"tdata firsttablecol col1\">", rows, fixed = TRUE)
   offset <- 0
   for (row_start in row_starts) {
     row_start <- row_start + offset
     label <- strip_html(rows[row_start])
-    tau_value <- tau_values[[label]]
-    if (is.null(tau_value)) {
-      tau_value <- "&nbsp;"
+    value <- values[[label]]
+    if (is.null(value)) {
+      value <- "&nbsp;"
     } else {
-      tau_value <- tooltip_span(
-        tau_value,
-        paste0("&tau; for ", label, ": Estimated random-effect variance component.")
+      value <- tooltip_span(
+        format_random_component_value(value),
+        tooltip_fun(label, value)
       )
     }
     cell <- paste0(
       "    <td class=\"tdata centeralign modelcolumn1 col",
-      tau_col,
+      col,
       "\">",
-      tau_value,
+      value,
       "</td>"
     )
     row_end <- row_start
@@ -287,6 +369,39 @@ add_tau_cells <- function(rows, tau_values, tau_col) {
     offset <- offset + 1
   }
   rows
+}
+
+#' Format a random-component cell value
+#'
+#' @param value random-component value
+#' @noRd
+format_random_component_value <- function(value) {
+  if (is.list(value) && !is.null(value[[1]]$group)) {
+    values <- vapply(value, function(x) x$value, character(1))
+    return(paste(values, collapse = "<br>"))
+  }
+  value
+}
+
+#' Format tau tooltip
+#'
+#' @param label fixed-effect row label
+#' @param value tau value
+#' @noRd
+format_tau_tooltip <- function(label, value) {
+  paste0("&tau; for ", label, ": Estimated random-effect variance component.")
+}
+
+#' Format random-intercept correlation tooltip
+#'
+#' @param label fixed-effect row label
+#' @param value rho value
+#' @noRd
+format_intercept_rho_tooltip <- function(label, value) {
+  paste0(
+    "&rho; for ", label, "<br>",
+    "Estimated correlation between the group-level random intercept and this predictor's random slope."
+  )
 }
 
 #' Get model-column colspan from sjPlot table
@@ -466,13 +581,22 @@ calculate_r2_components <- function(mdl) {
   if (!requireNamespace("insight", quietly = TRUE)) {
     return(NULL)
   }
-  variances <- tryCatch(insight::get_variance(mdl), error = function(e) NULL)
+  variances <- tryCatch(
+    suppressWarnings(insight::get_variance(mdl)),
+    error = function(e) NULL
+  )
   if (is.null(variances)) {
     return(NULL)
   }
   fixed <- as.numeric(variances$var.fixed)
   random <- as.numeric(variances$var.random)
   residual <- as.numeric(variances$var.residual)
+  if (!identical(lengths(list(fixed, random, residual)), c(1L, 1L, 1L))) {
+    return(NULL)
+  }
+  if (any(!is.finite(c(fixed, random, residual)))) {
+    return(NULL)
+  }
   total <- fixed + random + residual
   if (!is.finite(total) || total <= 0) {
     return(NULL)

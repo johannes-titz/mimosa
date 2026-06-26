@@ -41,15 +41,23 @@ test_that("tau values are moved to predictor table", {
   expect_true(grepl("&tau; for Days", table, fixed = TRUE))
   expect_false(grepl("&tau;<sub>00</sub>", table, fixed = TRUE))
   expect_false(grepl("&tau;<sub>11</sub>", table, fixed = TRUE))
-  expect_true(grepl("<td colspan=\"4\" class=\"randomparts\">Model summary</td>", table, fixed = TRUE))
+  expect_true(grepl("<td colspan=\"5\" class=\"randomparts\">Model summary</td>", table, fixed = TRUE))
 })
 
-test_that("rho and ICC summary rows include tooltips", {
+test_that("rho values are moved to predictor table", {
   mdl <- lme4::lmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
   table <- create_table(mdl, l1 = "Days", output_options = character(0))
 
-  expect_true(grepl("Estimated correlation between random effects", table, fixed = TRUE))
-  expect_true(grepl("random intercept and first random slope", table, fixed = TRUE))
+  expect_true(grepl("class=\"depvarhead firsttablerow col5\">&rho;", table, fixed = TRUE))
+  expect_true(grepl("&rho; for Days", table, fixed = TRUE))
+  expect_true(grepl("random intercept and this predictor's random slope", table, fixed = TRUE))
+  expect_false(grepl("&rho;<sub>01</sub>", table, fixed = TRUE))
+})
+
+test_that("ICC summary row includes tooltip", {
+  mdl <- lme4::lmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
+  table <- create_table(mdl, l1 = "Days", output_options = character(0))
+
   expect_true(grepl("Intraclass correlation coefficient", table, fixed = TRUE))
   expect_true(grepl("1698.08 / (1698.08 + 654.94) = 0.72", table, fixed = TRUE))
 })
@@ -59,9 +67,22 @@ test_that("tooltips are shown on values rather than labels", {
   table <- create_table(mdl, l1 = "Days", output_options = character(0))
 
   expect_true(grepl("<td class=\"tdata leftalign summary\">&sigma;<sup>2</sup></td>", table, fixed = TRUE))
-  expect_true(grepl("<td class=\"tdata leftalign summary\">&rho;<sub>01</sub> <sub>Subject</sub></td>", table, fixed = TRUE))
   expect_true(grepl("<td class=\"tdata leftalign summary\">ICC</td>", table, fixed = TRUE))
   expect_true(grepl("<td class=\"tdata leftalign summary\">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>", table, fixed = TRUE))
+})
+
+test_that("multiple random slopes get predictor-specific rho values", {
+  mdl <- lme4::lmer(
+    score ~ age + gcsescore + (age + gcsescore | school),
+    data = mlmRev::Chem97,
+    REML = FALSE
+  )
+  table <- create_table(mdl, l1 = c("age", "gcsescore"), output_options = character(0))
+
+  expect_true(grepl("&rho; for age", table, fixed = TRUE))
+  expect_true(grepl("&rho; for gcsescore", table, fixed = TRUE))
+  expect_true(grepl("group-level random intercept and this predictor's random slope", table, fixed = TRUE))
+  expect_false(grepl("&rho;<sub>01</sub>", table, fixed = TRUE))
 })
 
 test_that("intercept-only model has zero fixed-effect variance", {

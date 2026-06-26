@@ -10,18 +10,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
   shinybusy::add_busy_spinner(spin = "self-building-square",
                               position = "bottom-right",
                               margin = c(50, 0)),
-  tags$head(tags$style(HTML(
-    ".sidebar {padding-left: 8px;}
-     .example-dataset-select-tooltip {
-       border-bottom: 0;
-       cursor: default;
-     }
-     .example-dataset-select-tooltip .mimosa-tooltip-box {
-       bottom: auto;
-       top: 1.8em;
-       width: 240px;
-     }"
-  ))),
+  tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
   # load data
   uiOutput("file_area"),
   uiOutput("examplefile_area"),

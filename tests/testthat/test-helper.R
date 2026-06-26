@@ -107,6 +107,13 @@ test_that("example data set choices include two-level mlmRev data", {
   expect_true(grepl("students nested in schools", example_dataset_description("mlmRev::Chem97"), fixed = TRUE))
 })
 
+test_that("example data set helpers tolerate empty input", {
+  expect_null(load_example_dataset(NULL))
+  expect_null(load_example_dataset(character(0)))
+  expect_null(load_example_dataset(c("mlmRev::Exam", "mlmRev::Chem97")))
+  expect_identical("", example_dataset_description(NULL))
+})
+
 test_that("Exam example defaults select the tutorial model", {
   result <- determine_levels("school", mlmRev::Exam)
   level1 <- filter_ivs(result$level1, mlmRev::Exam)

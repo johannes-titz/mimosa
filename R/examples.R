@@ -69,6 +69,9 @@ example_dataset_description <- function(key) {
 #' @param key example data set key
 #' @noRd
 canonical_example_key <- function(key) {
+  if (!is.character(key) || length(key) != 1 || is.na(key)) {
+    return("")
+  }
   old_popular2_value <- paste0("mimosa", "::", "popular2")
   if (identical(key, old_popular2_value)) {
     return("popular2")
@@ -121,22 +124,14 @@ example_dataset_options <- function(selected = "mlmRev::Exam") {
 #' @param selected selected example data set key
 #' @noRd
 example_dataset_select <- function(selected = "mlmRev::Exam") {
-  description <- example_dataset_description(selected)
   tags$div(
-    class = "form-group shiny-input-container mimosa-tooltip example-dataset-select-tooltip",
+    class = "form-group shiny-input-container",
     style = "width: 150px;",
-    tabindex = "0",
     tags$label("OR use example data sets:", `for` = "examplefile"),
     tags$select(
       id = "examplefile",
       class = "form-control",
       example_dataset_options(selected)
-    ),
-    if (nzchar(description)) {
-      tags$span(
-        class = "mimosa-tooltip-box",
-        description
-      )
-    }
+    )
   )
 }
