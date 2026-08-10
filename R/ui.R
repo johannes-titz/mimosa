@@ -120,17 +120,6 @@ ui_body <- function(testing = F) {
               )
           ),
           
-          shinyjs::hidden(
-            box(title = "Family",collapsed = T,
-                status = "primary",
-                collapsible = T, width = 2,
-                radioButtons("family",
-                             "Output options",
-                             choices = c("gaussian",
-                                         "binomial")
-                )
-            )),
-
           shinyjs::hidden(box(title = "Optimizer",collapsed = T,
                               status = "primary",
                               collapsible = T, width = 2,

@@ -116,6 +116,8 @@ If the grouping variable is known, the procedure to categorize variables in leve
 
 Model specification is quite self-explanatory: First one determines the dependent variable, for which the exam score (*normexam*) appears most interesting in the school data set (see image above). The output for this null model is directly created with the most useful statistics:
 
+Mimosa automatically fits a binomial generalized linear mixed model when the selected dependent variable has exactly two observed values; other numeric responses use a Gaussian linear mixed model. For a dichotomous response, the second factor level (or the second value in sorted order) is modeled as the event.
+
 ![Output table.](images/output1.png)
 
 The null model produces an intercept of close to 0, which makes sense since the data is standardized. The output table is created with ``sjPlot`` [@ludecke2018]. It is concise, nicely formatted and can be either downloaded as an HTML file or directly copy-pasted to the application of choice (e.g. a word processor). Additional statistics (standard error, AIC, deviance, Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be selected in the Table Options dialog (not shown here).

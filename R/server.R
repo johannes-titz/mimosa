@@ -115,11 +115,11 @@ server <- shinyServer(function(input, output, session) {
                }
         ),
         column(width = 2,
-               radioButtons("dv", label = "Dependent variable (numeric only)",
+               radioButtons("dv", label = "Dependent variable",
                             selected = default_dv,
                             choices = dv_choices),
                if (length(dv_choices) == 0) {
-                 helpText("No numeric level-1 variables available as dependent variables.")
+                 helpText("No numeric or dichotomous level-1 variables available as dependent variables.")
                }
         ),
         column(width = 2,
@@ -276,8 +276,9 @@ server <- shinyServer(function(input, output, session) {
       # if you change data file, dv is not emptied
       return("Select dependent variable and grouping variable"
       )
-    if (!is.numeric(reactive$data[[dv]])) {
-      return("Select a numeric dependent variable.")
+    family <- response_family(reactive$data[[dv]])
+    if (is.na(family)) {
+      return("Select a numeric or dichotomous dependent variable.")
     }
     mdl_formula <- create_r_formula(dv, group_id, l1,
                                     l2, l1_varies,
@@ -288,13 +289,18 @@ server <- shinyServer(function(input, output, session) {
     showNotification("Estimating model...", id = "estimating_model",
                      duration = NULL, type = "message")
     mdl <- tryCatch({
-      if (input$family != "gaussian") {
-        lme4::glmer(stats::as.formula(mdl_formula), data = reactive$data,
-                    nAGQ = input$nAGQ,
-                    family = input$family)
-      } else {
-        lme4::lmer(stats::as.formula(mdl_formula), data = reactive$data)
+      if (family == "binomial") {
+        event <- dichotomous_response_values(reactive$data[[dv]])[2]
+        showNotification(
+          paste0(
+            "Detected a dichotomous dependent variable. Fitting a binomial ",
+            "mixed model; '", event, "' is modelled as the event."
+          ),
+          type = "message"
+        )
       }
+      nAGQ <- if (is.null(input$nAGQ)) 1 else input$nAGQ
+      fit_mixed_model(mdl_formula, reactive$data, dv, nAGQ = nAGQ)
     },
     error = function(error_message) {
       msg <- ifelse(grepl("<= number of random effects", error_message),

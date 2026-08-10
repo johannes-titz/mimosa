@@ -68,21 +68,22 @@ test_that("grouping variable is found in two-level mlmRev datasets", {
   expect_identical("Subject", find_id(mlmRev::Oxboys))
 })
 
-test_that("dependent variables are restricted to numeric variables", {
+test_that("dependent variables include numeric and dichotomous variables", {
   data <- data.frame(
     numeric_score = c(1.2, 2.4, 3.1),
     integer_score = c(1L, 2L, 3L),
     group = factor(c("a", "a", "b")),
-    condition = c("x", "y", "x")
+    condition = c("x", "y", "x"),
+    three_groups = c("x", "y", "z")
   )
 
   expect_identical(
-    c("numeric_score", "integer_score"),
+    c("numeric_score", "integer_score", "group", "condition"),
     filter_dvs(names(data), data)
   )
   expect_identical(
-    "integer_score",
-    filter_dvs(c("integer_score", "condition"), data)
+    c("integer_score", "condition"),
+    filter_dvs(c("integer_score", "condition", "three_groups"), data)
   )
 })
 

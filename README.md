@@ -174,6 +174,12 @@ dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
 this null model is directly created with the most useful statistics:
 
+Mimosa automatically fits a binomial generalized linear mixed model
+when the selected dependent variable has exactly two observed values;
+other numeric responses use a Gaussian linear mixed model. For a
+dichotomous response, the second factor level (or the second value in
+sorted order) is modeled as the event.
+
 <figure>
 <img src="images/output1.png" alt="Output table." />
 <figcaption aria-hidden="true">Output table.</figcaption>

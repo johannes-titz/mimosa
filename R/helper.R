@@ -233,15 +233,22 @@ filter_ivs <- function(ivs, data, n_levels_max = 10) {
 
 #' Filter dependent variables
 #'
-#' Dependent variables for the Gaussian mixed model must be numeric.
+#' Dependent variables must be numeric or dichotomous. Dichotomous factors,
+#' logical vectors, and character vectors are supported by the binomial model.
 #'
 #' @param dvs potential dependent variables
 #' @param data the data frame
 #' @noRd
 filter_dvs <- function(dvs, data) {
   data <- data[names(data) %in% dvs]
-  is_numeric <- vapply(data, is.numeric, logical(1))
-  names(data)[is_numeric]
+  is_supported <- vapply(
+    data,
+    function(x) {
+      is.numeric(x) || length(unique(x[!is.na(x)])) == 2
+    },
+    logical(1)
+  )
+  names(data)[is_supported]
 }
 
 #' Select columns matching a predicate
