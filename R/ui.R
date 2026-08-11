@@ -71,18 +71,115 @@ ui_body <- function(testing = F) {
        visibility: visible;
        opacity: 1;
      }
+     .mimosa-r-code pre {
+       max-height: 360px;
+       max-width: 50ch;
+       overflow-y: auto;
+       white-space: pre-wrap;
+       overflow-wrap: anywhere;
+     }
+     .mimosa-code-actions {
+       margin: 8px 0;
+     }"
+  )),
+  tags$script(HTML(
+    "function mimosaCopyRCode() {
+       var code = document.getElementById('r_analysis_code');
+       var status = document.getElementById('copy_r_code_status');
+       if (!code || !code.textContent.trim()) {
+         status.textContent = 'Estimate a model first.';
+         return;
+       }
+       var text = code.textContent;
+       var copied = function(ok) {
+         status.textContent = ok ? 'Copied.' : 'Copy failed.';
+         window.setTimeout(function() { status.textContent = ''; }, 2500);
+       };
+       if (navigator.clipboard && window.isSecureContext) {
+         navigator.clipboard.writeText(text).then(
+           function() { copied(true); },
+           function() { copied(false); }
+         );
+         return;
+       }
+       var area = document.createElement('textarea');
+       area.value = text;
+       area.style.position = 'fixed';
+       area.style.opacity = '0';
+       document.body.appendChild(area);
+       area.select();
+       var ok = document.execCommand('copy');
+       document.body.removeChild(area);
+       copied(ok);
      }"
   ))),
   # Model spec and model display -----------------------------------------
   fluidRow(
-    shinyjs::hidden(
-      div(id = "create_model",
-          box(title = "2. Create model", status = "primary",
-              collapsible = T, width = 8, uiOutput("variables")
-          ))),
-    shinyjs::hidden(
-      div(id = "display_model",
-          box(title = "Model", status = "primary", collapsible = T, width = 4,
+    column(
+      width = 8,
+      shinyjs::hidden(
+        div(
+          id = "create_model",
+          box(
+            title = "2. Create model", status = "primary",
+            collapsible = T, width = NULL, uiOutput("variables")
+          )
+        )
+      ),
+      shinyjs::hidden(
+        div(
+          id = "output_region",
+          fluidRow(
+            column(
+              width = 9,
+              box(
+                title = "3. Save output table", status = "primary",
+                width = NULL, uiOutput("table_region"), br(),
+                downloadButton("download", "Download Table")
+              )
+            ),
+            column(
+              width = 3,
+              box(
+                title = "Table Options", collapsed = T, status = "primary",
+                collapsible = T, width = NULL,
+                checkboxGroupInput(
+                  "output_options",
+                  "Output options",
+                  choices = c(
+                    "standard error",
+                    "AIC",
+                    "Deviance",
+                    "Log-Likelihood",
+                    "standardized coefficients",
+                    "test statistic",
+                    "p-value"
+                  )
+                )
+              ),
+              shinyjs::hidden(
+                box(
+                  title = "Optimizer", collapsed = T, status = "primary",
+                  collapsible = T, width = NULL,
+                  numericInput("nAGQ", "Number of AGQ points", 1),
+                  radioButtons(
+                    "optimizer",
+                    "Output options",
+                    choices = c("Nelder_Mead", "bobyqa")
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+    column(
+      width = 4,
+      shinyjs::hidden(
+        div(
+          id = "display_model",
+          box(title = "Model", status = "primary", collapsible = T, width = NULL,
               # level 1
               strong("Level 1"),
               br(),
@@ -92,46 +189,35 @@ ui_body <- function(testing = F) {
               uiOutput("mod_l2"),
               # model formula
               br(), strong("R model formula"),
-              uiOutput("mod_r")
-          ))
-    )),
-  # Output Table, Download -----------------------------------------------
-  fluidRow(
-    shinyjs::hidden(
-      div(id = "output_region",
-          box(title = "3. Save output table", status = "primary",
-              width = 6, uiOutput("table_region"), br(), 
-              downloadButton("download", "Download Table")),
-          
-          # Table Options
-          box(title = "Table Options", collapsed = T, status = "primary",
-              collapsible = T, width = 2,
-              checkboxGroupInput(
-                "output_options",
-                "Output options",
-                choices = c(
-                  "standard error",
-                  "AIC",
-                  "Deviance",
-                  "Log-Likelihood",
-                  "standardized coefficients",
-                  "test statistic",
-                  "p-value")
-              )
+              textOutput("mod_r")
           ),
-          
-          shinyjs::hidden(box(title = "Optimizer",collapsed = T,
-                              status = "primary",
-                              collapsible = T, width = 2,
-                              numericInput("nAGQ", "Number of AGQ points", 1),
-                              radioButtons("optimizer",
-                                           "Output options",
-                                           choices = c("Nelder_Mead",
-                                                       "bobyqa")
-                                           )
-                              )                    
-                           )
-      ))),
+          box(
+              title = "R analysis code", status = "primary",
+              collapsible = T, width = NULL,
+              div(
+                class = "mimosa-r-code",
+                verbatimTextOutput("r_analysis_code", placeholder = TRUE)
+              ),
+              div(
+                class = "mimosa-code-actions",
+                actionButton(
+                  "copy_r_code",
+                  "Copy R code",
+                  icon = icon("copy"),
+                  onclick = "mimosaCopyRCode();"
+                ),
+                tags$span(
+                  id = "copy_r_code_status",
+                  class = "text-muted",
+                  role = "status",
+                  style = "margin-left: 8px;"
+                )
+              )
+          )
+        )
+      )
+    )
+  ),
   fluidRow(
     div(id = "help",
         box(title = "Help", status = "primary",

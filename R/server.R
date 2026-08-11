@@ -8,6 +8,7 @@ server <- shinyServer(function(input, output, session) {
   reactive <- reactiveValues(level1 = data.frame(),
                              level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
+                             r_analysis_code = "", data_source_code = "",
                              group_id_selected = character(0),
                              group_ids = character(0),
                              table = NULL)
@@ -30,6 +31,7 @@ server <- shinyServer(function(input, output, session) {
         data <- load_example_dataset(input$examplefile)
         if (!is.null(data)) {
             reactive$data <- data
+            reactive$data_source_code <- example_dataset_code(input$examplefile)
             shinyjs::show("create_model")
             shinyjs::show("reactive_mode_area")
             shinyjs::hide("display_model")
@@ -37,7 +39,7 @@ server <- shinyServer(function(input, output, session) {
             id <- find_id(data)
             reactive$group_id_selected <- id[1]
             reactive$group_ids <- id
-            result <- determine_levels(id[1], data, show_prog = T)
+            result <- determine_levels(id[1], data, show_prog = FALSE)
             reactive$level1 <- filter_ivs(result$level1, data)
             reactive$level2 <- filter_ivs(result$level2, data)
           }
@@ -74,6 +76,7 @@ server <- shinyServer(function(input, output, session) {
     # otherwise the app will crash when load_data fails
     req(data)
     reactive$data <- data
+    reactive$data_source_code <- uploaded_dataset_code(input$datafile$name)
 
     id <- find_id(data)
     reactive$group_id_selected <- id[1]
@@ -100,7 +103,7 @@ server <- shinyServer(function(input, output, session) {
                             choices = reactive$group_ids),
                # button to calculate model
                # hide if reactive mode is on
-               if (isolate(input$reactive_mode == TRUE)) {
+               if (isTRUE(isolate(input$reactive_mode))) {
                shinyjs::hidden(div(id = "start_calculation_button_area",
                                    actionButton("start_calculation_button",
                                                 "Estimate model",
@@ -241,10 +244,8 @@ server <- shinyServer(function(input, output, session) {
       HTML(paste(equation, collapse = ""))
   })
   # create R model formula -----------------------------------------------------
-  output$mod_r <- renderUI({
-    HTML("R formula")
-    HTML(reactive$r_mdl_formula)
-  })
+  output$mod_r <- renderText(reactive$r_mdl_formula)
+  output$r_analysis_code <- renderText(reactive$r_analysis_code)
 
   # create table ---------------------------------------------------------------
   output$table_region <- renderUI({
@@ -285,12 +286,26 @@ server <- shinyServer(function(input, output, session) {
                                     interaction)
     reactive$r_mdl_formula <- mdl_formula
 
+    event <- if (family == "binomial") {
+      dichotomous_response_values(reactive$data[[dv]])[2]
+    } else {
+      NULL
+    }
+    nAGQ <- if (is.null(input$nAGQ)) 1 else input$nAGQ
+    reactive$r_analysis_code <- create_analysis_code(
+      formula = mdl_formula,
+      data_code = reactive$data_source_code,
+      dv = dv,
+      family = family,
+      event = event,
+      nAGQ = nAGQ
+    )
+
     # calc the actual model
     showNotification("Estimating model...", id = "estimating_model",
                      duration = NULL, type = "message")
     mdl <- tryCatch({
       if (family == "binomial") {
-        event <- dichotomous_response_values(reactive$data[[dv]])[2]
         showNotification(
           paste0(
             "Detected a dichotomous dependent variable. Fitting a binomial ",
@@ -299,7 +314,6 @@ server <- shinyServer(function(input, output, session) {
           type = "message"
         )
       }
-      nAGQ <- if (is.null(input$nAGQ)) 1 else input$nAGQ
       fit_mixed_model(mdl_formula, reactive$data, dv, nAGQ = nAGQ)
     },
     error = function(error_message) {

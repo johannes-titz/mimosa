@@ -35,6 +35,10 @@ example_dataset_info <- function() {
       label = "sleepstudy",
       description = "Reaction-time data from a sleep-deprivation study, with repeated observations nested within subjects."
     ),
+    "johnson2014-orange" = list(
+      label = "Orange",
+      description = "Two-level orange-tree growth example from Johnson (2014), with repeated measurements nested within trees and age expressed in years."
+    ),
     "popular2" = list(
       label = "Popularity2",
       description = "Simulated pupil-popularity data included with mimosa, with pupils nested in classes."
@@ -95,9 +99,44 @@ load_example_dataset <- function(key) {
     "mlmRev::Mmmec" = mlmRev::Mmmec,
     "mlmRev::Oxboys" = mlmRev::Oxboys,
     "lme4::sleepstudy" = lme4::sleepstudy,
+    "johnson2014-orange" = transform(
+      datasets::Orange,
+      ageYears = age / 365.25
+    ),
     "popular2" = load_package_dataset("popular2"),
     NULL
   )
+}
+
+#' R code for loading an example data set
+#'
+#' @param key example data set key
+#' @noRd
+example_dataset_code <- function(key) {
+  key <- canonical_example_key(key)
+  if (!nzchar(key)) {
+    return("")
+  }
+  if (identical(key, "johnson2014-orange")) {
+    return(paste(
+      "data <- transform(",
+      "  datasets::Orange,",
+      "  ageYears = age / 365.25",
+      ")",
+      sep = "\n"
+    ))
+  }
+  if (identical(key, "popular2")) {
+    return(paste(
+      'data("popular2", package = "mimosa")',
+      "data <- popular2",
+      sep = "\n"
+    ))
+  }
+  if (grepl("^[[:alnum:].]+::[[:alnum:]_.]+$", key)) {
+    return(paste0("data <- ", key))
+  }
+  ""
 }
 
 #' Load a package dataset by name

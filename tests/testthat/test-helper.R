@@ -103,6 +103,8 @@ test_that("example data set choices include two-level mlmRev data", {
   expect_s3_class(load_example_dataset("mlmRev::Chem97"), "data.frame")
   expect_s3_class(load_example_dataset("mlmRev::Contraception"), "data.frame")
   expect_s3_class(load_example_dataset("mlmRev::Oxboys"), "data.frame")
+  expect_true("johnson2014-orange" %in% choices)
+  expect_s3_class(load_example_dataset("johnson2014-orange"), "data.frame")
   expect_s3_class(load_example_dataset("mimosa::popular2"), "data.frame")
   expect_true(nzchar(example_dataset_description("mlmRev::Exam")))
   expect_true(grepl("students nested in schools", example_dataset_description("mlmRev::Chem97"), fixed = TRUE))

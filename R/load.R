@@ -18,6 +18,39 @@ load_data <- function(name, datapath) {
   d
 }
 
+#' R code for loading an uploaded data file
+#'
+#' The generated code assumes the original file is in the working directory.
+#'
+#' @param name original file name
+#' @noRd
+uploaded_dataset_code <- function(name) {
+  filename <- paste(deparse(basename(name), control = "all"), collapse = "")
+  ext <- tolower(tools::file_ext(name))
+  switch(
+    ext,
+    csv = paste(
+      "data <- utils::read.csv(",
+      paste0("  ", filename),
+      ")",
+      "if (ncol(data) == 1L) {",
+      "  data <- utils::read.csv2(",
+      paste0("    ", filename),
+      "  )",
+      "}",
+      sep = "\n"
+    ),
+    sav = paste(
+      "data <- Hmisc::spss.get(",
+      paste0("  ", filename, ","),
+      "  use.value.labels = FALSE",
+      ")",
+      sep = "\n"
+    ),
+    ""
+  )
+}
+
 #' check for diferent csv types and encoding
 #' @noRd
 load_csv <- function(path) {

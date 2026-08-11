@@ -2,19 +2,28 @@
 # and supporting Data S1/Data S4:
 # https://doi.org/10.1111/j.2041-210x.2012.00261.x
 #
-# The original BeetlesBody data are also maintained by the authors in the
-# MIT-licensed rptR package. The CSV fixture is a plain-text conversion of:
+# The packaged BeetlesBody data are maintained by the authors in the
+# MIT-licensed rptR package and sourced from:
 # https://github.com/mastoffel/rptR/blob/master/data/BeetlesBody.rda
 fit_nakagawa_2013_size_model <- function() {
-  beetles <- utils::read.csv(
-    test_path("data", "nakagawa-2013-beetles-body.csv")
-  )
+  beetles <- load_package_dataset("BeetlesBody")
   lme4::lmer(
     BodyL ~ Sex + Treatment + Habitat +
       (1 | Population) + (1 | Container),
     data = beetles
   )
 }
+
+test_that("BeetlesBody is included as a documented Mimosa data set", {
+  beetles <- load_package_dataset("BeetlesBody")
+
+  expect_s3_class(beetles, "data.frame")
+  expect_equal(dim(beetles), c(960, 6))
+  expect_identical(
+    names(beetles),
+    c("Population", "Container", "Sex", "Habitat", "Treatment", "BodyL")
+  )
+})
 
 test_that("Nakagawa and Schielzeth (2013) Gaussian components are reproduced", {
   mdl <- fit_nakagawa_2013_size_model()
