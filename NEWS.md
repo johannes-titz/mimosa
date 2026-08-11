@@ -1,4 +1,4 @@
-# mimosa 0.5.9000
+# mimosa 0.6.0
 
 ## Models and statistical output
 
@@ -30,6 +30,8 @@
   wrap long lines for easier reading, and place the copy button below the code.
 - The right-hand model/code panel and the save-output area were rearranged to
   avoid excess vertical whitespace.
+- The save-output panel now shows the same busy spinner as the model and R-code
+  outputs while the model table is recalculating.
 - The installed Mimosa version is now shown in the application header.
 - The example selector now includes additional two-level data sets from
   `mlmRev`, with descriptions of their nesting structure. The app remains
@@ -62,7 +64,13 @@
 - The unused `shinyBS` dependency was removed, and Shiny's built-in busy
   indicators replace the one `shinybusy` call.
 - A Shinylive/webR build can run Mimosa entirely in the browser and is built
-  and deployed to GitHub Pages automatically.
+  and deployed to GitHub Pages automatically. Its startup now avoids redundant
+  runtime package installation, false package dependencies, and eager loading
+  of large namespaces. The exported dependency set was reduced from 154 to 52
+  entries and the generated site from about 217 MB to 125 MB.
+- The browser-only documentation now explains that WebR still starts more
+  slowly than a warm ShinyProxy deployment because every page load creates a
+  new in-browser R session, even when downloaded assets are cached.
 - Package metadata, generated documentation, styling, examples, the tutorial
   video links, and dependency declarations were refreshed. `insight` is now an
   explicit dependency for model variance calculations.

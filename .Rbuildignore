@@ -64,6 +64,7 @@ _\.new\.png$
 ^test-app-file\.R$
 ^Rprofile\.site$
 ^Dockerfile$
+^\.dockerignore$
 ^data_orig$
 ^\.github$
 ^R/docker\.R$
