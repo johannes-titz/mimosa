@@ -1,3 +1,5 @@
+# mimosa (development version)
+
 # mimosa 0.6.0
 
 ## Models and statistical output
