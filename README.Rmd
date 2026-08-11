@@ -48,7 +48,9 @@ A BibTeX entry for LaTeX users is
 - [Installation](#installation)
   - [Docker](#docker)
   - [Browser-only webR build](#browser-only-webr-build)
+- [Problems installing](#problems-installing)
 - [Using mimosa](#using-mimosa)
+  - [Dichotomous outcomes](#dichotomous-outcomes)
 - [Testing](#testing)
 - [Issues and Support](#issues-and-support)
 - [Contributing](#contributing)
@@ -71,10 +73,11 @@ These benefits come at the cost of the limitation to 2-level models. If you need
 
 No need to install mimosa, just go to https://mimosa.icu and use it there. An example data file is loaded when you go to https://mimosa.icu/example.
 
-If you really want to use it locally, install from github (you need the package devtools for this):
+To run Mimosa locally, install it directly from GitHub with `remotes`:
 
 ```{r echo = T, results = "hide", eval = F}
-devtools::install_github("johannes-titz/mimosa")
+install.packages("remotes")
+remotes::install_github("johannes-titz/mimosa")
 ```
 
 And now run the app:
@@ -111,6 +114,8 @@ httpuv::runStaticServer("docs")
 The generated `docs/` directory is deployed to GitHub Pages automatically by
 GitHub Actions. Package availability depends on precompiled WebAssembly
 binaries from the webR package repository.
+
+## Problems installing
 
 If you have any problems installing mimosa, first check that your R version is
 up to date. If you are using Windows, enable TLS 1.2 in the Internet Options
@@ -149,12 +154,6 @@ If the grouping variable is known, the procedure to categorize variables in leve
 
 Model specification is quite self-explanatory: First one determines the dependent variable, for which the exam score (*normexam*) appears most interesting in the school data set (see image above). The output for this null model is directly created with the most useful statistics:
 
-Mimosa automatically fits a binomial generalized linear mixed model when the
-selected dependent variable has exactly two observed values; other numeric
-responses use a Gaussian linear mixed model. For a dichotomous response, the
-second factor level (or the second value in sorted order) is modeled as the
-event, and Mimosa states this coding above the output.
-
 ![Output table.](images/output1.png)
 
 The null model produces an intercept of close to 0, which makes sense since the
@@ -191,11 +190,33 @@ In the following step, one can add a variable on level 2, for instance *type*. T
 
 ![Model creation dialog.](images/create_model.png)
 
-![Output table.](images/output.png)
+![Output table.](images/output_current.png)
 
 The effect of the interaction is about -0.03, meaning that the relationship between *standLRT* and *normexam* is a bit lower for single gender schools than for mixed gender schools. But the effect is not reliable since the confidence intervals are quite wide.
 
 The general conclusion for the data set might be that a reading test at age 11 can predict the final exam grade at age 16 relatively well. Furthermore, single gender schools perform somewhat better than mixed gender schools. Overall, the model explains about 43% of the total variance, which is quite good for social science.
+
+### Dichotomous outcomes
+
+Mimosa automatically fits a binomial generalized linear mixed model when the
+selected dependent variable has exactly two observed values. As a real example,
+choose the **Contraception** data set in the app. These data contain observations
+from 1,934 women in 60 districts from the 1988 Bangladesh Fertility Survey
+[@huq1990] and are distributed with `mlmRev` [@bates2019]. Select `district` as
+the group ID, `use` as the dependent variable, and `livch`, `age`, and `urban`
+as level-1 predictors.
+
+![Binomial model using the Contraception data.](images/binomial_model.png)
+
+The response has the levels `N` and `Y`. Mimosa models the second factor level,
+`Y`, as the event, reports odds ratios, and fits
+`use ~ livch + age + urban + (1 | district)` with `lme4::glmer()` and
+`family = binomial()`. The notification and generated R code both identify the
+modeled event. In this model, for example, the estimated odds of contraceptive
+use are 2.08 times as high for women in urban areas as for women in rural areas,
+holding age and number of living children constant.
+
+![Binomial mixed-model output.](images/binomial_output.png)
 
 ## Testing
 

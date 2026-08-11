@@ -20,6 +20,9 @@ packrat/lib*/
 *.png
 !images/r_analysis_code.png
 !images/variance_tooltip.png
+!images/output_current.png
+!images/binomial_model.png
+!images/binomial_output.png
 *.aux
 *.bcf
 *.blg

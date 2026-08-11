@@ -32,7 +32,9 @@ A BibTeX entry for LaTeX users is
 - [Installation](#installation)
   - [Docker](#docker)
   - [Browser-only webR build](#browser-only-webr-build)
+- [Problems installing](#problems-installing)
 - [Using mimosa](#using-mimosa)
+  - [Dichotomous outcomes](#dichotomous-outcomes)
 - [Testing](#testing)
 - [Issues and Support](#issues-and-support)
 - [Contributing](#contributing)
@@ -81,11 +83,11 @@ No need to install mimosa, just go to <https://mimosa.icu> and use it
 there. An example data file is loaded when you go to
 <https://mimosa.icu/example>.
 
-If you really want to use it locally, install from github (you need the
-package devtools for this):
+To run Mimosa locally, install it directly from GitHub with `remotes`:
 
 ``` r
-devtools::install_github("johannes-titz/mimosa")
+install.packages("remotes")
+remotes::install_github("johannes-titz/mimosa")
 ```
 
 And now run the app:
@@ -122,6 +124,8 @@ httpuv::runStaticServer("docs")
 The generated `docs/` directory is deployed to GitHub Pages
 automatically by GitHub Actions. Package availability depends on
 precompiled WebAssembly binaries from the webR package repository.
+
+## Problems installing
 
 If you have any problems installing mimosa, first check that your R
 version is up to date. If you are using Windows, enable TLS 1.2 in the
@@ -201,12 +205,6 @@ Model specification is quite self-explanatory: First one determines the
 dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
 this null model is directly created with the most useful statistics:
-
-Mimosa automatically fits a binomial generalized linear mixed model when
-the selected dependent variable has exactly two observed values; other
-numeric responses use a Gaussian linear mixed model. For a dichotomous
-response, the second factor level (or the second value in sorted order)
-is modeled as the event, and Mimosa states this coding above the output.
 
 <figure>
 <img src="images/output1.png" alt="Output table." />
@@ -292,7 +290,7 @@ we arrive at the final model:
 </figure>
 
 <figure>
-<img src="images/output.png" alt="Output table." />
+<img src="images/output_current.png" alt="Output table." />
 <figcaption aria-hidden="true">Output table.</figcaption>
 </figure>
 
@@ -306,6 +304,39 @@ age 11 can predict the final exam grade at age 16 relatively well.
 Furthermore, single gender schools perform somewhat better than mixed
 gender schools. Overall, the model explains about 43% of the total
 variance, which is quite good for social science.
+
+### Dichotomous outcomes
+
+Mimosa automatically fits a binomial generalized linear mixed model when
+the selected dependent variable has exactly two observed values. As a
+real example, choose the **Contraception** data set in the app. These
+data contain observations from 1,934 women in 60 districts from the 1988
+Bangladesh Fertility Survey (Huq & Cleland, 1990) and are distributed
+with `mlmRev` (Bates et al., 2019). Select `district` as the group ID,
+`use` as the dependent variable, and `livch`, `age`, and `urban` as
+level-1 predictors.
+
+<figure>
+<img src="images/binomial_model.png"
+alt="Binomial model using the Contraception data." />
+<figcaption aria-hidden="true">Binomial model using the Contraception
+data.</figcaption>
+</figure>
+
+The response has the levels `N` and `Y`. Mimosa models the second factor
+level, `Y`, as the event, reports odds ratios, and fits
+`use ~ livch + age + urban + (1 | district)` with `lme4::glmer()` and
+`family = binomial()`. The notification and generated R code both
+identify the modeled event. In this model, for example, the estimated
+odds of contraceptive use are 2.08 times as high for women in urban
+areas as for women in rural areas, holding age and number of living
+children constant.
+
+<figure>
+<img src="images/binomial_output.png"
+alt="Binomial mixed-model output." />
+<figcaption aria-hidden="true">Binomial mixed-model output.</figcaption>
+</figure>
 
 ## Testing
 
@@ -382,6 +413,14 @@ Goldstein, H., Rasbash, J., Yang, M., Woodhouse, G., Pan, H., Nuttall,
 D., & Thomas, S. (1993). A multilevel analysis of school examination
 results. *Oxford Review of Education*, *19*, 425–433.
 <https://doi.org/10.1080/0305498930190401>
+
+</div>
+
+<div id="ref-huq1990" class="csl-entry">
+
+Huq, N. M., & Cleland, J. (1990). *Bangladesh fertility survey 1989:
+Main report*. Dhaka: National Institute of Population Research;
+Training.
 
 </div>
 
