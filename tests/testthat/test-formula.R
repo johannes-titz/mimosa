@@ -105,6 +105,25 @@ test_that("complete binomial analysis code preserves Mimosa event coding", {
   expect_lte(max(nchar(strsplit(code, "\n", fixed = TRUE)[[1]])), 50)
 })
 
+test_that("long formulas wrap safely around backticked names and operators", {
+  formula <- create_r_formula(
+    "a response with spaces",
+    "a grouping variable with spaces",
+    l1 = c("a long predictor name", "another long predictor name"),
+    l1_varies = c("a long predictor name", "another long predictor name")
+  )
+  code <- create_analysis_code(
+    formula,
+    "data <- example_data",
+    dv = "a response with spaces",
+    family = "gaussian"
+  )
+
+  expect_no_error(parse(text = code))
+  expect_gt(length(strsplit(code, "\n", fixed = TRUE)[[1]]), 10)
+  expect_true(grepl("`a long predictor name`", code, fixed = TRUE))
+})
+
 test_that("data loading code covers examples and uploaded files", {
   expect_identical(
     example_dataset_code("lme4::sleepstudy"),
@@ -115,4 +134,5 @@ test_that("data loading code covers examples and uploaded files", {
   expect_no_error(parse(text = uploaded_dataset_code("results.csv")))
   expect_no_error(parse(text = uploaded_dataset_code("results.sav")))
   expect_true(grepl("Hmisc::spss.get", uploaded_dataset_code("results.sav")))
+  expect_identical(uploaded_dataset_code("results.txt"), "")
 })

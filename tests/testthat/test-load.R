@@ -12,3 +12,24 @@ test_that("load_data() handles all input types", {
   expect_equal(load_data("ATEMM.sav", sav), sav_df)
   expect_error(load_data("blah.rnd", csv), "Invalid file")
 })
+test_that("uploaded data code and readers handle unsupported and fallback cases", {
+  expect_identical(uploaded_dataset_code("data.unsupported"), "")
+
+  attempts <- 0
+  fallback_reader <- function(path, fileEncoding = NULL) {
+    attempts <<- attempts + 1
+    if (is.null(fileEncoding)) {
+      stop("try an explicit encoding")
+    }
+    data.frame(value = 1)
+  }
+  result <- read_csv_with_fallback("unused.csv", fallback_reader)
+  expect_s3_class(result, "data.frame")
+  expect_equal(attempts, 2)
+
+  failing_reader <- function(path, fileEncoding = NULL) stop("unreadable")
+  expect_error(
+    read_csv_with_fallback("unused.csv", failing_reader),
+    "unreadable"
+  )
+})

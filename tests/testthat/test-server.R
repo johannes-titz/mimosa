@@ -137,3 +137,103 @@ test_that("server loads uploaded CSV data without browser automation", {
                       fixed = TRUE))
   })
 })
+
+test_that("server returns guidance for missing and unsupported selections", {
+  shiny::testServer(server, {
+    session$setInputs(
+      examplefile = "not-an-example",
+      reactive_mode = TRUE,
+      output_options = character(0)
+    )
+    session$flushReact()
+    expect_true(grepl(
+      "Select dependent variable and grouping variable",
+      paste(as.character(output$table_region), collapse = ""),
+      fixed = TRUE
+    ))
+
+    reactive$data <- data.frame(
+      group = factor(rep(seq_len(3), each = 3)),
+      category = rep(c("a", "b", "c"), 3)
+    )
+    reactive$data_source_code <- "data <- example_data"
+    session$setInputs(
+      group_id = "group",
+      dv = "category",
+      l1 = character(0),
+      l1_varies = character(0),
+      l2 = character(0),
+      interaction = character(0),
+      nAGQ = 1
+    )
+    session$flushReact()
+    expect_true(grepl(
+      "Select a numeric or dichotomous dependent variable.",
+      paste(as.character(output$table_region), collapse = ""),
+      fixed = TRUE
+    ))
+  })
+})
+
+test_that("server explains singular and unidentifiable models", {
+  shiny::testServer(server, {
+    session$setInputs(examplefile = "not-an-example")
+    session$flushReact()
+    reactive$data <- data.frame(
+      group = factor(rep(seq_len(10), each = 5)),
+      predictor = rep(seq_len(5), 10)
+    )
+    reactive$data$outcome <- 2 * reactive$data$predictor +
+      rep(c(-0.2, 0.1, 0, 0.1, -0.2), 10)
+    reactive$data_source_code <- "data <- example_data"
+    session$setInputs(
+      reactive_mode = TRUE,
+      group_id = "group",
+      dv = "outcome",
+      l1 = "predictor",
+      l1_varies = character(0),
+      l2 = character(0),
+      interaction = character(0),
+      output_options = character(0),
+      nAGQ = 1
+    )
+    session$flushReact()
+
+    expect_true(grepl(
+      "Model has a singular fit. Please simplify the random-effects structure.",
+      paste(as.character(output$table_region), collapse = ""),
+      fixed = TRUE
+    ))
+  })
+
+  shiny::testServer(server, {
+    session$setInputs(examplefile = "not-an-example")
+    session$flushReact()
+    reactive$data <- data.frame(
+      group = factor(rep(seq_len(3), each = 2)),
+      outcome = c(1, 3, 2, 5, 4, 7),
+      x1 = seq_len(6),
+      x2 = c(0, 1, 0, 1, 0, 1),
+      x3 = c(2, 1, 3, 2, 4, 3)
+    )
+    reactive$data_source_code <- "data <- example_data"
+    session$setInputs(
+      reactive_mode = TRUE,
+      group_id = "group",
+      dv = "outcome",
+      l1 = c("x1", "x2", "x3"),
+      l1_varies = c("x1", "x2", "x3"),
+      l2 = character(0),
+      interaction = character(0),
+      output_options = character(0),
+      nAGQ = 1
+    )
+    session$flushReact()
+
+    expect_true(grepl(
+      "Model could not be estimated. Please simplify the model and try again.",
+      paste(as.character(output$table_region), collapse = ""),
+      fixed = TRUE
+    ))
+  })
+})

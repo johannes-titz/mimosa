@@ -13,8 +13,11 @@ find_id <- function(d) {
   group_variables <- as.character(diagnostics$variable[diagnostics$is_candidate])
   # if still empty, there is probably no id
   if (length(group_variables) == 0) {
-    showNotification("There seems to be no proper grouping variable (ID). The analysis will likely not work. Please check the structure of your data!",
-                     duration = NULL)
+    session <- shiny::getDefaultReactiveDomain()
+    if (!is.null(session) && is.function(session$sendNotification)) {
+      showNotification("There seems to be no proper grouping variable (ID). The analysis will likely not work. Please check the structure of your data!",
+                       duration = NULL)
+    }
     group_variables <- names(d)
   }
   group_variables

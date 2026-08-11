@@ -1,10 +1,25 @@
 test_that("response family is selected automatically", {
+  expect_true(is_dichotomous_response(c("no", "yes", NA)))
+  expect_false(is_dichotomous_response(c("a", "b", "c")))
   expect_identical(response_family(c(0, 1, 0, NA)), "binomial")
   expect_identical(response_family(c(1, 2, 1, 2)), "binomial")
   expect_identical(response_family(factor(c("no", "yes", "no"))), "binomial")
   expect_identical(response_family(c(TRUE, FALSE, TRUE)), "binomial")
   expect_identical(response_family(c(1.2, 2.4, 3.1)), "gaussian")
   expect_true(is.na(response_family(c("a", "b", "c"))))
+})
+
+test_that("unsupported responses fail before model estimation", {
+  data <- data.frame(outcome = c("a", "b", "c"))
+
+  expect_error(
+    prepare_mixed_model_data(data, "outcome"),
+    "numeric or dichotomous"
+  )
+  expect_error(
+    fit_mixed_model(outcome ~ 1, data, "outcome"),
+    "numeric or dichotomous"
+  )
 })
 
 test_that("dichotomous responses are recoded with a documented event", {

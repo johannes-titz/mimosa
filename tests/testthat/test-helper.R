@@ -58,6 +58,24 @@ test_that("grouping variable explanation is returned", {
   expect_true(explanation$repeated_row_prop[1] > 0)
 })
 
+test_that("grouping detection handles data without a plausible ID", {
+  data <- data.frame(unique_value = seq_len(5), constant = 1)
+  explanation <- explain_find_id(data)
+
+  expect_s3_class(explanation, "data.frame")
+  expect_equal(nrow(explanation), 0)
+  expect_identical(names(explanation), names(empty_id_explanation()))
+  expect_identical(find_id(data), names(data))
+
+  all_missing <- score_group_candidate(
+    data.frame(candidate = rep(NA_integer_, 4)),
+    "candidate"
+  )
+  expect_equal(all_missing$repeated_row_prop, 0)
+  expect_equal(all_missing$n_groups, 0)
+  expect_equal(score_group_count(8, 10), 0.4)
+})
+
 test_that("grouping variable is found in two-level mlmRev datasets", {
   expect_identical("school", find_id(mlmRev::Chem97))
   expect_identical("district", find_id(mlmRev::Contraception))
@@ -115,6 +133,26 @@ test_that("example data set helpers tolerate empty input", {
   expect_null(load_example_dataset(character(0)))
   expect_null(load_example_dataset(c("mlmRev::Exam", "mlmRev::Chem97")))
   expect_identical("", example_dataset_description(NULL))
+})
+
+test_that("all example loaders and selector elements are usable", {
+  keys <- unname(example_dataset_choices())
+  loaded <- lapply(keys, load_example_dataset)
+
+  expect_true(all(vapply(loaded, is.data.frame, logical(1))))
+  expect_identical(example_dataset_code(NULL), "")
+  expect_identical(example_dataset_code("not-an-example"), "")
+  expect_true(grepl("data(\"popular2\"", example_dataset_code("popular2"),
+                    fixed = TRUE))
+
+  options <- example_dataset_options("popular2")
+  options_html <- paste(vapply(options, as.character, character(1)),
+                        collapse = "")
+  select_html <- paste(as.character(example_dataset_select("popular2")),
+                       collapse = "")
+  expect_true(grepl('value="popular2"', options_html, fixed = TRUE))
+  expect_true(grepl('selected="selected"', options_html, fixed = TRUE))
+  expect_true(grepl('id="examplefile"', select_html, fixed = TRUE))
 })
 
 test_that("Exam example defaults select the tutorial model", {

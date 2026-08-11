@@ -17,6 +17,55 @@ test_that("fixed-effect variance is shown in model table", {
   expect_false(grepl("\\\\(", table, fixed = TRUE))
 })
 
+test_that("table options and variance-row fallbacks are handled", {
+  mdl <- lme4::lmer(Reaction ~ Days + (1 | Subject), lme4::sleepstudy)
+  table <- create_table(
+    mdl,
+    l1 = "Days",
+    output_options = c("standardized coefficients", "standard error")
+  )
+
+  expect_true(grepl("&beta;", table, fixed = TRUE))
+  expect_true(grepl("SE", table, fixed = TRUE))
+  expect_identical(add_fixed_effect_variance("<table></table>", Inf),
+                   "<table></table>")
+  expect_true(grepl(
+    sigma_squared_label("FE"),
+    add_fixed_effect_variance("<table></table>", 1.25),
+    fixed = TRUE
+  ))
+  expect_identical(create_variance_row("variance", NaN, "tooltip"), "")
+})
+
+test_that("HTML transformation helpers tolerate incomplete input", {
+  plain <- "<table><td>Random Effects</td></table>"
+
+  expect_true(grepl(
+    "Model summary",
+    move_random_components_to_predictor_table(plain, NULL),
+    fixed = TRUE
+  ))
+  expect_identical(move_tau_to_predictor_table(plain),
+                   move_random_components_to_predictor_table(plain, NULL))
+  expect_identical(extract_tau_rows(c("&tau;<sub>00</sub>"))$values, list())
+  expect_null(extract_tau_label("not a tau row"))
+  expect_null(extract_tau_label("&tau;<sub>11</sub> <sub>group</sub>"))
+  expect_identical(extract_intercept_rhos(NULL), list())
+  expect_true(is.na(get_model_colspan("no table header")))
+
+  mdl <- lme4::lmer(Reaction ~ Days + (1 | Subject), lme4::sleepstudy)
+  expect_identical(add_r2_tooltips("no R-squared row", mdl),
+                   "no R-squared row")
+  expect_null(calculate_r2_components(NULL))
+
+  replaced <- replace_all_matches(
+    "one one",
+    "(one)",
+    function(pieces) "1"
+  )
+  expect_identical(replaced, "1 1")
+})
+
 test_that("variance summary rows include labels and tooltips", {
   mdl <- lme4::lmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
   table <- create_table(mdl, l1 = "Days", output_options = character(0))

@@ -271,8 +271,8 @@ server <- shinyServer(function(input, output, session) {
     }
     # renderTable does not work if the object is empty, as is the case when
     # no dv and grouping var is selected, workaround:
-    if (is.null(input$group_id) |
-        is.null(dv) |
+    if (is.null(input$group_id) ||
+        is.null(dv) ||
         !dv %in% names(reactive$data))
       # if you change data file, dv is not emptied
       return("Select dependent variable and grouping variable"
