@@ -128,7 +128,7 @@ example_dataset_code <- function(key) {
   }
   if (identical(key, "popular2")) {
     return(paste(
-      'data("popular2", package = "mimosa")',
+      paste0('data("popular2", package = "', "mimosa", '")'),
       "data <- popular2",
       sep = "\n"
     ))
@@ -144,8 +144,12 @@ example_dataset_code <- function(key) {
 #' @param name dataset name
 #' @noRd
 load_package_dataset <- function(name) {
+  source_env <- parent.env(environment())
+  if (exists(name, envir = source_env, inherits = TRUE)) {
+    return(get(name, envir = source_env, inherits = TRUE))
+  }
   data_env <- new.env(parent = emptyenv())
-  utils::data(list = name, package = "mimosa", envir = data_env)
+  utils::data(list = name, package = utils::packageName(), envir = data_env)
   data_env[[name]]
 }
 

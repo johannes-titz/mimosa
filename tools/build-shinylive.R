@@ -34,6 +34,7 @@ invisible(file.copy(file.path(root, "R", c(
   "examples.R",
   "helper.R",
   "formula.R",
+  "model.R",
   "output.R",
   "ui.R",
   "server.R"
@@ -41,6 +42,7 @@ invisible(file.copy(file.path(root, "R", c(
 invisible(file.copy(file.path(root, "data", "popular2.rda"), file.path(stage_dir, "data"), overwrite = TRUE))
 
 shinylive::export(stage_dir, site_dir)
+unlink(stage_dir, recursive = TRUE)
 
 message("Shinylive site written to: ", site_dir)
 message("Preview with: httpuv::runStaticServer('docs')")

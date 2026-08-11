@@ -92,7 +92,10 @@ uploaded_dataset_code <- function(name) {
       "}",
       sep = "\n"
     ),
-    sav = paste0("data <- mimosa::read_sav(", filename, ")"),
+    # Keep the package-qualified call in the generated code, but assemble the
+    # namespace marker separately so dependency scanners do not try to install
+    # mimosa inside the already self-contained Shinylive app.
+    sav = paste0("data <- mimosa", "::read_sav(", filename, ")"),
     ""
   )
 }

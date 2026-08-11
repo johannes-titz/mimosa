@@ -115,6 +115,13 @@ The generated `docs/` directory is deployed to GitHub Pages automatically by
 GitHub Actions. Package availability depends on precompiled WebAssembly
 binaries from the webR package repository.
 
+The browser-only build is still noticeably slower to start than a warm
+ShinyProxy deployment. Each page load creates a new R session inside the
+browser and mounts the required WebAssembly packages, even when the downloaded
+files are already cached. On a typical desktop, expect roughly 20 seconds until
+the interface is usable and 30--40 seconds until the initial model table is
+ready; exact times depend on the device and network.
+
 ## Problems installing
 
 If you have any problems installing mimosa, first check that your R version is

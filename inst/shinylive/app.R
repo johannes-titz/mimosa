@@ -1,30 +1,8 @@
-if (requireNamespace("webr", quietly = TRUE)) {
-  webr::install(c(
-    "Hmisc",
-    "insight",
-    "lme4",
-    "mlmRev",
-    "shiny",
-    "shinybusy",
-    "shinydashboard",
-    "shinyjs",
-    "sjPlot"
-  ))
-}
-
 suppressPackageStartupMessages({
   library(shiny)
   library(shinydashboard)
-  library(shinybusy)
   library(shinyjs)
-  library(mlmRev)
-  library(lme4)
-  library(sjPlot)
 })
-
-if (requireNamespace("Hmisc", quietly = TRUE)) {
-  suppressPackageStartupMessages(library(Hmisc))
-}
 
 load("data/popular2.rda")
 source("R/load.R", local = TRUE)

@@ -131,7 +131,9 @@ ui_body <- function(testing = F) {
               width = 9,
               box(
                 title = "3. Save output table", status = "primary",
-                width = NULL, uiOutput("table_region"), br(),
+                width = NULL,
+                uiOutput("table_region", class = "shiny-table-output"),
+                br(),
                 downloadButton("download", "Download Table")
               )
             ),

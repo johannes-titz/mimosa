@@ -6,6 +6,11 @@ test_that("model panel exposes complete code and copy controls", {
   expect_true(grepl('id="copy_r_code"', html, fixed = TRUE))
   expect_true(grepl('id="r_analysis_code"', html, fixed = TRUE))
   expect_true(grepl("mimosaCopyRCode", html, fixed = TRUE))
+  expect_true(grepl(
+    'class="shiny-html-output shiny-table-output" id="table_region"',
+    html,
+    fixed = TRUE
+  ))
   expect_lt(
     regexpr('id="r_analysis_code"', html, fixed = TRUE)[1],
     regexpr('id="copy_r_code"', html, fixed = TRUE)[1]
