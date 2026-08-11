@@ -1,4 +1,61 @@
-#
+# mimosa 0.5.9000
+
+## Models and statistical output
+
+- Dichotomous dependent variables are now detected automatically and fitted
+  with `lme4::glmer(..., family = binomial())`. Numeric responses with more
+  than two observed values continue to use Gaussian `lme4::lmer()` models.
+  Mimosa explicitly reports which response value is modeled as the event.
+- The output table now displays the empirical fixed-effect variance, each
+  random-effect variance component, and the residual variance. Random-effect
+  variances and correlations are placed next to their corresponding terms.
+- Marginal and conditional R-squared and the intraclass correlation coefficient
+  (ICC) now have detailed hover explanations showing the variance components
+  and formulas used in their calculation.
+- The variance calculations are regression tested against published Gaussian
+  mixed-model examples from Nakagawa and Schielzeth (2013) and Johnson (2014).
+  The Johnson two-level Orange example is available in the example selector,
+  and the BeetlesBody data used for the published benchmark are included as a
+  documented package data set.
+- Singular fits, model-fitting errors, and cases with too few repeated groups
+  now produce more useful diagnostics instead of failing silently.
+
+## Interface and reproducibility
+
+- A new **R analysis code** panel below the model display provides a complete
+  copyable script for the current analysis. It includes reproducible data
+  loading, the correct `lmer()` or `glmer()` call, binomial event recoding when
+  needed, and `sjPlot::tab_model(model)`.
+- Generated formulas and R code now quote non-syntactic variable names safely,
+  wrap long lines for easier reading, and place the copy button below the code.
+- The right-hand model/code panel and the save-output area were rearranged to
+  avoid excess vertical whitespace.
+- The installed Mimosa version is now shown in the application header.
+- The example selector now includes additional two-level data sets from
+  `mlmRev`, with descriptions of their nesting structure. The app remains
+  intentionally limited to two-level models.
+- Uploaded data handling and character-encoding fallbacks are more robust, and
+  unsupported dependent variables are excluded. Dependent variables may be
+  numeric or dichotomous factors, characters, or logical values.
+- Grouping-variable detection now reports its reasoning, uses more robust
+  repeated-measure thresholds, and warns when a proposed grouping variable has
+  too many groups without repetition. `explain_find_id()` is exported for
+  inspecting these diagnostics outside the app.
+
+## Testing, deployment, and maintenance
+
+- The automated suite now contains 266 tests with 97.7% line coverage. New
+  headless `shiny::testServer()` tests exercise Gaussian and binomial models,
+  generated R code, downloads, uploads, reactive error states, and output
+  diagnostics on GitHub Actions; the browser-dependent `shinytest2` test is
+  skipped on CI.
+- GitHub Actions now performs multi-platform R CMD checks, generates and
+  uploads Cobertura coverage, and uses current supported action versions.
+- A Shinylive/webR build can run Mimosa entirely in the browser and is built
+  and deployed to GitHub Pages automatically.
+- Package metadata, generated documentation, styling, examples, the tutorial
+  video links, and dependency declarations were refreshed. `insight` is now an
+  explicit dependency for model variance calculations.
 
 # v0.5.1
 

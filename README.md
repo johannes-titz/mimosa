@@ -2,8 +2,9 @@
 # mimosa
 
 [![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
-<!-- [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa) -->
+[![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level
@@ -91,13 +92,13 @@ source("tools/build-shinylive.R")
 httpuv::runStaticServer("docs")
 ```
 
-The generated `docs/` directory can be deployed to static hosting such
-as GitHub Pages. Package availability depends on precompiled WebAssembly
-binaries from the webR package repository.
+The generated `docs/` directory is deployed to GitHub Pages
+automatically by GitHub Actions. Package availability depends on
+precompiled WebAssembly binaries from the webR package repository.
 
-If you have any problems installing mimosa, check that your R version is
-up to date (currently 4.3). If you are using Windows, enable TLS 1.2 in
-the Internet Options Advanced tab (see
+If you have any problems installing mimosa, first check that your R
+version is up to date. If you are using Windows, enable TLS 1.2 in the
+Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
 <https://cran.r-project.org/bin/windows/Rtools/>.
@@ -119,18 +120,18 @@ the age of 11. Both variables are already
 data set. The other variables are described in more detail in Goldstein
 et al. (1993) and Nuttall, Goldstein, Prosser, & Rasbash (1989).
 
-| variable | description                                              | data type | levels (if factor)           |
-|:---------|:---------------------------------------------------------|:----------|:-----------------------------|
-| school   | school ID                                                | factor    | 65 levels                    |
-| normexam | standardized exam score                                  | numeric   |                              |
-| schgend  | school gender                                            | factor    | mixed, boys, girls           |
-| schavg   | school average of intake score                           | numeric   |                              |
-| vr       | student level Verbal Reasoning (VR) score band at intake | factor    | bottom 25%, mid 50%, top 25% |
-| intake   | band of student’s intake score                           | factor    | bottom 25%, mid 50%, top 25% |
-| standLRT | standardized listening and reading test score            | numeric   |                              |
-| sex      | sex of the student                                       | factor    | F, M                         |
-| type     | school type                                              | factor    | Mxd, Sngl                    |
-| student  | student ID (within school)                               | factor    | 650 levels                   |
+| variable | description | data type | levels (if factor) |
+|:---|:---|:---|:---|
+| school | school ID | factor | 65 levels |
+| normexam | standardized exam score | numeric |  |
+| schgend | school gender | factor | mixed, boys, girls |
+| schavg | school average of intake score | numeric |  |
+| vr | student level Verbal Reasoning (VR) score band at intake | factor | bottom 25%, mid 50%, top 25% |
+| intake | band of student’s intake score | factor | bottom 25%, mid 50%, top 25% |
+| standLRT | standardized listening and reading test score | numeric |  |
+| sex | sex of the student | factor | F, M |
+| type | school type | factor | Mxd, Sngl |
+| student | student ID (within school) | factor | 650 levels |
 
 <span id="tab:data" label="tab:data"></span> Description of example
 data. *Note*. This data is available in the R package `mlmRev` (Bates et
@@ -174,11 +175,11 @@ dependent variable, for which the exam score (*normexam*) appears most
 interesting in the school data set (see image above). The output for
 this null model is directly created with the most useful statistics:
 
-Mimosa automatically fits a binomial generalized linear mixed model
-when the selected dependent variable has exactly two observed values;
-other numeric responses use a Gaussian linear mixed model. For a
-dichotomous response, the second factor level (or the second value in
-sorted order) is modeled as the event.
+Mimosa automatically fits a binomial generalized linear mixed model when
+the selected dependent variable has exactly two observed values; other
+numeric responses use a Gaussian linear mixed model. For a dichotomous
+response, the second factor level (or the second value in sorted order)
+is modeled as the event, and Mimosa states this coding above the output.
 
 <figure>
 <img src="images/output1.png" alt="Output table." />
@@ -195,8 +196,22 @@ coefficients, test statistic,
 ![p](https://latex.codecogs.com/png.latex?p "p")-value), can be selected
 in the Table Options dialog (not shown here).
 
+The table also reports fixed-effect, random-effect, and residual
+variance, marginal and conditional
+![R^2](https://latex.codecogs.com/png.latex?R%5E2 "R^2"), and the
+intraclass correlation coefficient (ICC). Hovering over these values
+shows what they mean and, where applicable, the components used in their
+calculation. The calculations are regression tested against published
+Gaussian mixed-model examples from [Nakagawa and Schielzeth
+(2013)](https://doi.org/10.1111/j.2041-210x.2012.00261.x) and [Johnson
+(2014)](https://doi.org/10.1111/2041-210X.12225).
+
 The model description is shown mathematically and in R syntax of the
-`lme4` package:
+`lme4` package. Directly below it, a separate **R analysis code** panel
+contains a complete, copyable script: data loading, the matching `lmer`
+or `glmer` call, and `sjPlot::tab_model(model)`. Variable names that
+require quoting and Mimosa’s dichotomous event coding are preserved in
+the generated code.
 
 <figure>
 <img src="images/model_display1.png" alt="Model display." />
@@ -253,11 +268,13 @@ variance, which is quite good for social science.
 
 ## Testing
 
-Mimosa includes many automated tests with a test coverage of around 90%.
-Unfortunately, `shinytest2` leads to problems when testing via github
-actions. Thus, I run the tests locally on my GNU/Linux system and no
-badge is shown for the testcoverage. In the future I will try to include
-non-GUI tests to simplify automated testing via github actions.
+Mimosa currently has 266 automated tests and 97.7% line coverage. GitHub
+Actions runs package checks on Linux, macOS, and Windows and runs the
+coverage suite headlessly. The server behavior—including Gaussian and
+binomial model fitting, generated R code, output diagnostics, uploads,
+and error states—is tested with `shiny::testServer()`. The
+browser-dependent `shinytest2` test is kept for local end-to-end testing
+and skipped on CI.
 
 ## Issues and Support
 
@@ -292,7 +309,7 @@ documentation.
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
-line-spacing="2">
+entry-spacing="0" line-spacing="2">
 
 <div id="ref-bates2019" class="csl-entry">
 

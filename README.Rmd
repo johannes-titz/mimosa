@@ -18,8 +18,9 @@ knitr::opts_chunk$set(
 
 # mimosa
 [![R-CMD-check](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
-<!-- [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa) -->
+[![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116
@@ -80,11 +81,16 @@ source("tools/build-shinylive.R")
 httpuv::runStaticServer("docs")
 ```
 
-The generated `docs/` directory can be deployed to static hosting such as
-GitHub Pages. Package availability depends on precompiled WebAssembly binaries
-from the webR package repository.
+The generated `docs/` directory is deployed to GitHub Pages automatically by
+GitHub Actions. Package availability depends on precompiled WebAssembly
+binaries from the webR package repository.
 
-If you have any problems installing mimosa, check that your R version is up to date (currently 4.3). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/.
+If you have any problems installing mimosa, first check that your R version is
+up to date. If you are using Windows, enable TLS 1.2 in the Internet Options
+Advanced tab (see
+https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under
+Windows, you will also need Rtools to build the package:
+https://cran.r-project.org/bin/windows/Rtools/.
 
 If it still does not work drop me an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
 
@@ -116,13 +122,35 @@ If the grouping variable is known, the procedure to categorize variables in leve
 
 Model specification is quite self-explanatory: First one determines the dependent variable, for which the exam score (*normexam*) appears most interesting in the school data set (see image above). The output for this null model is directly created with the most useful statistics:
 
-Mimosa automatically fits a binomial generalized linear mixed model when the selected dependent variable has exactly two observed values; other numeric responses use a Gaussian linear mixed model. For a dichotomous response, the second factor level (or the second value in sorted order) is modeled as the event.
+Mimosa automatically fits a binomial generalized linear mixed model when the
+selected dependent variable has exactly two observed values; other numeric
+responses use a Gaussian linear mixed model. For a dichotomous response, the
+second factor level (or the second value in sorted order) is modeled as the
+event, and Mimosa states this coding above the output.
 
 ![Output table.](images/output1.png)
 
-The null model produces an intercept of close to 0, which makes sense since the data is standardized. The output table is created with ``sjPlot`` [@ludecke2018]. It is concise, nicely formatted and can be either downloaded as an HTML file or directly copy-pasted to the application of choice (e.g. a word processor). Additional statistics (standard error, AIC, deviance, Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be selected in the Table Options dialog (not shown here).
+The null model produces an intercept of close to 0, which makes sense since the
+data is standardized. The output table is created with ``sjPlot``
+[@ludecke2018]. It is concise, nicely formatted and can be either downloaded as
+an HTML file or directly copy-pasted to the application of choice (e.g. a word
+processor). Additional statistics (standard error, AIC, deviance,
+Log-Likelihood, standardized coefficients, test statistic, $p$-value), can be
+selected in the Table Options dialog (not shown here).
 
-The model description is shown mathematically and in R syntax of the ``lme4`` package:
+The table also reports fixed-effect, random-effect, and residual variance,
+marginal and conditional $R^2$, and the intraclass correlation coefficient
+(ICC). Hovering over these values shows what they mean and, where applicable,
+the components used in their calculation. The calculations are regression
+tested against published Gaussian mixed-model examples from
+[Nakagawa and Schielzeth (2013)](https://doi.org/10.1111/j.2041-210x.2012.00261.x)
+and [Johnson (2014)](https://doi.org/10.1111/2041-210X.12225).
+
+The model description is shown mathematically and in R syntax of the ``lme4``
+package. Directly below it, a separate **R analysis code** panel contains a
+complete, copyable script: data loading, the matching ``lmer`` or ``glmer``
+call, and ``sjPlot::tab_model(model)``. Variable names that require quoting and
+Mimosa's dichotomous event coding are preserved in the generated code.
 
 ![Model display.](images/model_display1.png)
 
@@ -140,7 +168,12 @@ The general conclusion for the data set might be that a reading test at age 11 c
 
 ## Testing
 
-Mimosa includes many automated tests with a test coverage of around 90%. Unfortunately, `shinytest2` leads to problems when testing via github actions. Thus, I run the tests locally on my GNU/Linux system and no badge is shown for the testcoverage. In the future I will try to include non-GUI tests to simplify automated testing via github actions.
+Mimosa currently has 266 automated tests and 97.7% line coverage. GitHub
+Actions runs package checks on Linux, macOS, and Windows and runs the coverage
+suite headlessly. The server behavior---including Gaussian and binomial model
+fitting, generated R code, output diagnostics, uploads, and error states---is
+tested with `shiny::testServer()`. The browser-dependent `shinytest2` test is
+kept for local end-to-end testing and skipped on CI.
 
 ## Issues and Support
 
