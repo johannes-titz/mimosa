@@ -18,6 +18,8 @@ test.R
 thomas
 packrat/lib*/
 *.png
+!images/r_analysis_code.png
+!images/variance_tooltip.png
 *.aux
 *.bcf
 *.blg

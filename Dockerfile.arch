@@ -1,3 +1,4 @@
+# Experimental legacy image. Prefer the maintained Dockerfile.
 FROM archlinux:latest
 
 RUN yes | pacman -Syu

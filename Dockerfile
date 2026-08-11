@@ -1,36 +1,42 @@
-#it would be interesting to try out the alpine image, but then dependencies
-# must be handled manually; or arch
-FROM rocker/r-ver:4
+# syntax=docker/dockerfile:1
 
-MAINTAINER Johannes Titz "shiny@titz.science"
+ARG R_VERSION=4.6.1
+FROM rocker/r-ver:${R_VERSION}
 
-# getting system deps via: https://www.jumpingrivers.com/blog/shiny-auto-docker/?
-# just call glue_sys_reqs (see R/docker.R)
-RUN apt-get update -qq && apt-get install -y --no-install-recommends \
-  cmake \
-  libicu-dev \
-  make \
-  pandoc \
-  zlib1g-dev \
-  && apt-get clean
+LABEL org.opencontainers.image.authors="Johannes Titz <shiny@titz.science>" \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.source="https://github.com/johannes-titz/mimosa"
 
-## needed?
-## update system libraries
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get clean
+# Keep dependency installation cacheable when application code changes.
+WORKDIR /tmp/mimosa
+COPY DESCRIPTION ./
 
-# mimosa app from github with all deps
-RUN R -e "install.packages('remotes')"
-RUN R -e "remotes::install_github('johannes-titz/mimosa')"
-RUN strip /usr/local/lib/R/site-library/*/libs/*.so
+# rocker/r-ver uses Posit Package Manager binaries on amd64. Removing download
+# caches and stripping shared objects keeps the installed library compact.
+RUN install2.r --error --skipinstalled --ncpus -1 \
+      foreign \
+      insight \
+      lme4 \
+      mlmRev \
+      shiny \
+      shinydashboard \
+      shinyjs \
+      sjPlot \
+    && rm -rf /tmp/downloaded_packages \
+    && find /usr/local/lib/R/site-library -type f -path '*/libs/*.so' \
+      -exec strip --strip-unneeded '{}' +
 
-# update mimosa and deps if necessary
-ADD "https://www.random.org/cgi-bin/randbyte?nbytes=10&format=h" skipcache
-RUN R -e "remotes::install_github('johannes-titz/mimosa')"
+# Install the package from this checkout, rather than downloading and then
+# reinstalling the GitHub version with a random cache-busting URL.
+COPY . ./
+RUN R CMD INSTALL --no-multiarch . \
+    && Rscript -e 'stopifnot(requireNamespace("mimosa", quietly = TRUE))' \
+    && rm -rf /tmp/mimosa /tmp/downloaded_packages
 
-# expose port
+# The application does not need root privileges at runtime.
+RUN useradd --create-home --uid 10001 --shell /usr/sbin/nologin mimosa
+USER mimosa
+WORKDIR /home/mimosa
+
 EXPOSE 3838
-
-# run mimosa
-CMD ["R", "-e", "mimosa::run_app(port = 3838, host = '0.0.0.0')"]
+CMD ["R", "--no-save", "-e", "mimosa::run_app(port = 3838, host = '0.0.0.0')"]

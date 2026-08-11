@@ -20,17 +20,15 @@ License: AGPL-3
 URL: http://github.com/johannes-titz/mimosa
 BugReports: http://github.com/johannes-titz/mimosa/issues
 Imports: 
+    foreign,
     insight,
     mlmRev,
     lme4,
-    shiny,
-    shinyBS,
-    shinybusy,
+    shiny (>= 1.13.0),
     shinydashboard,
     shinyjs,
     sjPlot,
-    utils,
-    Hmisc
+    utils
 Suggests: 
     shinytest2,
     testthat (>= 3.0.0)

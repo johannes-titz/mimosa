@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![test-coverage](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
+
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116
@@ -39,6 +40,20 @@ A BibTeX entry for LaTeX users is
   number = {49}
 }
 ```
+
+## Contents
+
+- [Quick Start Youtube-Tutorial](#quick-start-youtube-tutorial)
+- [Introduction](#introduction)
+- [Installation](#installation)
+  - [Docker](#docker)
+  - [Browser-only webR build](#browser-only-webr-build)
+- [Using mimosa](#using-mimosa)
+- [Testing](#testing)
+- [Issues and Support](#issues-and-support)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [References](#references)
 
 ## Quick Start Youtube-Tutorial
 
@@ -69,6 +84,18 @@ mimosa::run_app()
 ```
 
 Yes, it is that easy---at least under GNU/Linux! 
+
+### Docker
+
+Build the image from the current checkout and run Mimosa on port 3838:
+
+```bash
+docker build -t mimosa .
+docker run --rm -p 3838:3838 mimosa
+```
+
+The image uses a pinned Rocker R version by default. Override it when needed
+with, for example, `--build-arg R_VERSION=4.6.1`.
 
 ### Browser-only webR build
 
@@ -146,6 +173,8 @@ tested against published Gaussian mixed-model examples from
 [Nakagawa and Schielzeth (2013)](https://doi.org/10.1111/j.2041-210x.2012.00261.x)
 and [Johnson (2014)](https://doi.org/10.1111/2041-210X.12225).
 
+![Variance calculation shown on hover.](images/variance_tooltip.png)
+
 The model description is shown mathematically and in R syntax of the ``lme4``
 package. Directly below it, a separate **R analysis code** panel contains a
 complete, copyable script: data loading, the matching ``lmer`` or ``glmer``
@@ -153,6 +182,8 @@ call, and ``sjPlot::tab_model(model)``. Variable names that require quoting and
 Mimosa's dichotomous event coding are preserved in the generated code.
 
 ![Model display.](images/model_display1.png)
+
+![Complete R analysis code with copy button.](images/r_analysis_code.png)
 
 In the next step one can select the independent variables on level 1, after which one can further specify if these variables should be modeled as random or fixed effects. For the example data set, one can add *standLRT* (a standardized listening and reading test score). The output table as well as the model description adapts each time a change is made. Note that, to avoid redundancy, this updated table is not shown here, but you can check the results on your own at [https://mimosa.icu/example](https://mimosa.icu/example). The effect for *standLRT* is .56. One can add a random component to the effect, which will result in an estimate for the variance in the population of the *standLRT* effect $\tau_\mathrm{11 school.standLRT}$ (not shown here). It is only 0.01, but the square root $\sqrt{0.01}=.1$ is usually more interesting, giving the estimated population standard deviation for the estimated population effect of .56.
 
@@ -168,7 +199,7 @@ The general conclusion for the data set might be that a reading test at age 11 c
 
 ## Testing
 
-Mimosa currently has 266 automated tests and 97.7% line coverage. GitHub
+Mimosa currently has 273 automated checks and 97.7% line coverage. GitHub
 Actions runs package checks on Linux, macOS, and Windows and runs the coverage
 suite headlessly. The server behavior---including Gaussian and binomial model
 fitting, generated R code, output diagnostics, uploads, and error states---is

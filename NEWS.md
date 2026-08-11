@@ -44,13 +44,23 @@
 
 ## Testing, deployment, and maintenance
 
-- The automated suite now contains 266 tests with 97.7% line coverage. New
+- The automated suite now contains 273 checks with 97.7% line coverage. New
   headless `shiny::testServer()` tests exercise Gaussian and binomial models,
   generated R code, downloads, uploads, reactive error states, and output
   diagnostics on GitHub Actions; the browser-dependent `shinytest2` test is
   skipped on CI.
 - GitHub Actions now performs multi-platform R CMD checks, generates and
   uploads Cobertura coverage, and uses current supported action versions.
+- The Docker image now installs the current checkout once, caches dependency
+  installation separately from application code, excludes development files
+  from the build context, strips compiled libraries, and runs as a non-root
+  user. The obsolete random cache-busting download and full system upgrade were
+  removed.
+- SPSS imports now use a small wrapper around R's recommended `foreign`
+  package. This preserves the previous import behavior while removing the much
+  larger direct `Hmisc` dependency.
+- The unused `shinyBS` dependency was removed, and Shiny's built-in busy
+  indicators replace the one `shinybusy` call.
 - A Shinylive/webR build can run Mimosa entirely in the browser and is built
   and deployed to GitHub Pages automatically.
 - Package metadata, generated documentation, styling, examples, the tutorial

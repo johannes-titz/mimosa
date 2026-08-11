@@ -1,0 +1,17 @@
+# Send only files needed by R CMD INSTALL to the Docker builder.
+*
+!DESCRIPTION
+!LICENSE.md
+!NAMESPACE
+!NEWS.md
+!R/
+!R/**
+!data/
+!data/**
+!inst/
+!inst/**
+!man/
+!man/**
+
+# Local legacy tests are intentionally not part of the package image.
+inst/tinytest/

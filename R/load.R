@@ -2,7 +2,7 @@
 #' 
 #' Depending on file ending, the data is loaded.
 #' 
-#' @importFrom Hmisc spss.get
+#' @importFrom foreign read.spss
 #' @importFrom utils read.csv read.csv2 count.fields
 #' @param name name of file
 #' @param datapath the actual path
@@ -11,11 +11,63 @@
 load_data <- function(name, datapath) {
   ext <- tools::file_ext(name)
   d <- switch(ext,
-              sav = Hmisc::spss.get(datapath, use.value.labels = F),
+              sav = read_sav(datapath),
               csv = load_csv(datapath),
               validate("Invalid file; Please upload a .csv or .sav file")
   )
   d
+}
+
+#' Read an SPSS data file
+#'
+#' A lightweight wrapper around [foreign::read.spss()] that preserves the
+#' naming, variable-label, and integer-conversion behavior previously provided
+#' by `Hmisc::spss.get()`.
+#'
+#' @param file path to an SPSS `.sav` file
+#' @return a data frame
+#' @export
+read_sav <- function(file) {
+  data <- foreign::read.spss(
+    file,
+    use.value.labels = FALSE,
+    to.data.frame = TRUE,
+    reencode = NA
+  )
+  variable_labels <- attr(data, "variable.labels")
+  original_names <- names(data)
+  names(data) <- gsub(
+    "_",
+    ".",
+    make.names(original_names, unique = TRUE),
+    fixed = TRUE
+  )
+
+  if (length(variable_labels)) {
+    for (i in seq_along(data)) {
+      label <- variable_labels[i]
+      if (!is.na(label) && nzchar(label) && label != original_names[i]) {
+        attr(data[[i]], "label") <- label
+        class(data[[i]]) <- c("labelled", class(data[[i]]))
+      }
+    }
+  }
+  attr(data, "variable.labels") <- NULL
+
+  for (name in names(data)) {
+    value <- data[[name]]
+    if (is.factor(value) || is.character(value)) {
+      next
+    }
+    if (all(is.na(value)) || (
+      max(abs(value), na.rm = TRUE) <= .Machine$integer.max &&
+        all(floor(value) == value, na.rm = TRUE)
+    )) {
+      storage.mode(value) <- "integer"
+      data[[name]] <- value
+    }
+  }
+  data
 }
 
 #' R code for loading an uploaded data file
@@ -40,13 +92,7 @@ uploaded_dataset_code <- function(name) {
       "}",
       sep = "\n"
     ),
-    sav = paste(
-      "data <- Hmisc::spss.get(",
-      paste0("  ", filename, ","),
-      "  use.value.labels = FALSE",
-      ")",
-      sep = "\n"
-    ),
+    sav = paste0("data <- mimosa::read_sav(", filename, ")"),
     ""
   )
 }

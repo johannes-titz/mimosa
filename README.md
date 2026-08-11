@@ -5,6 +5,7 @@
 [![test-coverage](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/mimosa/actions/workflows/test-coverage.yaml)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116)
 [![codecov](https://codecov.io/gh/johannes-titz/mimosa/graph/badge.svg?token=TQmQxWpjLP)](https://codecov.io/gh/johannes-titz/mimosa)
+
 To cite mimosa in publications use:
 
 Titz, J. (2020). mimosa: A modern graphical user interface for 2-level
@@ -23,6 +24,20 @@ A BibTeX entry for LaTeX users is
       doi = {10.21105/joss.02116},
       number = {49}
     }
+
+## Contents
+
+- [Quick Start Youtube-Tutorial](#quick-start-youtube-tutorial)
+- [Introduction](#introduction)
+- [Installation](#installation)
+  - [Docker](#docker)
+  - [Browser-only webR build](#browser-only-webr-build)
+- [Using mimosa](#using-mimosa)
+- [Testing](#testing)
+- [Issues and Support](#issues-and-support)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [References](#references)
 
 ## Quick Start Youtube-Tutorial
 
@@ -80,6 +95,18 @@ mimosa::run_app()
 ```
 
 Yes, it is that easy—at least under GNU/Linux!
+
+### Docker
+
+Build the image from the current checkout and run Mimosa on port 3838:
+
+``` bash
+docker build -t mimosa .
+docker run --rm -p 3838:3838 mimosa
+```
+
+The image uses a pinned Rocker R version by default. Override it when
+needed with, for example, `--build-arg R_VERSION=4.6.1`.
 
 ### Browser-only webR build
 
@@ -206,6 +233,13 @@ Gaussian mixed-model examples from [Nakagawa and Schielzeth
 (2013)](https://doi.org/10.1111/j.2041-210x.2012.00261.x) and [Johnson
 (2014)](https://doi.org/10.1111/2041-210X.12225).
 
+<figure>
+<img src="images/variance_tooltip.png"
+alt="Variance calculation shown on hover." />
+<figcaption aria-hidden="true">Variance calculation shown on
+hover.</figcaption>
+</figure>
+
 The model description is shown mathematically and in R syntax of the
 `lme4` package. Directly below it, a separate **R analysis code** panel
 contains a complete, copyable script: data loading, the matching `lmer`
@@ -216,6 +250,13 @@ the generated code.
 <figure>
 <img src="images/model_display1.png" alt="Model display." />
 <figcaption aria-hidden="true">Model display.</figcaption>
+</figure>
+
+<figure>
+<img src="images/r_analysis_code.png"
+alt="Complete R analysis code with copy button." />
+<figcaption aria-hidden="true">Complete R analysis code with copy
+button.</figcaption>
 </figure>
 
 In the next step one can select the independent variables on level 1,
@@ -268,11 +309,11 @@ variance, which is quite good for social science.
 
 ## Testing
 
-Mimosa currently has 266 automated tests and 97.7% line coverage. GitHub
-Actions runs package checks on Linux, macOS, and Windows and runs the
-coverage suite headlessly. The server behavior—including Gaussian and
-binomial model fitting, generated R code, output diagnostics, uploads,
-and error states—is tested with `shiny::testServer()`. The
+Mimosa currently has 273 automated checks and 97.7% line coverage.
+GitHub Actions runs package checks on Linux, macOS, and Windows and runs
+the coverage suite headlessly. The server behavior—including Gaussian
+and binomial model fitting, generated R code, output diagnostics,
+uploads, and error states—is tested with `shiny::testServer()`. The
 browser-dependent `shinytest2` test is kept for local end-to-end testing
 and skipped on CI.
 

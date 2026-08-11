@@ -99,9 +99,9 @@ load_example_dataset <- function(key) {
     "mlmRev::Mmmec" = mlmRev::Mmmec,
     "mlmRev::Oxboys" = mlmRev::Oxboys,
     "lme4::sleepstudy" = lme4::sleepstudy,
-    "johnson2014-orange" = transform(
+    "johnson2014-orange" = within(
       datasets::Orange,
-      ageYears = age / 365.25
+      ageYears <- datasets::Orange$age / 365.25
     ),
     "popular2" = load_package_dataset("popular2"),
     NULL

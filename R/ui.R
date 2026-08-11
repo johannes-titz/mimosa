@@ -3,13 +3,10 @@
 enableBookmarking("url") # not currently supported, but maybe later
 
 #' @importFrom shinydashboard dashboardSidebar
-#' @importFrom shinybusy add_busy_spinner
 #' @importFrom shinyjs hidden
 #' @noRd
 ui_sidebar <- shinydashboard::dashboardSidebar(
-  shinybusy::add_busy_spinner(spin = "self-building-square",
-                              position = "bottom-right",
-                              margin = c(50, 0)),
+  shiny::useBusyIndicators(),
   tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
   # load data
   uiOutput("file_area"),
@@ -29,7 +26,7 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
     type = 'text/css',
     "footer{position: absolute; bottom:1%; left: 5%; padding:5px;}"
   ),
-  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny, shinydashboard, shinyalert for the interface</li><li>Hmisc for loading SPSS data</li><li>base R for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
+  HTML(paste0('<footer><font size="1"><p style="color:grey">', Sys.Date(), '<br/>mimosa &copy; Johannes Titz, license AGPL, Contributors: Maria Reichert<br><br>made with love and R:<br><ul style="color:grey"><li>shiny and shinydashboard for the interface</li><li>foreign for loading SPSS data</li><li>base R for data wrangling </li><li>lme4 for mixed model analysis</li><li>sjPlot for presentation</li></ul></p><p style="color:grey">feedback: mimosa@titz.science</p></font></footer>'))
 )
 
 #' @importFrom shinydashboard dashboardBody box
@@ -232,7 +229,6 @@ ui_body <- function(testing = F) {
 }
 
 #' @importFrom shinydashboard dashboardPage dashboardHeader
-#' @importFrom shinyBS bsTooltip
 #' @noRd
 myui <- function() {
   testmode <- getOption("shiny.testmode")

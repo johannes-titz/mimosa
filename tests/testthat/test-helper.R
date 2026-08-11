@@ -1,26 +1,18 @@
 test_that("finding grouping variable works", {
   hsball <- read.csv(test_path("data", "hsball.csv"))
-  tutorium <- Hmisc::spss.get(test_path("data", "vl.sav"),
-                               use.value.labels = F)
-  isabell1 <- Hmisc::spss.get(test_path("data", "MeaTimeAge.sav"), 
-                              use.value.labels = F)
+  tutorium <- read_sav(test_path("data", "vl.sav"))
+  isabell1 <- read_sav(test_path("data", "MeaTimeAge.sav"))
   thomas1 <- suppressWarnings(
-    Hmisc::spss.get(test_path("data", "Online-Tagebuch_130913.sav"),
-                    use.value.labels = F)
+    read_sav(test_path("data", "Online-Tagebuch_130913.sav"))
   )
-  atemm <- Hmisc::spss.get(test_path("data", "ATEMM.sav"), use.value.labels = F)
+  atemm <- read_sav(test_path("data", "ATEMM.sav"))
   karin <- read.csv2(test_path("data", "Joined_data_wellbeing_small.csv"), 
                      fileEncoding = "ISO-8859-1")
   
-  isabell2 <- Hmisc::spss.get(test_path("data", "MeaMimosa.sav"), 
-                              use.value.labels = F)
-  isabell3 <- Hmisc::spss.get(
-    test_path("data", "MeaGruppe1Vollstaendig.sav"), 
-    use.value.labels = F
-  )
+  isabell2 <- read_sav(test_path("data", "MeaMimosa.sav"))
+  isabell3 <- read_sav(test_path("data", "MeaGruppe1Vollstaendig.sav"))
   
-  kerner1 <- Hmisc::spss.get(test_path("data", "NurEG12-1.sav"), 
-                             use.value.labels = F)
+  kerner1 <- read_sav(test_path("data", "NurEG12-1.sav"))
   
   # atemm is problematic because too many dummy-vars are introduced
   # such that there is a dependency although there are no further level 2 vars

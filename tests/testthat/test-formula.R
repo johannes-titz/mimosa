@@ -133,6 +133,6 @@ test_that("data loading code covers examples and uploaded files", {
   expect_true(grepl("read.csv2", uploaded_dataset_code("results.csv")))
   expect_no_error(parse(text = uploaded_dataset_code("results.csv")))
   expect_no_error(parse(text = uploaded_dataset_code("results.sav")))
-  expect_true(grepl("Hmisc::spss.get", uploaded_dataset_code("results.sav")))
+  expect_true(grepl("mimosa::read_sav", uploaded_dataset_code("results.sav")))
   expect_identical(uploaded_dataset_code("results.txt"), "")
 })
