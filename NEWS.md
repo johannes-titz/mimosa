@@ -1,3 +1,5 @@
+# mimosa (development version)
+
 # mimosa 0.6.1
 
 - Downloaded model tables now omit interactive tooltip markup and explanatory
