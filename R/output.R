@@ -625,6 +625,23 @@ tooltip_span <- function(label, tooltip) {
   )
 }
 
+#' Remove interactive tooltips from downloaded table HTML
+#'
+#' Keeps the value shown in the table while removing the focusable wrapper and
+#' the explanatory tooltip body, which otherwise appears as ordinary text when
+#' the standalone HTML file is opened without the app's tooltip styles.
+#'
+#' @param table HTML table created by Mimosa
+#' @noRd
+remove_table_tooltips <- function(table) {
+  pattern <- paste0(
+    "<span class=\"mimosa-tooltip\" tabindex=\"0\">",
+    "(.*?)",
+    "<span class=\"mimosa-tooltip-box\">.*?</span></span>"
+  )
+  gsub(pattern, "\\1", table, perl = TRUE)
+}
+
 #' HTML label for sigma-squared
 #'
 #' @param subscript optional subscript

@@ -120,6 +120,24 @@ test_that("tooltips are shown on values rather than labels", {
   expect_true(grepl("<td class=\"tdata leftalign summary\">Marginal R<sup>2</sup> / Conditional R<sup>2</sup></td>", table, fixed = TRUE))
 })
 
+test_that("downloaded tables keep values but remove tooltip markup and text", {
+  mdl <- lme4::lmer(Reaction ~ Days + (Days | Subject), lme4::sleepstudy)
+  table <- create_table(mdl, l1 = "Days", output_options = character(0))
+  downloaded <- remove_table_tooltips(table)
+
+  expect_true(grepl("mimosa-tooltip", table, fixed = TRUE))
+  expect_false(grepl("mimosa-tooltip", downloaded, fixed = TRUE))
+  expect_false(grepl("Estimated residual variance", downloaded, fixed = TRUE))
+  expect_false(grepl("Marginal R-squared: fixed-effects share", downloaded,
+                     fixed = TRUE))
+  expect_true(grepl(
+    format_table_number(calculate_fixed_effect_variance(mdl)),
+    downloaded,
+    fixed = TRUE
+  ))
+  expect_true(grepl("10.47", downloaded, fixed = TRUE))
+})
+
 test_that("multiple random slopes get predictor-specific rho values", {
   mdl <- lme4::lmer(
     score ~ age + gcsescore + (age + gcsescore | school),

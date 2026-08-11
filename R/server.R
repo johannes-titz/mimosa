@@ -157,7 +157,7 @@ server <- shinyServer(function(input, output, session) {
   output$download <- downloadHandler(
     filename = paste(Sys.Date(), "mimosa.html", sep = ""),
     content = function(file) {
-      writeLines(reactive$table, file)
+      writeLines(remove_table_tooltips(reactive$table), file)
     }
   )
 
