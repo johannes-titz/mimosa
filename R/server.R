@@ -11,7 +11,21 @@ server <- shinyServer(function(input, output, session) {
                              r_analysis_code = "", data_source_code = "",
                              group_id_selected = character(0),
                              group_ids = character(0),
-                             table = NULL)
+                             table = NULL,
+                             data_revision = 0L,
+                             last_model_dialog_key = NULL)
+
+  show_acknowledgement <- function(title, message) {
+    showModal(acknowledgement_modal(title, message))
+  }
+
+  show_model_diagnostic_once <- function(key, title, message) {
+    previous_key <- isolate(reactive$last_model_dialog_key)
+    if (!identical(previous_key, key)) {
+      reactive$last_model_dialog_key <- key
+      show_acknowledgement(title, message)
+    }
+  }
   output$examplefile_area <- renderUI({
     selected <- input$examplefile
     if (is.null(selected)) {
@@ -31,6 +45,7 @@ server <- shinyServer(function(input, output, session) {
         data <- load_example_dataset(input$examplefile)
         if (!is.null(data)) {
             reactive$data <- data
+            reactive$data_revision <- isolate(reactive$data_revision) + 1L
             reactive$data_source_code <- example_dataset_code(input$examplefile)
             shinyjs::show("create_model")
             shinyjs::show("reactive_mode_area")
@@ -66,16 +81,13 @@ server <- shinyServer(function(input, output, session) {
       },
       error = function(error_message) {
         msg <- "Sorry, I could not read your data. Please check that it is in the SPSS format .sav or a regular .csv file with a comma or a semicolon as the separator."
-        showModal(modalDialog(
-          title = "Error",
-          msg,
-          easyClose = TRUE
-        ))
+        show_acknowledgement("Error", msg)
       }
     )
     # otherwise the app will crash when load_data fails
     req(data)
     reactive$data <- data
+    reactive$data_revision <- isolate(reactive$data_revision) + 1L
     reactive$data_source_code <- uploaded_dataset_code(input$datafile$name)
 
     id <- find_id(data)
@@ -161,6 +173,13 @@ server <- shinyServer(function(input, output, session) {
     }
   )
 
+  output$download_citation_bib <- downloadHandler(
+    filename = "mimosa-citation.bib",
+    content = function(file) {
+      writeLines(mimosa_citation_bibtex(), file)
+    }
+  )
+
   # update levels, when group variable changes ---------------------------------
   observeEvent(input$group_id, {
     reactive$group_id_selected <- input$group_id
@@ -168,10 +187,7 @@ server <- shinyServer(function(input, output, session) {
     msg <- paste0("Only ", round(repeated, 2) * 100, 
                   " % of groups have repeated measures; random effects may be unreliable.")
     if ( repeated < .5)
-      showModal(modalDialog(
-        title = "Warning",
-        msg
-      ))
+      show_acknowledgement("Warning", msg)
     result <- determine_levels(input$group_id, reactive$data)
     reactive$level1 <- filter_ivs(result$level1, reactive$data)
     reactive$level2 <- filter_ivs(result$level2, reactive$data)
@@ -317,13 +333,12 @@ server <- shinyServer(function(input, output, session) {
       fit_mixed_model(mdl_formula, reactive$data, dv, nAGQ = nAGQ)
     },
     error = function(error_message) {
-      msg <- ifelse(grepl("<= number of random effects", error_message),
-                    "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_message)
-      showModal(modalDialog(
-        title = "Error",
-        msg,
-        easyClose = TRUE
-      ))
+      error_text <- conditionMessage(error_message)
+      msg <- ifelse(grepl("<= number of random effects", error_text),
+                    "Your model is unidentifiable. Try to reduce the number of random effects (e.g. remove variables from <<level 1 varies>>.)", error_text)
+      key <- paste("error", reactive$data_revision, mdl_formula, error_text,
+                   sep = "\r")
+      show_model_diagnostic_once(key, "Error", msg)
       NULL
     }
     )
@@ -339,13 +354,11 @@ server <- shinyServer(function(input, output, session) {
         "<<Level 1 varies>>, removing cross-level interactions, or using fewer",
         "predictors."
       )
-      showModal(modalDialog(
-        title = "Singular fit",
-        msg,
-        easyClose = TRUE
-      ))
+      key <- paste("singular", reactive$data_revision, mdl_formula, sep = "\r")
+      show_model_diagnostic_once(key, "Singular fit", msg)
       return("Model has a singular fit. Please simplify the random-effects structure.")
     }
+    reactive$last_model_dialog_key <- NULL
     reactive$table <- create_table(mdl, l1, output_options)
     output <- HTML(reactive$table)
     removeNotification(id = "estimating_model")

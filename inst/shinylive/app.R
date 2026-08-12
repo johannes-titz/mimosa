@@ -4,6 +4,7 @@ suppressPackageStartupMessages({
   library(shinyjs)
 })
 
+source("build-info.R", local = TRUE)
 load("data/popular2.rda")
 source("R/load.R", local = TRUE)
 source("R/examples.R", local = TRUE)

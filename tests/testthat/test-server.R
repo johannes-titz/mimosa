@@ -204,6 +204,11 @@ test_that("server explains singular and unidentifiable models", {
       paste(as.character(output$table_region), collapse = ""),
       fixed = TRUE
     ))
+    singular_dialog_key <- reactive$last_model_dialog_key
+    expect_true(startsWith(singular_dialog_key, "singular\r"))
+
+    session$flushReact()
+    expect_identical(reactive$last_model_dialog_key, singular_dialog_key)
   })
 
   shiny::testServer(server, {
@@ -235,5 +240,6 @@ test_that("server explains singular and unidentifiable models", {
       paste(as.character(output$table_region), collapse = ""),
       fixed = TRUE
     ))
+    expect_true(startsWith(reactive$last_model_dialog_key, "error\r"))
   })
 })

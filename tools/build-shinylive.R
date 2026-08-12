@@ -28,6 +28,33 @@ dir.create(stage_dir, recursive = TRUE)
 dir.create(file.path(stage_dir, "R"), recursive = TRUE)
 dir.create(file.path(stage_dir, "data"), recursive = TRUE)
 
+description <- read.dcf(file.path(root, "DESCRIPTION"))
+build_version <- unname(description[1, "Version"])
+build_commit <- Sys.getenv("GITHUB_SHA", unset = "")
+if (!nzchar(build_commit)) {
+  build_commit <- tryCatch(
+    system2(
+      "git",
+      c("-C", root, "rev-parse", "--short=8", "HEAD"),
+      stdout = TRUE,
+      stderr = FALSE
+    ),
+    error = function(e) ""
+  )
+}
+build_commit <- substr(trimws(build_commit[1]), 1, 8)
+
+writeLines(
+  c(
+    "options(",
+    "  mimosa.webR = TRUE,",
+    paste0("  mimosa.version = ", encodeString(build_version, quote = "\""), ","),
+    paste0("  mimosa.commit = ", encodeString(build_commit, quote = "\"")),
+    ")"
+  ),
+  file.path(stage_dir, "build-info.R")
+)
+
 invisible(file.copy(file.path(root, "inst", "shinylive", "app.R"), stage_dir, overwrite = TRUE))
 invisible(file.copy(file.path(root, "R", c(
   "load.R",
@@ -45,4 +72,5 @@ shinylive::export(stage_dir, site_dir)
 unlink(stage_dir, recursive = TRUE)
 
 message("Shinylive site written to: ", site_dir)
+message("Build label: mimosa v", build_version, " (webR ", build_commit, ")")
 message("Preview with: httpuv::runStaticServer('docs')")

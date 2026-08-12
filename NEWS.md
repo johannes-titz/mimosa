@@ -1,5 +1,12 @@
 # mimosa (development version)
 
+- Model warnings and errors now remain open until acknowledged with **OK** and
+  are shown only once for an unchanged model and data set. The Help section now
+  links to the latest GitHub release and its release blog post.
+- The Help section can now copy the mimosa citation as plain text or HTML and
+  download it as BibTeX. webR builds identify both their package version and
+  short Git commit in the header.
+
 # mimosa 0.6.1
 
 - Downloaded model tables now omit interactive tooltip markup and explanatory

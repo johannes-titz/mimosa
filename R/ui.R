@@ -32,6 +32,73 @@ ui_sidebar <- shinydashboard::dashboardSidebar(
 #' @importFrom shinydashboard dashboardBody box
 #' @importFrom shinyjs useShinyjs hidden
 #' @noRd
+acknowledgement_modal <- function(title, message) {
+  modalDialog(
+    title = title,
+    message,
+    easyClose = FALSE,
+    footer = modalButton("OK")
+  )
+}
+
+#' @noRd
+mimosa_citation_plain <- function() {
+  paste(
+    "Titz, J. (2020). mimosa: A modern graphical user interface for",
+    "2-level mixed models. Journal of Open Source Software, 5(49), 2116.",
+    "https://doi.org/10.21105/joss.02116"
+  )
+}
+
+#' @noRd
+mimosa_citation_html <- function() {
+  paste0(
+    "<p>Titz, J. (2020). mimosa: A modern graphical user interface for ",
+    "2-level mixed models. <em>Journal of Open Source Software, 5</em>",
+    "(49), 2116. <a href=\"https://doi.org/10.21105/joss.02116\">",
+    "https://doi.org/10.21105/joss.02116</a></p>"
+  )
+}
+
+#' @noRd
+mimosa_citation_bibtex <- function() {
+  paste(
+    "@article{titz2020mimosa,",
+    "  author = {Titz, Johannes},",
+    "  title = {mimosa: A modern graphical user interface for 2-level mixed models},",
+    "  journal = {Journal of Open Source Software},",
+    "  year = {2020},",
+    "  volume = {5},",
+    "  number = {49},",
+    "  pages = {2116},",
+    "  doi = {10.21105/joss.02116}",
+    "}",
+    sep = "\n"
+  )
+}
+
+#' @noRd
+mimosa_version_label <- function() {
+  version <- getOption("mimosa.version")
+  if (is.null(version)) {
+    version <- tryCatch(
+      as.character(utils::packageVersion("mimosa")),
+      error = function(e) "development"
+    )
+  }
+
+  label <- paste0("mimosa v", version)
+  if (isTRUE(getOption("mimosa.webR"))) {
+    commit <- getOption("mimosa.commit")
+    build <- if (is.null(commit) || !nzchar(commit)) "webR" else paste("webR", commit)
+    label <- paste0(label, " (", build, ")")
+  }
+  label
+}
+
+#' @importFrom shinydashboard dashboardBody box
+#' @importFrom shinyjs useShinyjs hidden
+#' @noRd
 ui_body <- function(testing = F) {
   shinydashboard::dashboardBody(
   # shinytest2 does not react to shinyjs when called from command line, only
@@ -80,14 +147,12 @@ ui_body <- function(testing = F) {
      }"
   )),
   tags$script(HTML(
-    "function mimosaCopyRCode() {
-       var code = document.getElementById('r_analysis_code');
-       var status = document.getElementById('copy_r_code_status');
-       if (!code || !code.textContent.trim()) {
-         status.textContent = 'Estimate a model first.';
+    "function mimosaCopyText(text, statusId, emptyMessage) {
+       var status = document.getElementById(statusId);
+       if (!text || !text.trim()) {
+         status.textContent = emptyMessage;
          return;
        }
-       var text = code.textContent;
        var copied = function(ok) {
          status.textContent = ok ? 'Copied.' : 'Copy failed.';
          window.setTimeout(function() { status.textContent = ''; }, 2500);
@@ -108,6 +173,22 @@ ui_body <- function(testing = F) {
        var ok = document.execCommand('copy');
        document.body.removeChild(area);
        copied(ok);
+     }
+     function mimosaCopyRCode() {
+       var code = document.getElementById('r_analysis_code');
+       mimosaCopyText(
+         code ? code.textContent : '',
+         'copy_r_code_status',
+         'Estimate a model first.'
+       );
+     }
+     function mimosaCopyCitation(format) {
+       var citation = document.getElementById('mimosa_citation_' + format);
+       mimosaCopyText(
+         citation ? citation.value : '',
+         'copy_citation_status',
+         'Citation unavailable.'
+       );
      }"
   ))),
   # Model spec and model display -----------------------------------------
@@ -222,10 +303,45 @@ ui_body <- function(testing = F) {
         box(title = "Help", status = "primary",
             collapsible = T,
             HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
+                  <p>Latest release: <a href="https://github.com/johannes-titz/mimosa/releases/latest" target="_blank">mimosa 0.6.1 on GitHub</a></p>
+                  <p>What is new? Read <a href="https://johannestitz.com/post/2026-08-11-mimosa-0-6-1/" target="_blank">the release blog post</a>.</p>
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>
-                  <p>Citation: Titz, J. (2020). mimosa: A modern graphical user interface for 2-level mixed models. <i>Journal of Open Source Software, 5</i>(49), 2116. <a href ="https://doi.org/10.21105/joss.02116">https://doi.org/10.21105/joss.02116</a>
-                  <p>A good introduction to mixed models in German is available in <a href="https://www.pearson.de/datenanalyse-mit-r-fortgeschrittene-verfahren-9783868944136" target="_blank">Burkhardt, Titz, & Sedlmeier (2022)</a></p>
-                 <p>If you want to support my work and/or you use R a lot, please check out the <a href="https://a.co/d/0ELTAQP" target="_blank">Essential R Cheatsheets</a>.</p>')))
+                  <p>Citation:</p>'),
+            HTML(mimosa_citation_html()),
+            tags$textarea(
+              id = "mimosa_citation_plain",
+              style = "display: none;",
+              mimosa_citation_plain()
+            ),
+            tags$textarea(
+              id = "mimosa_citation_html",
+              style = "display: none;",
+              mimosa_citation_html()
+            ),
+            div(
+              class = "mimosa-code-actions",
+              actionButton(
+                "copy_citation_plain",
+                "Copy plain text",
+                icon = icon("copy"),
+                onclick = "mimosaCopyCitation('plain');"
+              ),
+              actionButton(
+                "copy_citation_html",
+                "Copy HTML",
+                icon = icon("copy"),
+                onclick = "mimosaCopyCitation('html');"
+              ),
+              downloadButton("download_citation_bib", "Download BibTeX"),
+              tags$span(
+                id = "copy_citation_status",
+                class = "text-muted",
+                role = "status",
+                style = "margin-left: 8px;"
+              )
+            ),
+            HTML('<p>A good introduction to mixed models in German is available in <a href="https://www.pearson.de/datenanalyse-mit-r-fortgeschrittene-verfahren-9783868944136" target="_blank">Burkhardt, Titz, & Sedlmeier (2022)</a></p>
+                  <p>If you want to support my work and/or you use R a lot, please check out the <a href="https://a.co/d/0ELTAQP" target="_blank">Essential R Cheatsheets</a>.</p>')))
   )
 )
 }
@@ -235,13 +351,9 @@ ui_body <- function(testing = F) {
 myui <- function() {
   testmode <- getOption("shiny.testmode")
   testmode <- ifelse(is.null(testmode), F, testmode)
-  mimosa_version <- tryCatch(
-    utils::packageVersion("mimosa"),
-    error = function(e) "webR"
-  )
   dashboardPage(
     skin = "red",
-    header = dashboardHeader(title = paste0("mimosa v", mimosa_version)),
+    header = dashboardHeader(title = mimosa_version_label()),
     # Sidebar-----------------------------------------------------------------
     sidebar = ui_sidebar,
     body = ui_body(testing = testmode),
