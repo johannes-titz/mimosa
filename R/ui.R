@@ -53,10 +53,17 @@ mimosa_citation_plain <- function() {
 #' @noRd
 mimosa_citation_html <- function() {
   paste0(
-    "<p>Titz, J. (2020). mimosa: A modern graphical user interface for ",
+    "<p>", mimosa_citation_html_body(), "</p>"
+  )
+}
+
+#' @noRd
+mimosa_citation_html_body <- function() {
+  paste0(
+    "Titz, J. (2020). mimosa: A modern graphical user interface for ",
     "2-level mixed models. <em>Journal of Open Source Software, 5</em>",
     "(49), 2116. <a href=\"https://doi.org/10.21105/joss.02116\">",
-    "https://doi.org/10.21105/joss.02116</a></p>"
+    "https://doi.org/10.21105/joss.02116</a>"
   )
 }
 
@@ -305,9 +312,14 @@ ui_body <- function(testing = F) {
             HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
                   <p>Latest release: <a href="https://github.com/johannes-titz/mimosa/releases/latest" target="_blank">mimosa 0.6.1 on GitHub</a></p>
                   <p>What is new? Read <a href="https://johannestitz.com/post/2026-08-11-mimosa-0-6-1/" target="_blank">the release blog post</a>.</p>
-                  <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>
-                  <p>Citation:</p>'),
-            HTML(mimosa_citation_html()),
+                  <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>'),
+            tags$p(
+              style = "margin-bottom: 6px;",
+              tags$strong(
+                "Citation: ",
+                HTML(mimosa_citation_html_body())
+              )
+            ),
             tags$textarea(
               id = "mimosa_citation_plain",
               style = "display: none;",
@@ -320,6 +332,7 @@ ui_body <- function(testing = F) {
             ),
             div(
               class = "mimosa-code-actions",
+              style = "margin-top: 0;",
               actionButton(
                 "copy_citation_plain",
                 "Copy plain text",
