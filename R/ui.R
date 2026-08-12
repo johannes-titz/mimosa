@@ -315,10 +315,9 @@ ui_body <- function(testing = F) {
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>'),
             tags$p(
               style = "margin-bottom: 6px;",
-              tags$strong(
-                "Citation: ",
-                HTML(mimosa_citation_html_body())
-              )
+              tags$strong("Citation:"),
+              " ",
+              HTML(mimosa_citation_html_body())
             ),
             tags$textarea(
               id = "mimosa_citation_plain",

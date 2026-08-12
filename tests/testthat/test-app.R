@@ -20,7 +20,7 @@ test_that("UI and Shiny app objects are constructed without launching a browser"
   expect_true(grepl('id="download_citation_bib"', ui_html, fixed = TRUE))
   expect_match(
     ui_html,
-    "<strong>[[:space:]]+Citation: [[:space:]]+Titz, J\\. \\(2020\\)\\. mimosa:"
+    "<strong>Citation:</strong>[[:space:]]+Titz, J\\. \\(2020\\)\\. mimosa:"
   )
   expect_s3_class(app, "shiny.appobj")
   expect_identical(app$options$host, "127.0.0.1")
