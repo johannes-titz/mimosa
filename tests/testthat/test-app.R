@@ -18,6 +18,11 @@ test_that("UI and Shiny app objects are constructed without launching a browser"
   expect_true(grepl('id="copy_citation_plain"', ui_html, fixed = TRUE))
   expect_true(grepl('id="copy_citation_html"', ui_html, fixed = TRUE))
   expect_true(grepl('id="download_citation_bib"', ui_html, fixed = TRUE))
+  expect_true(grepl(
+    'class="mimosa-code-actions mimosa-citation-actions"',
+    ui_html,
+    fixed = TRUE
+  ))
   expect_match(
     ui_html,
     "<strong>Citation:</strong>[[:space:]]+Titz, J\\. \\(2020\\)\\. mimosa:"
@@ -51,6 +56,18 @@ test_that("webR version labels identify the version and exact build", {
   expect_identical(
     mimosa_version_label(),
     "mimosa v0.6.9000 (webR 1a2b3c4d)"
+  )
+  title <- as.character(mimosa_version_title())
+  expect_match(title, 'class="mimosa-webr-version"', fixed = TRUE)
+  expect_match(title, 'class="mimosa-webr-name"', fixed = TRUE)
+  expect_match(title, "font-size: 20px", fixed = TRUE)
+  expect_match(title, 'class="mimosa-webr-build"', fixed = TRUE)
+  expect_match(title, "font-size: 11px", fixed = TRUE)
+  expect_match(title, "dev 1a2b3c4d", fixed = TRUE)
+  expect_match(
+    title,
+    'title="mimosa v0.6.9000 (webR 1a2b3c4d)"',
+    fixed = TRUE
   )
 })
 

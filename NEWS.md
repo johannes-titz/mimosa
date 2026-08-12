@@ -4,8 +4,8 @@
   are shown only once for an unchanged model and data set. The Help section now
   links to the latest GitHub release and its release blog post.
 - The Help section can now copy the mimosa citation as plain text or HTML and
-  download it as BibTeX. webR builds identify both their package version and
-  short Git commit in the header.
+  download it as BibTeX. The webR header identifies development builds with
+  their short Git commit while keeping the mimosa title clearly visible.
 
 # mimosa 0.6.1
 

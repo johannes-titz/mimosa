@@ -103,6 +103,32 @@ mimosa_version_label <- function() {
   label
 }
 
+#' @noRd
+mimosa_version_title <- function() {
+  label <- mimosa_version_label()
+  if (!isTRUE(getOption("mimosa.webR"))) {
+    return(label)
+  }
+
+  commit <- getOption("mimosa.commit")
+  build <- if (is.null(commit) || !nzchar(commit)) "dev" else paste("dev", commit)
+  tags$span(
+    class = "mimosa-webr-version",
+    style = "white-space: nowrap;",
+    title = label,
+    tags$span(
+      class = "mimosa-webr-name",
+      style = "font-size: 20px;",
+      "mimosa"
+    ),
+    tags$span(
+      class = "mimosa-webr-build",
+      style = "font-size: 11px; margin-left: 6px;",
+      build
+    )
+  )
+}
+
 #' @importFrom shinydashboard dashboardBody box
 #' @importFrom shinyjs useShinyjs hidden
 #' @noRd
@@ -151,6 +177,10 @@ ui_body <- function(testing = F) {
      }
      .mimosa-code-actions {
        margin: 8px 0;
+     }
+     .mimosa-citation-actions .btn {
+       font-size: 12px;
+       padding: 3px 7px;
      }"
   )),
   tags$script(HTML(
@@ -330,7 +360,7 @@ ui_body <- function(testing = F) {
               mimosa_citation_html()
             ),
             div(
-              class = "mimosa-code-actions",
+              class = "mimosa-code-actions mimosa-citation-actions",
               style = "margin-top: 0;",
               actionButton(
                 "copy_citation_plain",
@@ -365,7 +395,7 @@ myui <- function() {
   testmode <- ifelse(is.null(testmode), F, testmode)
   dashboardPage(
     skin = "red",
-    header = dashboardHeader(title = mimosa_version_label()),
+    header = dashboardHeader(title = mimosa_version_title()),
     # Sidebar-----------------------------------------------------------------
     sidebar = ui_sidebar,
     body = ui_body(testing = testmode),
