@@ -38,7 +38,7 @@
 
 - A new **R analysis code** panel below the model display provides a complete
   copyable script for the current analysis. It includes reproducible data
-  loading, the correct `lmer()` or `glmer()` call, binomial event recoding when
+  loading, the correct `lmer()` or `glmer()` call, binary outcome recoding when
   needed, and `sjPlot::tab_model(model)`.
 - Generated formulas and R code now quote non-syntactic variable names safely,
   wrap long lines for easier reading, and place the copy button below the code.

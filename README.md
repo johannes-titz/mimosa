@@ -250,7 +250,7 @@ The model description is shown mathematically and in R syntax of the
 `lme4` package. Directly below it, a separate **R analysis code** panel
 contains a complete, copyable script: data loading, the matching `lmer`
 or `glmer` call, and `sjPlot::tab_model(model)`. Variable names that
-require quoting and Mimosa’s dichotomous event coding are preserved in
+require quoting and Mimosa’s binary outcome coding are preserved in
 the generated code.
 
 <figure>

@@ -170,7 +170,7 @@ ui_body <- function(testing = F) {
      }
      .mimosa-r-code pre {
        max-height: 360px;
-       max-width: 50ch;
+       max-width: 60ch;
        overflow-y: auto;
        white-space: pre-wrap;
        overflow-wrap: anywhere;

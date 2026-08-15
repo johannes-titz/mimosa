@@ -107,8 +107,8 @@ quote_r_interaction <- function(term) {
 
 #' Create copyable R code for the complete analysis
 #'
-#' The generated code follows the same response-family selection, event coding,
-#' model fitting, and variance decomposition used by Mimosa.
+#' The generated code follows the same response-family selection, binary outcome
+#' coding, model fitting, and variance decomposition used by Mimosa.
 #'
 #' @param formula model formula
 #' @param data_code R code that loads the selected data into `data`
@@ -120,43 +120,45 @@ quote_r_interaction <- function(term) {
 create_analysis_code <- function(formula, data_code, dv, family,
                                  event = NULL, nAGQ = 1) {
   stopifnot(family %in% c("gaussian", "binomial"))
-  r_code_tokens <- function(code) {
-    characters <- strsplit(code, "", fixed = TRUE)[[1]]
-    tokens <- character(0)
-    token <- ""
+  code_width <- 55
+  top_level_formula_terms <- function(formula) {
+    characters <- strsplit(formula, "", fixed = TRUE)[[1]]
+    terms <- character(0)
+    term <- ""
+    depth <- 0L
     in_backticks <- FALSE
+
     for (character in characters) {
       if (identical(character, "`")) {
         in_backticks <- !in_backticks
       }
-      if (identical(character, " ") && !in_backticks) {
-        if (nzchar(token)) {
-          tokens <- c(tokens, token)
-          token <- ""
-        }
+      if (!in_backticks) {
+        if (identical(character, "(")) depth <- depth + 1L
+        if (identical(character, ")")) depth <- depth - 1L
+      }
+      if (identical(character, "+") && depth == 0L && !in_backticks) {
+        terms <- c(terms, trimws(term))
+        term <- ""
       } else {
-        token <- paste0(token, character)
+        term <- paste0(term, character)
       }
     }
-    c(tokens, token[nzchar(token)])
+    c(terms, trimws(term))
   }
-  format_formula_argument <- function(formula, width = 50) {
-    tokens <- r_code_tokens(formula)
+  format_formula_argument <- function(formula, width = code_width) {
+    terms <- top_level_formula_terms(formula)
     prefix <- "  formula ="
     continuation <- "    "
-    current <- prefix
+    current <- paste(prefix, terms[1])
     formatted <- character(0)
 
-    for (token in tokens) {
-      candidate <- paste(current, token)
-      if (nchar(candidate) <= width || identical(current, prefix)) {
+    for (term in terms[-1]) {
+      candidate <- paste0(current, " + ", term)
+      if (nchar(candidate) <= width) {
         current <- candidate
-      } else if (token %in% c("+", "~", "|")) {
-        formatted <- c(formatted, paste(current, token))
-        current <- continuation
       } else {
-        formatted <- c(formatted, current)
-        current <- paste(continuation, token)
+        formatted <- c(formatted, paste0(current, " +"))
+        current <- paste0(continuation, term)
       }
     }
     paste(c(formatted, paste0(current, ",")), collapse = "\n")
@@ -166,16 +168,25 @@ create_analysis_code <- function(formula, data_code, dv, family,
   if (family == "binomial") {
     dv_literal <- r_value_literal(dv)
     event_literal <- r_value_literal(event)
+    dv_reference <- if (identical(make.names(dv), dv)) {
+      paste0("data$", dv)
+    } else {
+      paste0("data[[", dv_literal, "]]")
+    }
+    binary_assignment <- paste0(
+      dv_reference, " <- as.integer(", dv_reference, " == ", event_literal, ")"
+    )
+    if (nchar(binary_assignment) > code_width) {
+      binary_assignment <- c(
+        paste0(dv_reference, " <- as.integer("),
+        paste0("  ", dv_reference, " == ", event_literal),
+        ")"
+      )
+    }
     lines <- c(
       lines,
-      paste0("# Model ", event_literal, " as the event (1)"),
-      paste0("data[[", dv_literal, "]] <- ifelse("),
-      paste0("  is.na(data[[", dv_literal, "]]),"),
-      "  NA_real_,",
-      "  as.numeric(",
-      paste0("    data[[", dv_literal, "]] == ", event_literal),
-      "  )",
-      ")",
+      paste0("# Code ", event_literal, " as 1 and the other value as 0"),
+      binary_assignment,
       "",
       "# Fit the binomial mixed model",
       "model <- lme4::glmer(",

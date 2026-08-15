@@ -88,10 +88,10 @@ test_that("complete Gaussian analysis code is valid and reproducible", {
   expect_true(grepl("sjPlot::tab_model(model)", code, fixed = TRUE))
   expect_false(grepl("summary(model)", code, fixed = TRUE))
   expect_false(grepl("insight::get_variance", code, fixed = TRUE))
-  expect_lte(max(nchar(strsplit(code, "\n", fixed = TRUE)[[1]])), 50)
+  expect_lte(max(nchar(strsplit(code, "\n", fixed = TRUE)[[1]])), 60)
 })
 
-test_that("complete binomial analysis code preserves Mimosa event coding", {
+test_that("complete binomial analysis code preserves binary outcome coding", {
   code <- create_analysis_code(
     "outcome ~ predictor + (1 | group)",
     "data <- example_data",
@@ -103,12 +103,52 @@ test_that("complete binomial analysis code preserves Mimosa event coding", {
 
   expect_no_error(parse(text = code))
   compact_code <- gsub("[[:space:]]+", " ", code)
-  expect_true(grepl('# Model "yes" as the event (1)', code, fixed = TRUE))
-  expect_true(grepl('data[["outcome"]] == "yes"', compact_code, fixed = TRUE))
+  expect_true(grepl(
+    '# Code "yes" as 1 and the other value as 0', code, fixed = TRUE
+  ))
+  expect_true(grepl('data$outcome == "yes"', compact_code, fixed = TRUE))
+  expect_false(grepl("ifelse", code, fixed = TRUE))
   expect_true(grepl("model <- lme4::glmer(", code, fixed = TRUE))
   expect_true(grepl("family = stats::binomial()", code, fixed = TRUE))
   expect_true(grepl("nAGQ = 3", code, fixed = TRUE))
-  expect_lte(max(nchar(strsplit(code, "\n", fixed = TRUE)[[1]])), 50)
+  expect_lte(max(nchar(strsplit(code, "\n", fixed = TRUE)[[1]])), 60)
+})
+
+test_that("binary outcome code safely handles non-syntactic names", {
+  code <- create_analysis_code(
+    "`response value` ~ predictor + (1 | group)",
+    "data <- example_data",
+    dv = "response value",
+    family = "binomial",
+    event = "yes"
+  )
+
+  expect_no_error(parse(text = code))
+  expect_true(grepl(
+    'data[["response value"]] == "yes"',
+    gsub("[[:space:]]+", " ", code),
+    fixed = TRUE
+  ))
+})
+
+test_that("formula wrapping keeps random-effect terms together", {
+  code <- create_analysis_code(
+    "use ~ age + livch + urban + (1 + age | district)",
+    "data <- example_data",
+    dv = "use",
+    family = "binomial",
+    event = "Y"
+  )
+
+  expect_true(grepl(
+    paste0(
+      "formula = use ~ age + livch + urban +\n",
+      "    (1 + age | district),"
+    ),
+    code,
+    fixed = TRUE
+  ))
+  expect_false(grepl("(1 +\n", code, fixed = TRUE))
 })
 
 test_that("long formulas wrap safely around backticked names and operators", {

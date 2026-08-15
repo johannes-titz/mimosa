@@ -70,7 +70,7 @@ test_that("server automatically fits binomial examples with the documented event
 
     expect_identical(output$mod_r, "use ~ age + (1 | district)")
     expect_true(grepl("lme4::glmer", output$r_analysis_code, fixed = TRUE))
-    expect_true(grepl('# Model "Y" as the event (1)',
+    expect_true(grepl('# Code "Y" as 1 and the other value as 0',
                       output$r_analysis_code, fixed = TRUE))
     expect_true(grepl("family = stats::binomial()",
                       output$r_analysis_code, fixed = TRUE))

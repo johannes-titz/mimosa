@@ -55,11 +55,7 @@ prepare_mixed_model_data <- function(data, dv) {
   if (family == "binomial") {
     values <- dichotomous_response_values(data[[dv]])
     event <- values[2]
-    data[[dv]] <- ifelse(
-      is.na(data[[dv]]),
-      NA_real_,
-      as.numeric(data[[dv]] == event)
-    )
+    data[[dv]] <- as.integer(data[[dv]] == event)
   }
   list(data = data, family = family, event = event)
 }
@@ -80,11 +76,7 @@ fit_mixed_model <- function(formula, data, dv, nAGQ = 1) {
   if (family == "binomial") {
     values <- dichotomous_response_values(data[[dv]])
     event <- values[2]
-    data[[dv]] <- ifelse(
-      is.na(data[[dv]]),
-      NA_real_,
-      as.numeric(data[[dv]] == event)
-    )
+    data[[dv]] <- as.integer(data[[dv]] == event)
   }
   formula <- stats::as.formula(formula)
   if (family == "binomial") {
