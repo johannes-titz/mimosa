@@ -1,3 +1,5 @@
+# mimosa (development version)
+
 # mimosa 0.6.2
 
 - Model warnings and errors now remain open until acknowledged with **OK** and
