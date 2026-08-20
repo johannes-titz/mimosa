@@ -340,8 +340,8 @@ ui_body <- function(testing = F) {
         box(title = "Help", status = "primary",
             collapsible = T,
             HTML('<p>How to use mimosa? See <a href="https://github.com/johannes-titz/mimosa/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
-                  <p>Latest release: <a href="https://github.com/johannes-titz/mimosa/releases/latest" target="_blank">mimosa 0.6.1 on GitHub</a></p>
-                  <p>What is new? Read <a href="https://johannestitz.com/post/2026-08-11-mimosa-0-6-1/" target="_blank">the release blog post</a>.</p>
+                  <p>Latest release: <a href="https://github.com/johannes-titz/mimosa/releases/latest" target="_blank">mimosa 0.6.2 on GitHub</a></p>
+                  <p>What is new? Read the <a href="https://github.com/johannes-titz/mimosa/releases/latest" target="_blank">latest release notes</a>.</p>
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/mimosa/issues" target="_blank">https://github.com/johannes-titz/mimosa/issues</a></p>'),
             tags$p(
               style = "margin-bottom: 6px;",

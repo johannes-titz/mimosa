@@ -1,4 +1,4 @@
-# mimosa (development version)
+# mimosa 0.6.2
 
 - Model warnings and errors now remain open until acknowledged with **OK** and
   are shown only once for an unchanged model and data set. The Help section now
@@ -6,6 +6,8 @@
 - The Help section can now copy the mimosa citation as plain text or HTML and
   download it as BibTeX. The webR header identifies development builds with
   their short Git commit while keeping the mimosa title clearly visible.
+- Generated code for binomial models now uses concise direct 0/1 recoding and
+  wraps formulas at top-level terms for easier copying and reading.
 
 # mimosa 0.6.1
 

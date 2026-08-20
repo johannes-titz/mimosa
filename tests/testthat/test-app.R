@@ -10,11 +10,8 @@ test_that("UI and Shiny app objects are constructed without launching a browser"
   expect_true(grepl("mimosa v", ui_html, fixed = TRUE))
   expect_true(grepl("https://github.com/johannes-titz/mimosa/releases/latest",
                     ui_html, fixed = TRUE))
-  expect_true(grepl(
-    "https://johannestitz.com/post/2026-08-11-mimosa-0-6-1/",
-    ui_html,
-    fixed = TRUE
-  ))
+  expect_true(grepl("mimosa 0.6.2 on GitHub", ui_html, fixed = TRUE))
+  expect_true(grepl("latest release notes", ui_html, fixed = TRUE))
   expect_true(grepl('id="copy_citation_plain"', ui_html, fixed = TRUE))
   expect_true(grepl('id="copy_citation_html"', ui_html, fixed = TRUE))
   expect_true(grepl('id="download_citation_bib"', ui_html, fixed = TRUE))
